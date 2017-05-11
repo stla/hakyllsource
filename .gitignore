@@ -7,3 +7,4 @@ posts/*.html
 posts/*.dll
 posts/*.so
 ztemp/
+.Rproj.user

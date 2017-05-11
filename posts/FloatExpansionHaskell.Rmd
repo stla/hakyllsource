@@ -8,6 +8,7 @@ output:
     variant: markdown
   html_document:
     highlight: zenburn
+    keep_md: yes
 prettify: yes
 prettifycss: minimal
 highlighter: pandoc-solarized
@@ -95,6 +96,7 @@ floatExpansion' base u = replicate (- snd expansion) 0 ++ fst expansion
   where expansion = floatToDigits base u
 ```
 
+
 ### Compilation
 
 We need the following C file to do the compilation, as explained in the [GHC users guide](https://downloads.haskell.org/~ghc/latest/docs/html/users_guide/win32-dlls.html#making-dlls-to-be-called-from-other-languages).
@@ -119,13 +121,34 @@ hs_exit();
 }
 ```
 
-Then we compile the library with the command:
+Then we compile the library with this command on Linux:
 
 ```bash
-ghc -shared -fPIC -dynamic -lHSrts-ghc7.10.3 FloatExpansion1.hs StartEnd.c -o FloatExpansion1.so
+ghc -shared -fPIC -dynamic -lHSrts-ghc8.0.2 FloatExpansion1.hs StartEnd.c -o FloatExpansion1.so
 ```
 
-This creates the dynamic linker `FloatExpansion1.so`. 
+and this command on Windows:
+
+```bash
+ghc -shared -fPIC FloatExpansion1.hs StartEnd.c -o FloatExpansion1.dll
+```
+
+This creates the dynamic linker `FloatExpansion1.so` on Linux, `FloatExpansion1.dll` on Windows.
+
+In a cabal file, assuming `StartEnd.c` is in the project directory, we can do:
+
+```cabal
+library
+  hs-source-dirs:      src
+  exposed-modules:     FloatExpansion
+  build-depends:       base >= 4.7 && < 5
+  default-language:    Haskell2010
+  if os(windows)
+    ghc-options:       -O2 -shared -fPIC StartEnd.c -o FloatExpansion1.dll
+  else
+    ghc-options:       -O2 -shared -fPIC -dynamic StartEnd.c -o FloatExpansion1.so
+    extra-libraries:   HSrts-ghc8.0.2
+```
 
 
 ### Call in R
@@ -143,11 +166,12 @@ And we invoke the function with the help of the `.C` function, as follows:
 .C("floatExpansion", base=2L, x=0.125, result="")$result 
 ```
 
-It works. But it would be better to have a vector as output. 
+It works. But it would be better to have a vector as output, rather than a string.
 
 ```{r}
 dyn.unload("FloatExpansion1.dll") 
 ```
+
 
 ## Second dynamic linker: vector output
 
@@ -180,7 +204,7 @@ floatExpansion base u result = do
   poke result $ DV.toSEXP $ DV.fromList expansion
 
 intToInt32 :: Int -> Int32
-intToInt32 i = fromIntegral (i :: Int) :: Int32
+intToInt32 = fromIntegral 
 
 floatExpansion' :: RealFloat a => Integer -> a -> [Int]
 floatExpansion' base u = replicate (- snd expansion) 0 ++ fst expansion
@@ -231,9 +255,12 @@ num2dyadic <- function(u, nmax=1024L){
 Let's compare it with my R function `num2dyadic`:
 
 ```{r}
-u <- runif(5000)
-system.time(sapply(u, floatExpand))
-system.time(sapply(u, num2dyadic))
+library(microbenchmark)
+microbenchmark(
+  floatExpand = floatExpand(runif(1)),
+  num2dyadic  = num2dyadic(runif(1)),
+  times = 5000
+)
 ```
 
 It is faster. And I have checked that the two functions always return the same results.

@@ -1,10 +1,11 @@
 ---
-author: StÃƒÂ©phane Laurent
+author: Stéphane Laurent
 date: '2017-05-11'
-highlighter: pandoc-solarized
+highlighter: 'pandoc-solarized'
 output:
   html_document:
     highlight: zenburn
+    keep_md: True
   md_document:
     toc: True
     variant: markdown
@@ -145,21 +146,44 @@ hs_exit();
 }
 ```
 
-Then we compile the library with the command:
+Then we compile the library with this command on Linux:
 
 ``` {.bash}
-ghc -shared -fPIC -dynamic -lHSrts-ghc7.10.3 FloatExpansion1.hs StartEnd.c -o FloatExpansion1.so
+ghc -shared -fPIC -dynamic -lHSrts-ghc8.0.2 FloatExpansion1.hs StartEnd.c -o FloatExpansion1.so
 ```
 
-This creates the dynamic linker `FloatExpansion1.so`.
+and this command on Windows:
+
+``` {.bash}
+ghc -shared -fPIC FloatExpansion1.hs StartEnd.c -o FloatExpansion1.dll
+```
+
+This creates the dynamic linker `FloatExpansion1.so` on Linux,
+`FloatExpansion1.dll` on Windows.
+
+In a cabal file, assuming `StartEnd.c` is in the project directory, we
+can do:
+
+``` {.cabal}
+library
+  hs-source-dirs:      src
+  exposed-modules:     FloatExpansion
+  build-depends:       base >= 4.7 && < 5
+  default-language:    Haskell2010
+  if os(windows)
+    ghc-options:       -O2 -shared -fPIC StartEnd.c -o FloatExpansion1.dll
+  else
+    ghc-options:       -O2 -shared -fPIC -dynamic StartEnd.c -o FloatExpansion1.so
+    extra-libraries:   HSrts-ghc8.0.2
+```
 
 ### Call in R
 
 We firstly load the library with:
 
 ``` {.r}
-dyn.load("FloatExpansion1.dll")
-.C("HsStart")
+dyn.load("FloatExpansion1.dll") 
+.C("HsStart") 
 ## list()
 ```
 
@@ -167,14 +191,15 @@ And we invoke the function with the help of the `.C` function, as
 follows:
 
 ``` {.r}
-.C("floatExpansion", base=2L, x=0.125, result="")$result
+.C("floatExpansion", base=2L, x=0.125, result="")$result 
 ## [1] "[0,0,1]"
 ```
 
-It works. But it would be better to have a vector as output.
+It works. But it would be better to have a vector as output, rather than
+a string.
 
 ``` {.r}
-dyn.unload("FloatExpansion1.dll")
+dyn.unload("FloatExpansion1.dll") 
 ```
 
 Second dynamic linker: vector output
@@ -215,7 +240,7 @@ floatExpansion base u result = do
   poke result $ DV.toSEXP $ DV.fromList expansion
 
 intToInt32 :: Int -> Int32
-intToInt32 i = fromIntegral (i :: Int) :: Int32
+intToInt32 = fromIntegral 
 
 floatExpansion' :: RealFloat a => Integer -> a -> [Int]
 floatExpansion' base u = replicate (- snd expansion) 0 ++ fst expansion
@@ -225,8 +250,8 @@ floatExpansion' base u = replicate (- snd expansion) 0 ++ fst expansion
 We compile the library as before. And we load it in R as before:
 
 ``` {.r}
-dyn.load("FloatExpansion2.dll")
-.C("HsStart")
+dyn.load("FloatExpansion2.dll") 
+.C("HsStart") 
 ## list()
 ```
 
@@ -234,7 +259,7 @@ And we invoke the function with the help of the `.C` function, as
 follows:
 
 ``` {.r}
-.C("floatExpansion", base=2L, x=0.125, result=list(0L))$result
+.C("floatExpansion", base=2L, x=0.125, result=list(0L))$result 
 ## [[1]]
 ## [1] 0 0 1
 ```
@@ -252,13 +277,16 @@ floatExpand <- function(x, base=2L){
 Let's compare it with my R function `num2dyadic`:
 
 ``` {.r}
-u <- runif(5000)
-system.time(sapply(u, floatExpand))
-##    user  system elapsed
-##    0.85    0.00    0.31
-system.time(sapply(u, num2dyadic))
-##    user  system elapsed
-##    0.64    0.00    0.64
+library(microbenchmark)
+microbenchmark(
+  floatExpand = floatExpand(runif(1)),
+  num2dyadic  = num2dyadic(runif(1)),
+  times = 5000
+)
+## Unit: microseconds
+##         expr    min     lq     mean median      uq       max neval
+##  floatExpand 11.156 14.726 23.23745 16.511 25.4360  5143.764  5000
+##   num2dyadic 13.387 25.882 47.93350 29.452 36.1455 50311.339  5000
 ```
 
 It is faster. And I have checked that the two functions always return
@@ -275,5 +303,5 @@ floatExpand(1/3+1/27, base=3)
 Quite nice, isn't it ?
 
 ``` {.r}
-dyn.unload("FloatExpansion2.dll")
+dyn.unload("FloatExpansion2.dll") 
 ```
