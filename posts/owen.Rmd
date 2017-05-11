@@ -1,0 +1,157 @@
+---
+title: "The `owen` library for Haskell"
+highlighter: hscolour
+date: '`r Sys.Date()`'
+output:
+  md_document:
+    variant: markdown
+  html_document: default
+prettify: yes
+---
+
+
+```{r setup, include=FALSE}
+knitr::knit_engines$set(ghc = function (options)
+{
+  engine = options$engine
+  f = basename(tempfile(engine, ".", ".txt"))
+  writeLines(options$code, f)
+  on.exit(unlink(f))
+  code = paste(f, options$engine.opts)
+  cmd = options$engine.path
+  out = if (options$eval) {
+    message("running: ", cmd, " ", code)
+    tryCatch(system2(cmd, code, stdout = TRUE, stderr = FALSE,
+                     env = options$engine.env), error = function(e) {
+                       if (!options$error)
+                         stop(e)
+                       paste("Error in running command", cmd)
+                     })
+  }
+  else ""
+  if (!options$error && !is.null(attr(out, "status")))
+    stop(paste(out, collapse = "\n"))
+  knitr::engine_output(options, options$code, out)
+}
+)
+## chunk options
+knitr::opts_chunk$set(engine = 'ghc', 
+                      engine.path = 'ghcscriptrender', 
+                      engine.opts = '--fragment --singleoutputs -p C:/cabal_sandbox/.cabal-sandbox/x86_64-windows-ghc-8.0.2-packages.conf.d', 
+                      echo = FALSE, results = 'asis')
+```
+
+The `owen` library is available [on Github](https://github.com/stla/owen). 
+The functions it provides are described and illustrated in this post.
+
+## Owen $T$-function
+
+The Owen $T$-function is defined by
+$$
+T(h,a) = \frac{1}{2\pi}\int_0^a \frac{e^{-\frac12 h^2(1+x^2)}}{1+x^2}\mathrm{d}x
+$$
+for $a, h \in \mathbb{R}$. It corresponds to a certain probability and then its value always lies between $0$ and $1$. 
+
+Below we compare some obtained values of $T(h, a)$ to the ones given by Wolfram up to $20$ digits:
+
+
+```{r}
+import OwenT
+owenT 0.1 0.1   - 0.01578338051718359918
+owenT 1 0.5     - 0.04306469112078536563
+owenT 0.5 0.1   - 0.01399302023628015424
+owenT 0.5 0.9   - 0.10007270175061385845
+owenT 5 0.5     - 0.00000014192549621069
+owenT 2 0.99999 - 0.01111626714677311317
+```
+
+<br/>
+
+The `owenT` function allows infinite values of $h$ and $a$:
+
+```{r}
+import OwenT
+import Data.Number.Erf 
+-- zero: 
+owenT (1/0) 3
+owenT (-1/0) 3
+-- equality:
+owenT 1 (1/0)
+(1 - normcdf 1)/2 
+```
+
+<br/>
+
+The algorithm runs as follows. 
+If $0 \leq a \leq 1$, and $0 \leq h \leq 8$, a series expansion is used, the one given by Owen (1956). The series is truncated after the $50$-th term. 
+If $0\leq a \leq 1$, and $h \geq 8$, an asymptotic approximation is used. Otherwise, the properties of the Owen $T$-function are exploited to come down to the case $0 \leq a \leq 1$. The main property involves the Gaussian cumulative function.
+
+As shown by Owen (1956), the Owen $T$-function can be used to evaluate the cumulative distribution function of the bivariate Gaussian distribution. 
+
+
+## Non-central Student distribution 
+
+The `pStudent` function of the `owen` library evaluates the cumulative distribution function of the non-central Student distribution with an *integer* number of degrees of freedom. For odd values, the algorithm resorts to the Owen $T$-function. 
+This algorithm is the one given by Owen (1965). 
+
+Below we compare some values to the ones given by R: 
+
+```{r}
+import Student
+pStudent 0.5 2 2.5 - 0.022741814853305026
+pStudent 0.5 3 2.5 - 0.022741355255468675
+```
+
+
+## Owen Q-function
+
+The first Owen $Q$-function is defined by 
+$$
+Q_1(\nu, t, \delta, R) = \frac{1}{\Gamma\left(\frac{\nu}{2}\right)2^{\frac12(\nu-2)}}
+\int_0^R \Phi\left(\frac{tx}{\sqrt{\nu}}-\delta\right)
+x^{\nu-1} e^{-\frac{x^2}{2}} \mathrm{d}x
+$$
+for $\nu >0$, $t, \delta \in \mathbb{R}$ and $R>0$. 
+
+Its value always lies between $0$ and $1$. 
+
+It is implemented in the `owen` library for *integer* values of $\nu$, under the name `owenQ1`. The algorithm used is the one given by Owen (1965). 
+
+The results are theoretically exact for even values of $\nu$, up to the fact that the function resorts to the Gaussian cumulative function. 
+For odd values of $\nu$, it also resorts to the Owen $T$-function. 
+
+Below we compare some obtained values of $Q_1(\nu, t, \delta, R)$ to the ones given by Wolfram up to $20$ digits:
+
+```{r}
+import OwenQ
+owenQ1 1 3 2 5  - 0.52485658843054409291
+owenQ1 2 3 2 5  - 0.62938193306526904118
+owenQ1 9 3 2 5  - 0.77030437685878389173
+owenQ1 10 3 2 5 - 0.77383547873740988537
+```
+
+<br/>
+
+The `owenQ1` function also returns a value for $t,\delta=\pm \infty$:
+
+```{r}
+import OwenQ
+import Math.Gamma as G
+-- zero:
+owenQ1 3 (-1/0) 2 2 
+owenQ1 3 2 (1/0) 2  
+-- equalities:
+owenQ1 5 (1/0) 9 3
+owenQ1 5 (1/0) 99 3
+owenQ1 5 99 (-1/0) 3
+owenQ1 5 9 (-1/0) 3
+G.p (5/2) (3^2/2) 
+```
+
+
+
+## References
+
+- Owen, D. B. (1956). Tables for computing bivariate normal probabilities. *Ann. Math. Statist.* **27**, 1075-90.
+
+- Owen, D. B. (1965). A Special Case of a Bivariate Non-Central $t$-Distribution. *Biometrika* **52**, 437-446. 

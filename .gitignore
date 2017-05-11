@@ -1,0 +1,9 @@
+_cache/
+_site/
+.stack-work/
+posts/.Rproj.user/
+posts/.Rhistory
+posts/*.html
+posts/*.dll
+posts/*.so
+ztemp/
