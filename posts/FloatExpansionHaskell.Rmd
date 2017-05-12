@@ -20,22 +20,22 @@ knitr::opts_chunk$set(echo = TRUE, collapse=TRUE)
 ```
 
 
-In [the previous article](http://stla.github.io/stlapblog/posts/DyadicExpansion.html), I wrote a R function returning the binary expansion of a real number $u \in [0,1]$. In the present article, I will: 
+In [the previous article](http://stla.github.io/stlapblog/posts/DyadicExpansion.html), I wrote a R function returning the binary expansion of a real number in $[0,1]$. In the present article, I will: 
 
-- write a similar function in Haskell; 
-- write this function in a way compatible with R, inside a module; 
+- write a similar function in Haskell;
+- write this function in a way compatible with R, inside a module;
 - compile this module in a dynamic linker suitable for R (`dll` with Windows, `so` with Linux);
 - call the function from R through the dynamic linker.
 
 The creation of a Haskell function compatible with R is allowed by the [Foreign Function Interface (FFI)](https://wiki.haskell.org/Foreign_Function_Interface), in other words the `Foreign` module.
 
-I learnt how to do such things with the help of [this blog post by Neil Mitchell](http://neilmitchell.blogspot.be/2011/10/calling-haskell-from-r.html). 
+I learnt how to do such things with the help of [this blog post by Neil Mitchell](http://neilmitchell.blogspot.be/2011/10/calling-haskell-from-r.html).
 
 
 ## Binary (and more) expansion in Haskell
 
-Let's go to Haskell. 
-The `floatExpansion` function below is obtained by a small modification of the `floatToDigits` function of the `Numeric` package. It returns the expansion of a real number $u \in [0,1]$ in a given integer base. 
+Let's go to Haskell.
+The `floatExpansion` function below is obtained by a small modification of the `floatToDigits` function of the `Numeric` package. It returns the expansion of a real number $u \in [0,1]$ in a given integer base.
 
 ```{r, engine='haskell', engine.path='ghc'}
 import Numeric (floatToDigits)
@@ -54,21 +54,21 @@ Firstly, I show how to make this function compatible with R when its output is a
 
 ```{r, engine='haskell', engine.path='ghc'}
 show [0, 0, 1]
-``` 
+```
 
-To get the output as a vector in R, more work is needed, and I will do it in the next section. 
+To get the output as a vector in R, more work is needed, and I will do it in the next section.
 
 
 ### Make the function compatible with R
 
 To make the function compatible with R, there are two rules:
 
-- Every argument must be a pointer (`Ptr`) to a C compatible type: `CInt`, `CDouble` or `CString`. 
+- Every argument must be a pointer (`Ptr`) to a C compatible type: `CInt`, `CDouble` or `CString`.
 
 - The result must be `IO ()`.
 
-A value of type `Ptr` represents a pointer to an object. This type is provided by the [`Foreign.Ptr` module](https://hackage.haskell.org/package/base-4.9.0.0/docs/Foreign-Ptr.html), which is imported via the `Foreign` module. 
-The types `CInt`, `CDouble` and `CString` are provided by the [`Foreign.C` module](https://hackage.haskell.org/package/base-4.9.0.0/docs/Foreign-C.html). 
+A value of type `Ptr` represents a pointer to an object. This type is provided by the [`Foreign.Ptr` module](https://hackage.haskell.org/package/base-4.9.0.0/docs/Foreign-Ptr.html), which is imported via the `Foreign` module.
+The types `CInt`, `CDouble` and `CString` are provided by the [`Foreign.C` module](https://hackage.haskell.org/package/base-4.9.0.0/docs/Foreign-C.html).
 
 We end up with this module:
 
@@ -156,26 +156,26 @@ library
 We firstly load the library with:
 
 ```{r}
-dyn.load("FloatExpansion1.dll") 
-.C("HsStart") 
+dyn.load("FloatExpansion1.dll")
+.C("HsStart")
 ```
 
 And we invoke the function with the help of the `.C` function, as follows:
 
 ```{r}
-.C("floatExpansion", base=2L, x=0.125, result="")$result 
+.C("floatExpansion", base=2L, x=0.125, result="")$result
 ```
 
 It works. But it would be better to have a vector as output, rather than a string.
 
 ```{r}
-dyn.unload("FloatExpansion1.dll") 
+dyn.unload("FloatExpansion1.dll")
 ```
 
 
 ## Second dynamic linker: vector output
 
-To get the output as a vector, the additional modules we need are: `Foreign.R`, `Foreign.R.Types` and `Data.Vector.SEXP`. They are provided by the [`inline-r` package](https://hackage.haskell.org/package/inline-r). 
+To get the output as a vector, the additional modules we need are: `Foreign.R`, `Foreign.R.Types` and `Data.Vector.SEXP`. They are provided by the [`inline-r` package](https://hackage.haskell.org/package/inline-r).
 The `[Int]` type of the output list of the `floatExpansion` function must be converted to `[Int32]`. We write a simple function `intToInt32` to help us to do the conversion. It works with the help of the `Data.Int` module which is imported via the `Foreign` module.
 
 We end up with this module:
@@ -204,7 +204,7 @@ floatExpansion base u result = do
   poke result $ DV.toSEXP $ DV.fromList expansion
 
 intToInt32 :: Int -> Int32
-intToInt32 = fromIntegral 
+intToInt32 = fromIntegral
 
 floatExpansion' :: RealFloat a => Integer -> a -> [Int]
 floatExpansion' base u = replicate (- snd expansion) 0 ++ fst expansion
@@ -214,14 +214,14 @@ floatExpansion' base u = replicate (- snd expansion) 0 ++ fst expansion
 We compile the library as before. And we load it in R as before:
 
 ```{r}
-dyn.load("FloatExpansion2.dll") 
-.C("HsStart") 
+dyn.load("FloatExpansion2.dll")
+.C("HsStart")
 ```
 
 And we invoke the function with the help of the `.C` function, as follows:
 
 ```{r}
-.C("floatExpansion", base=2L, x=0.125, result=list(0L))$result 
+.C("floatExpansion", base=2L, x=0.125, result=list(0L))$result
 ```
 
 In fact, the output is a list with one element, the desired vector.
@@ -235,11 +235,11 @@ floatExpand <- function(x, base=2L){
 ```
 
 ```{r, include=FALSE}
-num2dyadic <- function(u, nmax=1024L){ 
+num2dyadic <- function(u, nmax=1024L){
   out <- integer(nmax)
   i <- j <- 0L
   while(u>0 && i<nmax){
-    j <- 1L + max(0L,floor(-log2(u*(1+.Machine$double.eps^.5)))) 
+    j <- 1L + max(0L,floor(-log2(u*(1+.Machine$double.eps^.5))))
     if(i+j <= nmax){
       i <- i + j
       out[i] <- 1L
@@ -271,9 +271,8 @@ Moreover the "RHaskell" function allows more than the binary expansion, for exam
 floatExpand(1/3+1/27, base=3)
 ```
 
-Quite nice, isn't it ? 
+Quite nice, isn't it ?
 
 ```{r}
-dyn.unload("FloatExpansion2.dll") 
+dyn.unload("FloatExpansion2.dll")
 ```
-

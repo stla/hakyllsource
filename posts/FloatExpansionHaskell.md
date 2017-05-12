@@ -25,10 +25,10 @@ title: 'Calling a Haskell function in R - a float expansion example'
 -   [Second dynamic linker: vector
     output](#second-dynamic-linker-vector-output)
 
-In [the previous
+In [a previous
 article](http://stla.github.io/stlapblog/posts/DyadicExpansion.html), I
 wrote a R function returning the binary expansion of a real number
-$u \in [0,1]$. In the present article, I will:
+in $[0,1]$. In the present article, I will:
 
 -   write a similar function in Haskell;
 -   write this function in a way compatible with R, inside a module;
@@ -182,8 +182,8 @@ library
 We firstly load the library with:
 
 ``` {.r}
-dyn.load("FloatExpansion1.dll") 
-.C("HsStart") 
+dyn.load("FloatExpansion1.dll")
+.C("HsStart")
 ## list()
 ```
 
@@ -191,7 +191,7 @@ And we invoke the function with the help of the `.C` function, as
 follows:
 
 ``` {.r}
-.C("floatExpansion", base=2L, x=0.125, result="")$result 
+.C("floatExpansion", base=2L, x=0.125, result="")$result
 ## [1] "[0,0,1]"
 ```
 
@@ -199,7 +199,7 @@ It works. But it would be better to have a vector as output, rather than
 a string.
 
 ``` {.r}
-dyn.unload("FloatExpansion1.dll") 
+dyn.unload("FloatExpansion1.dll")
 ```
 
 Second dynamic linker: vector output
@@ -240,7 +240,7 @@ floatExpansion base u result = do
   poke result $ DV.toSEXP $ DV.fromList expansion
 
 intToInt32 :: Int -> Int32
-intToInt32 = fromIntegral 
+intToInt32 = fromIntegral
 
 floatExpansion' :: RealFloat a => Integer -> a -> [Int]
 floatExpansion' base u = replicate (- snd expansion) 0 ++ fst expansion
@@ -250,8 +250,8 @@ floatExpansion' base u = replicate (- snd expansion) 0 ++ fst expansion
 We compile the library as before. And we load it in R as before:
 
 ``` {.r}
-dyn.load("FloatExpansion2.dll") 
-.C("HsStart") 
+dyn.load("FloatExpansion2.dll")
+.C("HsStart")
 ## list()
 ```
 
@@ -259,7 +259,7 @@ And we invoke the function with the help of the `.C` function, as
 follows:
 
 ``` {.r}
-.C("floatExpansion", base=2L, x=0.125, result=list(0L))$result 
+.C("floatExpansion", base=2L, x=0.125, result=list(0L))$result
 ## [[1]]
 ## [1] 0 0 1
 ```
@@ -303,5 +303,5 @@ floatExpand(1/3+1/27, base=3)
 Quite nice, isn't it ?
 
 ``` {.r}
-dyn.unload("FloatExpansion2.dll") 
+dyn.unload("FloatExpansion2.dll")
 ```

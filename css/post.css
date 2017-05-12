@@ -51,6 +51,7 @@ h1, h2, h3, h4 {
 
 a {
  color: darkred; /* #404040 */
+ text-decoration: none;
 }
 
 h3 > a {

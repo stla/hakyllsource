@@ -6,5 +6,6 @@ posts/.Rhistory
 posts/*.html
 posts/*.dll
 posts/*.so
+posts/figures/
 ztemp/
 .Rproj.user

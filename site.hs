@@ -38,10 +38,14 @@ main = do
             >>= loadAndApplyTemplate "templates/default.html" defaultContext
             >>= relativizeUrls
 
+    match "posts/figures/*" $ do
+        route   idRoute
+        compile copyFileCompiler
+
     match "posts/*.md" $ do
         route $ setExtension "html"
         compile $ pandocMathCompiler
-            >>= loadAndApplyTemplate "templates/info.html"    postCtx
+            >>= loadAndApplyTemplate "templates/info.html" postCtx
             >>= loadAndApplyTemplate "templates/post.html" postCtx
             >>= relativizeUrls
 
