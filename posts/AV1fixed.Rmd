@@ -1,0 +1,207 @@
+---
+title: "The geometry of the balanced ANOVA model (with fixed effects)"
+author: "StÃƒÂ©phane Laurent"
+date: '2014-01-14'
+output:
+  md_document:
+    toc: yes
+    variant: markdown
+  html_document:
+    keep_md: yes
+prettify: yes
+prettifycss: twitter-bootstrap
+highlighter: kate
+--- 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(fig.path="figures/AV1fixed")
+```
+
+
+Most usually, the mathematical treatment of Gaussian linear models starts with 
+the matricial writing $Y=X\beta+\sigma G$, where $Y$ is a random vector modelling the 
+$n$ response values, $X$ is a known matrix, $\beta$ is 
+the vector of unknown parameters, and $G$ has the standard normal distribution on 
+$\mathbb{R}^n$. 
+
+There are good reasons to use this matricial writing. However it is cleaner to treat 
+the theory with the equivalent vector space notation $Y = \mu + \sigma G$, where 
+$\mu$ is assumed to lie in a linear subspace $W$ of $\mathbb{R}^n$, 
+corresponding to $\text{Im}(X)$ in the matricial notation. 
+For example, denoting by $P_W$ the orthogonal projection on $W$, the least-squares 
+estimate $\hat\mu$ of $\mu$ is simply given by $\hat\mu=P_Wy$, and 
+$P_W^\perp y$ is the vector of residuals, denoting by $P^\perp_W$ the projection on the orthogonal complement of 
+$W$. Thus there is no 
+need to consider $W=\text{Im}(X)$ to derive 
+the general principles of the theory. 
+The balanced one-way ANOVA model, 
+which is the topic of this article, illustrates this approach. 
+
+
+## Standard normal distribution on a vector space 
+
+The main tool used to treat the theory of Gaussian linear models is the 
+standard normal distribution on a linear space.
+
+<div class="title_box"><span id="boxtitle" style="color:blue;font-size:30px;">Theorem and definition</span><p id="boxcontent">
+Let $X$ be a $\mathbb{R}^n$-valued random vector, and
+$W \subset \mathbb{R}^n$ be a linear space. Say that $X$ has the
+standard normal distribution on the vector space $W$, and then note
+$X \sim SN(W)$, if it takes its values in $W$ and its characteristic
+function is given by
+$$\mathbb{E} \textrm{e}^{i\langle w, X \rangle} = \textrm{e}^{-\frac12{\Vert w \Vert}^2} \quad \text{for all } w \in W.$$
+The three following assertions are equivalent (and this is easy to
+prove): <br/> 1. $X \sim SN(W)$; <br/> 2. the coordinates of $X$ in some
+orthonormal basis of $W$ are i.i.d. standard normal random variables;
+<br/> 3. the coordinates of $X$ in any orthonormal basis of $W$ are
+i.i.d. standard normal random variables.</p></div>
+
+
+
+Of course we retrieve the standard normal distribution on $\mathbb{R}^n$ when taking $W=\mathbb{R}^n$. 
+
+From this definition-theorem, the so-called *Cochran's theorem* is an obvious statement. 
+More precisely, if $U \subset W$ is a linear space, and $Z=U^\perp \cap W$ is the orthogonal complement of $U$ in $W$, then the projection $P_UX$ of $X$ on $U$ has the standard normal distribution on $U$, similarly the projection $P_ZX$ of $X$ on $Z$ has the standard normal distribution on $Z$, and moreover $P_UX$ and $P_ZX$ are independent. 
+This is straightforward to see from the definition-theorem of $SN(W)$, and it is also easy to see that ${\Vert P_UX\Vert}^2 \sim \chi^2_{\dim(U)}$.
+
+
+
+## The balanced ANOVA model 
+
+The balanced ANOVA model is used to model a sample $y=(y_{ij})$ with a tabular structure:
+$$
+y=\begin{pmatrix}
+y_{11} & \ldots & y_{1J} \\
+\vdots & y_{ij} & \vdots \\
+y_{I1} & \ldots & y_{IJ}
+\end{pmatrix},
+$$
+$y_{ij}$ denoting the $j$-th measurement in group $i$. 
+It is assumed that the $y_{ij}$ are independent and the population mean depends on the group index $i$. More precisely, the $y_{ij}$ are modelled by random variables $Y_{ij} \sim_{\text{iid}} {\cal N}(\mu_i, \sigma^2)$. 
+
+So, how to write this model as $Y=\mu + \sigma G$ where $G \sim SN(\mathbb{R}^n)$ and $\mu$ lies in a linear space $W \subset \mathbb{R}^n$ ? 
+
+
+## Tensor product 
+
+Here $n=IJ$ and one could consider $Y$ as the vector obtained by stacking the $Y_{ij}$. 
+For example if $I=2$ and $J=3$, we should write 
+$$Y={(Y_{11}, Y_{12}, Y_{13}, Y_{21}, Y_{22}, Y_{23})}'.$$
+
+Actually this is not a good idea to loose the tabular structure. 
+The appropriate approach for writing the balanced ANOVA model involves the *tensor product*. 
+We keep the tabular structure of the data:
+$$Y = \begin{pmatrix} 
+Y_{11} & Y_{12} & Y_{13} \\
+Y_{21} & Y_{22} & Y_{23}
+\end{pmatrix}$$
+and we take $$G \sim SN(\mathbb{R}^I\otimes\mathbb{R}^J)$$ 
+where the *tensor poduct* $\mathbb{R}^I\otimes\mathbb{R}^J$ of $\mathbb{R}^I$ and $\mathbb{R}^J$ is nothing but the space of matrices with $I$ rows and $J$ columns.
+Here 
+$$
+\mu = \begin{pmatrix} 
+\mu_1 & \mu_1 & \mu_1 \\
+\mu_2 & \mu_2 & \mu_2 
+\end{pmatrix},
+$$
+lies, as we will see, in a linear space $W \subset \mathbb{R}^I\otimes\mathbb{R}^J$ which is convenient to define with the help of the *tensor product* $x \otimes y$ of two vectors $x \in \mathbb{R}^I$ and $y \in \mathbb{R}^J$, defined as the element of $\mathbb{R}^I\otimes\mathbb{R}^J$ given by 
+$$
+{(x \otimes y)}_{ij}=x_iy_j.
+$$
+Not all vectors of $\mathbb{R}^I\otimes\mathbb{R}^J$ can be written $x \otimes y$, but the vectors $x \otimes y$ span $\mathbb{R}^I\otimes\mathbb{R}^J$. In consistence with this notation, the tensor product $U \otimes V$ of two vector spaces $U \subset R^I$ and $V \subset R^J$ is defined as the vector space spanned by the vectors of the form $x \otimes y$, $x \in U$, $y \in V$. 
+
+Then  
+$$
+\mu = (\mu_1, \mu_2) \otimes (1,1,1),
+$$
+and $\mu$ is assumed to lie in the linear space 
+$$
+W = \mathbb{R}^I \otimes [{\bf 1}_J].
+$$
+
+Moreover, there is a nice orthogonal decomposition of $W$ corresponding to the usual other parameterization of the model:
+$$\boxed{\mu_i = m + \alpha_i} \quad \text{with } \sum_{i=1}^I\alpha_i=0.$$
+Indeed, writing $\mathbb{R}^I=[{\bf 1}_I] \oplus {[{\bf 1}_I]}^\perp$ yields the following decomposition of $\mu$:
+$$
+\begin{align*}
+\mu = (\mu_1, \ldots, \mu_I) \otimes {\bf 1}_J & = 
+\begin{pmatrix} 
+m & m & m \\
+m & m & m 
+\end{pmatrix} + 
+\begin{pmatrix} 
+\alpha_1 & \alpha_1 & \alpha_1 \\
+\alpha_2 & \alpha_2 & \alpha_2 
+\end{pmatrix} \\ 
+& = \underset{\in \bigl([{\bf 1}_I]\otimes[{\bf 1}_J]\bigr)}{\underbrace{m({\bf 1}_I\otimes{\bf 1}_J)}} + \underset{\in \bigl([{\bf 1}_I]^{\perp}\otimes[{\bf 1}_J] \bigr)}{\underbrace{(\alpha_1,\ldots,\alpha_I)\otimes{\bf 1}_J}} 
+\end{align*}
+$$
+
+
+## Least-squares estimates
+
+With the theory introduced above,  the least-squares estimates of 
+ $m$ and the $\alpha_i$ are  given by 
+$\hat m({\bf 1}_I\otimes{\bf 1}_J) = P_U y$ and 
+  $\hat\alpha\otimes{\bf 1}_J = P_Zy$  where $U = [{\bf 1}_I]\otimes[{\bf 1}_J]$ 
+and $Z = {[{\bf 1}_I]}^{\perp}\otimes[{\bf 1}_J] = U^\perp \cap W$, and 
+we also know that $\hat m$ and the $\hat\alpha_i$ are independent. 
+The least-squares estimates of the $\mu_i$ are given by $\hat\mu_i=\hat m +\hat\alpha_i$. 
+Deriving the expression of these estimates and their distribution is left as an exercise to the reader. 
+As another exercise, check that 
+$$
+{\Vert P_Z \mu \Vert}^2 =  J \sum_{i=1}^I {(\mu_i - \bar\mu_\bullet)}^2 =
+J \sum_{i=1}^I \alpha_i^2.
+$$
+
+
+
+________
+
+effect size 
+
+<https://stats.stackexchange.com/questions/80048/calculating-power-function-for-anova/80114#80114>
+
+base orthonormée de $U$: 
+$$
+\frac{1}{\sqrt{6}} \begin{pmatrix} 
+1 & 1 & 1 \\
+1 & 1 & 1 
+\end{pmatrix}
+$$
+
+$$
+P_U \mu = \frac{3\mu_1+3\mu_2}{6} {\boldsymbol 1}
+$$
+
+c'est $x := (\mu_1+\mu_2)/I$
+
+$$
+P_Z \mu = \mu - P_U \mu
+$$
+
+$$
+{\Vert P_Z \mu \Vert}^2 = 
+3*((\mu_1-x)^2+(\mu_2-x)^2) = crossprod(\mu-\bar\mu)
+$$
+
+$$
+{\Vert P_Z \mu \Vert}^2 =  J \sum_{i=1}^I {(\mu_i - \bar\mu_\bullet)}^2
+$$
+
+```{r}
+f <- gl(2,3,labels=c("a","b"))
+mu <- as.numeric(f)
+nsims <- 5000
+Fsims <- numeric(nsims)
+for(i in 1:nsims){
+  y <- rnorm(length(mu), mu)
+  fit1 <- lm(y~f)
+  fit0 <- lm(y~1)
+  Fsims[i] <- anova(fit0, fit1)$F[2]
+}
+lambda <- crossprod(mu-mean(mu))
+curve(ecdf(Fsims)(x), from=0, to=20)
+curve(pf(x, 1, length(mu)-2, ncp=lambda), add=TRUE, col="red")
+```
+

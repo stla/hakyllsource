@@ -1,0 +1,133 @@
+---
+title: "The binary splitting with Haskell"
+highlighter: hscolour
+date: '`r Sys.Date()`'
+output:
+  md_document:
+    variant: markdown
+  html_document: default
+prettify: yes
+---
+
+
+```{r setup, include=FALSE}
+knitr::knit_engines$set(ghc = function (options)
+{
+  engine = options$engine
+  f = basename(tempfile(engine, ".", ".txt"))
+  writeLines(options$code, f)
+  on.exit(unlink(f))
+  code = paste(f, options$engine.opts)
+  cmd = options$engine.path
+  out = if (options$eval) {
+    message("running: ", cmd, " ", code)
+    tryCatch(system2(cmd, code, stdout = TRUE, stderr = FALSE,
+                     env = options$engine.env), error = function(e) {
+                       if (!options$error)
+                         stop(e)
+                       paste("Error in running command", cmd)
+                     })
+  }
+  else ""
+  if (!options$error && !is.null(attr(out, "status")))
+    stop(paste(out, collapse = "\n"))
+  knitr::engine_output(options, options$code, out)
+}
+)
+## chunk options
+knitr::opts_chunk$set(engine = 'ghc', 
+                      engine.path = 'ghcscriptrender', 
+                      engine.opts = '--fragment --singleoutputs', 
+                      echo = FALSE, results = 'asis')
+```
+
+At the first line of each script in this article, we'll load the following small Haskell module:
+
+```{r, engine.opts="--fragment --module"}
+-- BinarySplitting.hs
+module BinarySplitting
+  where
+import Data.Ratio ((%))
+
+split0 :: ([Rational], [Rational]) -> [Rational]
+split0 u_v = map (\i -> (u !! (2*i)) * (v !! (2*i+1))) [0 .. m]
+  where (u, v) = u_v
+        m = div (length u) 2 - 1
+
+split1 :: ([Rational], [Rational], [Rational]) ->
+               ([Rational], [Rational], [Rational])
+split1 adb = split adb (length alpha)
+  where (alpha, _, _) = adb
+        split :: ([Rational], [Rational], [Rational]) -> Int ->
+                             ([Rational], [Rational], [Rational])
+        split u_v_w n =
+          if n == 1
+            then u_v_w
+            else split (x, split0 (v,v), split0 (w,w)) (div n 2)
+          where (u, v, w) = u_v_w
+                x  = zipWith (+) (split0 (u, w)) (split0 (v, u))
+
+bsplitting :: Int -> [Rational] -> [Rational] -> Rational
+bsplitting m u v = num / den + 1
+  where ([num], _, [den]) = split1 (take (2^m) u, take (2^m) u, take (2^m) v)
+```
+
+The `bsplitting` function performs the [binary splitting algorithm](http://stla.github.io/stlapblog/posts/BS_F21_v3.html). 
+Given an integer $m \geq 0$ and two sequences $(u_i)$ and $(v_i)$ 
+of rational numbers, it calculates the sum
+$$
+A_m = 1 + \sum_{k=1}^{2^m} \prod_{i=1}^k\frac{u_i}{v_i}.  
+$$
+
+## Approximation of $\pi$
+
+For example, $A_m \to \frac{\pi}{2}$ when $u_i = i$ and $v_i = 2i+1$. 
+So we get a rational approximate of $\pi$ as follows:
+
+```{r}
+:load BinarySplitting.hs
+
+:{
+approxPi :: Int -> Rational
+approxPi m = 2 * bsplitting m u v
+  where u = [i | i <- [1 ..]]
+        v = [2*i+1 | i <- [1 ..]]
+:}
+
+let x = approxPi 5
+x
+fromRational x
+```
+
+
+## Kummer hypergeometric function
+
+Consider the confluent hypergeometric series 
+$$
+{}_1\!F_1(a, b; x) = \sum_{n=0}^{\infty}\frac{{(a)}_{n}}{{(b)}_{n}}\frac{x^n}{n!} = 1 + \sum_{n=1}^{\infty}\frac{{(a)}_{n}}{{(b)}_{n}}\frac{x^n}{n!}.
+$$
+ Here ${(a)}_n:=a(a+1)\cdots(a+n-1)$ is the Pocchammer symbol denoting the ascending factorial.
+ The sum from $n=0$ to $n=2^m$ is evaluated by the `bsplitting` function by taking the sequences  
+$u_i = (a+i-1)x$ and $v_i = (b+i-1)i$.
+
+Below we evaluate this sum for $a=8.1$, $b=10.1$ and $x=100$. 
+We compare the result to the value of ${}_1\!F_1(a, b; x)$ given by Wolfram.
+
+```{r}
+:load BinarySplitting.hs
+
+:{
+hypergeo1F1 :: Int -> Rational -> Rational -> Rational -> Double
+hypergeo1F1 m a b x = fromRational $ bsplitting m u v
+  where u = [(a+i)*x | i <- [0 ..]]
+        v = [(b+i)*(i+1) | i <- [0 ..]]
+:}
+
+let wolfram = 1.7241310759926883216143646e41
+
+wolfram - hypergeo1F1 6 (81%10) (101%10) 100
+wolfram - hypergeo1F1 7 (81%10) (101%10) 100
+wolfram - hypergeo1F1 8 (81%10) (101%10) 100
+```
+
+We find a good approximate for $m=8$ (so $2^m=256$), and the evaluation is really fast.
