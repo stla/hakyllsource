@@ -20,6 +20,10 @@ main = do
         route   idRoute
         compile compressCssCompiler
 
+    match "libraries/bootstrap/*" $ do
+        route   idRoute
+        compile copyFileCompiler
+
     match "libraries/mathjax/*" $ do
         route   idRoute
         compile copyFileCompiler
