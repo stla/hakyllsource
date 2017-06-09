@@ -10,3 +10,5 @@ posts/figures/
 ztemp/
 .Rproj.user
 stlahblog/
+posts/*.pdf
+posts/*_cache

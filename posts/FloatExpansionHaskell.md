@@ -1,6 +1,6 @@
 ---
 author: Stéphane Laurent
-date: '2017-05-11'
+date: '2017-06-03'
 highlighter: 'pandoc-solarized'
 output:
   html_document:
@@ -25,15 +25,15 @@ title: 'Calling a Haskell function in R - a float expansion example'
 -   [Second dynamic linker: vector
     output](#second-dynamic-linker-vector-output)
 
-In [a previous
-article](http://stla.github.io/stlapblog/posts/DyadicExpansion.html), I
-wrote a R function returning the binary expansion of a real number
-in $[0,1]$. In the present article, I will:
+In [the previous
+article](https://laustep.github.io/stlahblog/posts/DyadicExpansion.html),
+I wrote a R function returning the binary expansion of a real number in
+$[0,1]$. In the present article, I will:
 
 -   write a similar function in Haskell;
 -   write this function in a way compatible with R, inside a module;
--   compile this module in a dynamic linker suitable for R (`dll` with
-    Windows, `so` with Linux);
+-   compile this module in a dynamic linker suitable for R (`dll` for
+    Windows, `so` for Linux);
 -   call the function from R through the dynamic linker.
 
 The creation of a Haskell function compatible with R is allowed by the
@@ -49,7 +49,7 @@ Binary (and more) expansion in Haskell
 
 Let's go to Haskell. The `floatExpansion` function below is obtained by
 a small modification of the `floatToDigits` function of the `Numeric`
-package. It returns the expansion of a real number $u \in [0,1]$ in a
+module. It returns the expansion of a real number $u \in [0,1]$ in a
 given integer base.
 
 ``` {.haskell}
@@ -106,7 +106,7 @@ import Foreign
 import Foreign.C
 import Numeric (floatToDigits)
 
-foreign export ccall floatExpansionR :: Ptr CInt -> Ptr CDouble -> Ptr CString -> IO ()
+foreign export ccall floatExpansion :: Ptr CInt -> Ptr CDouble -> Ptr CString -> IO ()
 
 floatExpansion :: Ptr CInt -> Ptr CDouble -> Ptr CString -> IO ()
 floatExpansion base u result = do
@@ -284,9 +284,9 @@ microbenchmark(
   times = 5000
 )
 ## Unit: microseconds
-##         expr    min     lq     mean median      uq       max neval
-##  floatExpand 11.156 14.726 23.23745 16.511 25.4360  5143.764  5000
-##   num2dyadic 13.387 25.882 47.93350 29.452 36.1455 50311.339  5000
+##         expr    min     lq     mean median      uq      max neval cld
+##  floatExpand 12.048 14.280 19.46149 15.619  16.511 1871.522  5000  a 
+##   num2dyadic 45.516 80.323 97.29269 91.033 102.189 1550.677  5000   b
 ```
 
 It is faster. And I have checked that the two functions always return

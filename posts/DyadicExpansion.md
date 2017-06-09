@@ -1,6 +1,6 @@
 ---
 author: Stéphane Laurent
-date: '2017-05-12'
+date: '2017-06-02'
 highlighter: kate
 output:
   html_document:
@@ -144,7 +144,7 @@ The Pascal transformation $P$ is defined for every
 $d \in {\{0,1\}}^{\mathbb{N}}$ except when $d=000\ldots$ or when $d$ has
 the form $d=0^i111\ldots$ ($i\geq 0$). Such a $d$ has the form
 $d= 0^m1^k10x$ where $m,k \geq 0$ and $x \in {\{0,1\}}^{\mathbb{N}}$,
-and then the image of $d$ by the Pascal transformation is $$
+and then the image of $d$ by the Pascal transformation is defined by $$
 P(0^m1^k10x) = 1^k0^m01x.
 $$ The case when $d=0^i111\ldots$ does not occur for us since we deal
 with finite sequences only. One naturally extends the Pascal

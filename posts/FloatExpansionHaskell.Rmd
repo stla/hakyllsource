@@ -1,7 +1,7 @@
 ---
 title: "Calling a Haskell function in R - a float expansion example"
 author: "Stéphane Laurent"
-date: '`r Sys.Date()`'
+date: '2017-06-03'
 output:
   md_document:
     toc: yes
@@ -20,11 +20,11 @@ knitr::opts_chunk$set(echo = TRUE, collapse=TRUE)
 ```
 
 
-In [the previous article](http://stla.github.io/stlapblog/posts/DyadicExpansion.html), I wrote a R function returning the binary expansion of a real number in $[0,1]$. In the present article, I will: 
+In [the previous article](https://laustep.github.io/stlahblog/posts/DyadicExpansion.html), I wrote a R function returning the binary expansion of a real number in $[0,1]$. In the present article, I will: 
 
 - write a similar function in Haskell;
 - write this function in a way compatible with R, inside a module;
-- compile this module in a dynamic linker suitable for R (`dll` with Windows, `so` with Linux);
+- compile this module in a dynamic linker suitable for R (`dll` for Windows, `so` for Linux);
 - call the function from R through the dynamic linker.
 
 The creation of a Haskell function compatible with R is allowed by the [Foreign Function Interface (FFI)](https://wiki.haskell.org/Foreign_Function_Interface), in other words the `Foreign` module.
@@ -35,7 +35,7 @@ I learnt how to do such things with the help of [this blog post by Neil Mitchell
 ## Binary (and more) expansion in Haskell
 
 Let's go to Haskell.
-The `floatExpansion` function below is obtained by a small modification of the `floatToDigits` function of the `Numeric` package. It returns the expansion of a real number $u \in [0,1]$ in a given integer base.
+The `floatExpansion` function below is obtained by a small modification of the `floatToDigits` function of the `Numeric` module. It returns the expansion of a real number $u \in [0,1]$ in a given integer base.
 
 ```{r, engine='haskell', engine.path='ghc'}
 import Numeric (floatToDigits)
@@ -82,7 +82,7 @@ import Foreign
 import Foreign.C
 import Numeric (floatToDigits)
 
-foreign export ccall floatExpansionR :: Ptr CInt -> Ptr CDouble -> Ptr CString -> IO ()
+foreign export ccall floatExpansion :: Ptr CInt -> Ptr CDouble -> Ptr CString -> IO ()
 
 floatExpansion :: Ptr CInt -> Ptr CDouble -> Ptr CString -> IO ()
 floatExpansion base u result = do
@@ -155,20 +155,20 @@ library
 
 We firstly load the library with:
 
-```{r}
+```{r, cache=TRUE}
 dyn.load("FloatExpansion1.dll")
 .C("HsStart")
 ```
 
 And we invoke the function with the help of the `.C` function, as follows:
 
-```{r}
+```{r, cache=TRUE}
 .C("floatExpansion", base=2L, x=0.125, result="")$result
 ```
 
 It works. But it would be better to have a vector as output, rather than a string.
 
-```{r}
+```{r, cache=TRUE}
 dyn.unload("FloatExpansion1.dll")
 ```
 
@@ -273,6 +273,6 @@ floatExpand(1/3+1/27, base=3)
 
 Quite nice, isn't it ?
 
-```{r}
+```{r, eval=FALSE}
 dyn.unload("FloatExpansion2.dll")
 ```
