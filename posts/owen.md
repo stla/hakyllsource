@@ -1,5 +1,6 @@
 ---
-date: '2017-05-11'
+author: Stéphane Laurent
+date: '2017-06-01'
 highlighter: hscolour
 output:
   html_document: default

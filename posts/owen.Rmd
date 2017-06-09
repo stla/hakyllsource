@@ -1,7 +1,8 @@
 ---
 title: "The `owen` library for Haskell"
+author: "Stéphane Laurent"
 highlighter: hscolour
-date: '`r Sys.Date()`'
+date: "2017-06-01"
 output:
   md_document:
     variant: markdown
