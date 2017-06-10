@@ -1,5 +1,6 @@
 ---
-date: '2017-06-08'
+author: Stéphane Laurent
+date: '2017-06-05'
 highlighter: hscolour
 output:
   html_document: default
@@ -45,9 +46,10 @@ following small Haskell module:
 </div>
 
 The `bsplitting` function performs the [binary splitting
-algorithm](http://stla.github.io/stlapblog/posts/BS_F21_v3.html). Given
-an integer $m \geq 0$ and two sequences $(u_i)$ and $(v_i)$ of rational
-numbers, it calculates the sum $$
+algorithm](https://laustep.github.io/stlahblog/posts/hypergeometric.html).
+
+Given an integer $m \geq 0$ and two sequences $(u_i)$ and $(v_i)$ of
+rational numbers, it calculates the sum $$
 A_m = 1 + \sum_{k=1}^{2^m} \prod_{i=1}^k\frac{u_i}{v_i}.  
 $$
 

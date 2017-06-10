@@ -1,12 +1,12 @@
 ---
 title: "The binary splitting with the R `gmp` package - Application to the Gauss hypergeometric function"
 author: "Stéphane Laurent"
-date: "`r Sys.Date()`"
+date: "2017-06-04"
 output:
-  html_document: default
   md_document:
     variant: markdown
     toc: true
+  html_document: default
 highlighter: kate
 prettify: yes
 prettifycss: twitter-bootstrap
@@ -368,6 +368,7 @@ Hypergeometric2F1 <- function(a, b, c, z, m=7,
 ```
 
 For example:
+
 ```{r}
 a <- 20.5; b <- 11.92; c <- 19
 z <- 0.5
@@ -376,7 +377,8 @@ Hypergeometric2F1(a,b,c,z, m=3, check.cv=TRUE)
 Hypergeometric2F1(a,b,c,z, m=7, check.cv=TRUE)
 ```
 
-Note that Robin Hankin s `gsl` package does an excellent job:
+Note that Robin Hankin's `gsl` package does an excellent job:
+
 ```{r}
 library(gsl)
 hyperg_2F1(a,b,c,z)

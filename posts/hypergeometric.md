@@ -1,8 +1,9 @@
 ---
 author: Stéphane Laurent
-date: '2017-05-11'
+date: '2017-06-04'
 highlighter: kate
 output:
+  html_document: default
   md_document:
     toc: True
     variant: markdown
@@ -41,7 +42,7 @@ Introductory example: Euler's approximation of $\pi$
 
 The following formula is due to Euler
 $$\frac{\pi}{2} = 1 + \frac{1}{3} + \frac{1\times 2}{3\times 5} + \frac{1\times 2 \times 3}{3\times 5 \times 7} + \cdots + \frac{n!}{3\times 5 \times 7 \times \cdots \times (2n+1)} + \cdots,$$
-that is, $\pi = \lim S_n$ where $$\begin{aligned}
+that is, $\frac{\pi}{2} = \lim S_n$ where $$\begin{aligned}
 S_n & = 1 + \frac{u_1}{v_1} + \frac{u_1 u_2}{v_1v_2} +
 \frac{u_1u_2 u_3}{v_1v_2v_3} + \cdots +
 \frac{u_1u_2\ldots u_{n-1}u_n}{v_1v_2\ldots v_{n-1}v_n} \\
@@ -389,9 +390,9 @@ and complex variable $z$ defined for $|z|<1$ as the sum of an absolute
 convergent series
 $${}_2\!F_1(\alpha,\beta,\gamma; z) = \sum_{n=0}^{\infty}\frac{ {(\alpha)}_{n}{(\beta)}_n}{ {(\gamma)}_{n}}\frac{z^n}{n!},$$
 and extended by analytical continuation in the complex plane with the
-cut along $(1,+\infty)$. Here ${(a)}_n:=a(a+1)\cdots(a+n-1)$ denotes
-Pochhammer s symbol used to represent the $n$-th ascending factorial of
-$a$. .
+cut along $(1,+\infty)$. Here ${(a)}_n:=a(a+1)\cdots(a+n-1)$ denotes the
+Pochhammer symbol used to represent the $n$-th ascending factorial of
+$a$.
 
 The binary splitting allows to evaluate
 ${}_2\!F_1(\alpha,\beta,\gamma; z)$ for rational values of
@@ -512,7 +513,7 @@ Hypergeometric2F1(a,b,c,z, m=7, check.cv=TRUE)
     ## $convergence
     ## [1] TRUE
 
-Note that Robin Hankin s `gsl` package does an excellent job:
+Note that Robin Hankin's `gsl` package does an excellent job:
 
 ``` {.r}
 library(gsl)

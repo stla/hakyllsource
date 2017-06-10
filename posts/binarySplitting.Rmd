@@ -1,7 +1,8 @@
 ---
 title: "The binary splitting with Haskell"
+author: "Stéphane Laurent"
 highlighter: hscolour
-date: '`r Sys.Date()`'
+date: "2017-06-05"
 output:
   md_document:
     variant: markdown
@@ -72,7 +73,8 @@ bsplitting m u v = num / den + 1
   where ([num], _, [den]) = split1 (take (2^m) u, take (2^m) u, take (2^m) v)
 ```
 
-The `bsplitting` function performs the [binary splitting algorithm](http://stla.github.io/stlapblog/posts/BS_F21_v3.html). 
+The `bsplitting` function performs the [binary splitting algorithm](https://laustep.github.io/stlahblog/posts/hypergeometric.html). 
+
 Given an integer $m \geq 0$ and two sequences $(u_i)$ and $(v_i)$ 
 of rational numbers, it calculates the sum
 $$
