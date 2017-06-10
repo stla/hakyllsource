@@ -1,20 +1,20 @@
 ---
 title: "The geometry of the balanced ANOVA model (with fixed effects)"
-author: "StÃƒÂ©phane Laurent"
-date: '2014-01-14'
+author: "Stéphane Laurent"
+date: '2017-06-06'
 output:
   md_document:
     toc: yes
     variant: markdown
   html_document:
-    keep_md: yes
+    keep_md: no
 prettify: yes
 prettifycss: twitter-bootstrap
 highlighter: kate
 --- 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(fig.path="figures/AV1fixed")
+knitr::opts_chunk$set(fig.path="figures/AV1fixed-")
 ```
 
 
@@ -108,7 +108,7 @@ lies, as we will see, in a linear space $W \subset \mathbb{R}^I\otimes\mathbb{R}
 $$
 {(x \otimes y)}_{ij}=x_iy_j.
 $$
-Not all vectors of $\mathbb{R}^I\otimes\mathbb{R}^J$ can be written $x \otimes y$, but the vectors $x \otimes y$ span $\mathbb{R}^I\otimes\mathbb{R}^J$. In consistence with this notation, the tensor product $U \otimes V$ of two vector spaces $U \subset R^I$ and $V \subset R^J$ is defined as the vector space spanned by the vectors of the form $x \otimes y$, $x \in U$, $y \in V$. 
+Not all vectors of $\mathbb{R}^I\otimes\mathbb{R}^J$ can be written $x \otimes y$, but the vectors $x \otimes y$ span $\mathbb{R}^I\otimes\mathbb{R}^J$. In consistence with this notation, the tensor product $U \otimes V$ of two vector spaces $U \subset \mathbb{R}^I$ and $V \subset \mathbb{R}^J$ is defined as the vector space spanned by the vectors of the form $x \otimes y$, $x \in U$, $y \in V$. 
 
 Then  
 $$
@@ -154,6 +154,10 @@ $$
 J \sum_{i=1}^I \alpha_i^2.
 $$
 
+
+```{r, echo=FALSE}
+knitr::knit_exit()
+```
 
 
 ________

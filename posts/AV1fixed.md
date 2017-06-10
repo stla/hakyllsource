@@ -1,10 +1,10 @@
 ---
-author: StÃƒÂ©phane Laurent
-date: '2014-01-14'
+author: Stéphane Laurent
+date: '2017-06-06'
 highlighter: kate
 output:
   html_document:
-    keep_md: True
+    keep_md: False
   md_document:
     toc: True
     variant: markdown
@@ -125,9 +125,10 @@ element of $\mathbb{R}^I\otimes\mathbb{R}^J$ given by $$
 $$ Not all vectors of $\mathbb{R}^I\otimes\mathbb{R}^J$ can be written
 $x \otimes y$, but the vectors $x \otimes y$ span
 $\mathbb{R}^I\otimes\mathbb{R}^J$. In consistence with this notation,
-the tensor product $U \otimes V$ of two vector spaces $U \subset R^I$
-and $V \subset R^J$ is defined as the vector space spanned by the
-vectors of the form $x \otimes y$, $x \in U$, $y \in V$.
+the tensor product $U \otimes V$ of two vector spaces
+$U \subset \mathbb{R}^I$ and $V \subset \mathbb{R}^J$ is defined as the
+vector space spanned by the vectors of the form $x \otimes y$,
+$x \in U$, $y \in V$.
 
 Then\
 $$
@@ -171,53 +172,3 @@ As another exercise, check that $$
 {\Vert P_Z \mu \Vert}^2 =  J \sum_{i=1}^I {(\mu_i - \bar\mu_\bullet)}^2 =
 J \sum_{i=1}^I \alpha_i^2.
 $$
-
-------------------------------------------------------------------------
-
-effect size
-
-<https://stats.stackexchange.com/questions/80048/calculating-power-function-for-anova/80114#80114>
-
-base orthonormée de $U$: $$
-\frac{1}{\sqrt{6}} \begin{pmatrix} 
-1 & 1 & 1 \\
-1 & 1 & 1 
-\end{pmatrix}
-$$
-
-$$
-P_U \mu = \frac{3\mu_1+3\mu_2}{6} {\boldsymbol 1}
-$$
-
-c'est $x := (\mu_1+\mu_2)/I$
-
-$$
-P_Z \mu = \mu - P_U \mu
-$$
-
-$$
-{\Vert P_Z \mu \Vert}^2 = 
-3*((\mu_1-x)^2+(\mu_2-x)^2) = crossprod(\mu-\bar\mu)
-$$
-
-$$
-{\Vert P_Z \mu \Vert}^2 =  J \sum_{i=1}^I {(\mu_i - \bar\mu_\bullet)}^2
-$$
-
-``` {.r}
-f <- gl(2,3,labels=c("a","b"))
-mu <- as.numeric(f)
-nsims <- 5000
-Fsims <- numeric(nsims)
-for(i in 1:nsims){
-  y <- rnorm(length(mu), mu)
-  fit1 <- lm(y~f)
-  fit0 <- lm(y~1)
-  Fsims[i] <- anova(fit0, fit1)$F[2]
-}
-lambda <- crossprod(mu-mean(mu))
-curve(ecdf(Fsims)(x), from=0, to=20)
-curve(pf(x, 1, length(mu)-2, ncp=lambda), add=TRUE, col="red")
-```
-
-![](figures/AV1fixedunnamed-chunk-1-1.png)
