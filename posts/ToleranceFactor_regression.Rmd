@@ -13,7 +13,7 @@ highlighter: kate
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, collapse = TRUE)
+knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, fig.path="figures/regtol-")
 ```
 
 We denote by $\chi^2_{\nu, \lambda}(p)$ the $100p\%$-quantile of the non-central Chi-squared distribution $\chi^2_{\nu, \lambda}$ with degrees of freedom number $\nu$ and non-centrality parameter $\lambda$.
@@ -80,6 +80,7 @@ Rcpp::NumericVector integral(double l, double p, double k, double d){
   return out;
 }
 ```
+
 ## Example 
 
 We test our function on Example 3.1 of Krishnamoorthy & Mathew's book. 
@@ -141,7 +142,7 @@ alpha <- 0.05
 sqrt(l*qchisq(p,1)/qchisq(1-alpha, l, lower.tail=FALSE))
 ```
 
-```{r}
+```{r lowerBound}
 curve(Vectorize(regtolerance:::integral)(l, p, x, d), 
       from=0.1, to=4, ylim=c(0,1))
 curve(pchisq(l*qchisq(p,1)/x^2, l, lower.tail=FALSE), add=TRUE, col="red")

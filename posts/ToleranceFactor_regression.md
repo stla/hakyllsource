@@ -157,7 +157,7 @@ curve(Vectorize(regtolerance:::integral)(l, p, x, d),
 curve(pchisq(l*qchisq(p,1)/x^2, l, lower.tail=FALSE), add=TRUE, col="red")
 ```
 
-![](ToleranceFactor_regression_files/figure-markdown/unnamed-chunk-5-1.png)
+![](figures/regtol-lowerBound-1.png)
 
 ### Upper bound
 
