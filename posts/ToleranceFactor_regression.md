@@ -21,7 +21,7 @@ $(p, 1-\alpha)$-tolerance factor for a linear regression model is the
 solution $k$ of the equation
 
 $$
-2\int_0^\infty \Pr\left(\chi^2_\ell > \frac{\ell\chi^2_{1,x^2}(p)}{k^2} \right) \phi\left(\frac{x}{d}\right) \mathrm{d}x
+\frac{2}{d}\int_0^\infty \Pr\left(\chi^2_\ell > \frac{\ell\chi^2_{1,x^2}(p)}{k^2} \right) \phi\left(\frac{x}{d}\right) \mathrm{d}x
 = 1-\alpha
 $$ where $\ell$ is the corank of the $X$ matrix, and $d$ is a number
 calculated from the desired values of the predictors (as we will see on
@@ -106,12 +106,11 @@ d <- sqrt(c(t(xnew) %*% H %*% matrix(xnew)))
 ```
 
 No we solve the equation. The `Rcpp` function `integral` is available in
-a package I called `RcppNC`.
+a package I called `regtolerance`.
 
 ``` {.r}
-library(RcppNC)
 f <- function(k, l, p, d, alpha){
-  integral(l, p, k, d) - (1-alpha)
+  regtolerance:::integral(l, p, k, d) - (1-alpha)
 }
 ## Calculation of the (0.9, 0.95)-tolerance factor
 ( k <- uniroot(f, l=nrow(dat)-3, p=0.9, d=d, alpha=0.05, lower=2, upper=3)$root )
@@ -125,6 +124,73 @@ estimates <- fit$coefficients
 yhat <- c(t(xnew) %*% matrix(estimates))
 yhat + c(-1,1)*k*sigma(fit)
 ## [1] 2271.436 2356.594
+```
+
+Bounding the tolerance factor
+-----------------------------
+
+### Lower bound
+
+For a fixed number of degrees of freedom, the Chi-squared distribution
+is stochastically increasing in its non-centrality parameter. Therefore
+$$
+\frac{2}{d}\int_0^\infty \Pr\left(\chi^2_\ell > \frac{\ell\chi^2_{1,x^2}(p)}{k^2} \right) \phi\left(\frac{x}{d}\right) \mathrm{d}x 
+\leq \Pr\left(\chi^2_\ell > \frac{\ell\chi^2_{1}(p)}{k^2} \right)
+$$
+
+Thus, the value of $k$ satisfying $$
+\Pr\left(\chi^2_\ell > \frac{\ell\chi^2_{1}(p)}{k^2} \right) = 1-\alpha
+$$ is lower than the tolerance factor.
+
+``` {.r}
+l <- nrow(dat)-3
+p <- 0.9
+alpha <- 0.05
+# lower bound
+sqrt(l*qchisq(p,1)/qchisq(1-alpha, l, lower.tail=FALSE))
+## [1] 2.443276
+```
+
+``` {.r}
+curve(Vectorize(regtolerance:::integral)(l, p, x, d), 
+      from=0.1, to=4, ylim=c(0,1))
+curve(pchisq(l*qchisq(p,1)/x^2, l, lower.tail=FALSE), add=TRUE, col="red")
+```
+
+![](ToleranceFactor_regression_files/figure-markdown/unnamed-chunk-5-1.png)
+
+### Upper bound
+
+The Lee & Mathew approximation of $k$ is known to be generally higher
+than $k$. It is returned by the function `kLM` below.
+
+``` {.r}
+kLM <- function(p, alpha, l, d){
+  e <- (1+d^2)^2/d^4
+  f <- d^4/(1+d^2) 
+  delta <- d^2*((3*d^2+sqrt(9*d^4+6*d^2+3))/(2*d^2+1))
+  sqrt(e*f/(1+delta)*qchisq(p, 1, delta)*qf(1-alpha, e, l))
+}
+kLM(p, alpha, l, d)
+## [1] 2.606926
+```
+
+### Put things together
+
+``` {.r}
+p = 0.9 
+alpha = 0.05
+xnew = c(1, 88, 9)
+X <- model.matrix(fit)
+H <- chol2inv(chol(t(X)%*%X)) 
+d <- sqrt(c(t(xnew) %*% H %*% matrix(xnew)))
+l <- nrow(X)-ncol(X)
+k_low <- sqrt(l*qchisq(p,1)/qchisq(alpha, l))
+k_upp <- kLM(p, alpha, l, d)
+( k <- uniroot(f, l = l, p = p, d = d, alpha = alpha, 
+               lower = k_low, upper = k_upp, 
+               extendInt = "upX")$root )
+## [1] 2.602831
 ```
 
 References
