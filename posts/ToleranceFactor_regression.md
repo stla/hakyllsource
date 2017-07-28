@@ -9,6 +9,7 @@ output:
     variant: markdown
 prettify: True
 prettifycss: 'twitter-bootstrap'
+tags: 'R, Rcpp, statistics'
 title: 'Two-sided tolerance factor for linear regression'
 ---
 

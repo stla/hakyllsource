@@ -7,6 +7,7 @@ output:
   md_document:
     variant: markdown
 prettify: True
+tags: 'haskell, special-functions'
 title: The binary splitting with Haskell
 ---
 

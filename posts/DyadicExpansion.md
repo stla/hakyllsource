@@ -10,6 +10,7 @@ output:
     variant: markdown
 prettify: True
 prettifycss: 'twitter-bootstrap'
+tags: 'maths, R'
 title: Dyadic expansion with R
 ---
 

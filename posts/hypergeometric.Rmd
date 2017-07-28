@@ -2,6 +2,7 @@
 title: "The binary splitting with the R `gmp` package - Application to the Gauss hypergeometric function"
 author: "Stéphane Laurent"
 date: "2017-06-04"
+tags: R, special-functions
 output:
   md_document:
     variant: markdown

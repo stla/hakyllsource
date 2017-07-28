@@ -10,6 +10,7 @@ output:
     variant: markdown
 prettify: True
 prettifycss: 'twitter-bootstrap'
+tags: 'maths, statistics'
 title: 'The geometry of the balanced ANOVA model (with fixed effects)'
 ---
 

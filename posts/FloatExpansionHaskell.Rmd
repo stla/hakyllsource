@@ -2,6 +2,7 @@
 title: "Calling a Haskell function in R - a float expansion example"
 author: "Stéphane Laurent"
 date: '2017-06-03'
+tags: haskell, R
 output:
   md_document:
     toc: yes

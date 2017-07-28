@@ -9,6 +9,7 @@ output:
     variant: markdown
 prettify: True
 prettifycss: 'twitter-bootstrap'
+tags: 'R, special-functions'
 title: |
     The binary splitting with the R `gmp` package - Application to the Gauss
     hypergeometric function

@@ -11,6 +11,7 @@ output:
     variant: markdown
 prettify: True
 prettifycss: minimal
+tags: 'haskell, R'
 title: 'Calling a Haskell function in R - a float expansion example'
 ---
 
@@ -284,9 +285,9 @@ microbenchmark(
   times = 5000
 )
 ## Unit: microseconds
-##         expr    min     lq     mean median      uq      max neval cld
-##  floatExpand 12.048 14.280 19.46149 15.619  16.511 1871.522  5000  a 
-##   num2dyadic 45.516 80.323 97.29269 91.033 102.189 1550.677  5000   b
+##         expr    min      lq      mean  median      uq      max neval cld
+##  floatExpand 12.049 16.9580  43.44155  23.205  35.253 8006.062  5000  a 
+##   num2dyadic 43.286 98.8435 150.81104 128.964 167.788 3451.697  5000   b
 ```
 
 It is faster. And I have checked that the two functions always return

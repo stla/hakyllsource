@@ -2,6 +2,7 @@
 title: "The geometry of the balanced ANOVA model (with fixed effects)"
 author: "Stéphane Laurent"
 date: '2017-06-06'
+tags: maths, statistics
 output:
   md_document:
     toc: yes

@@ -2,6 +2,7 @@
 title: "Dyadic expansion with R"
 author: "Stéphane Laurent"
 date: '2017-06-02'
+tags: maths, R
 output:
   md_document:
     toc: yes
