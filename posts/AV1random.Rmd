@@ -1,0 +1,245 @@
+--- 
+title: "The balanced ANOVA model with random effects"
+author: "Stéphane Laurent"
+date: '2017-07-29'
+output:
+  md_document:
+    toc: yes
+    variant: markdown
+  html_document:
+    keep_md: yes
+prettify: yes
+prettifycss: twitter-bootstrap
+tags: maths, statistics
+highlighter: kate
+--- 
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(fig.path="./figures/AV1random-")
+library(scales)
+source('./Rfunctions/inertia_macro_v1.R', encoding='UTF-8')
+```
+
+\(\newcommand{\indic}{\mathbf{1}}\)
+\(\newcommand{\perpoplus}{\overset{\perp}{\oplus}}\)
+\(\newcommand{\RR}{\mathbb{R}}\)
+
+## The balanced ANOVA model with random effects  
+
+The balanced ANOVA model is used to model a sample $y=(y_{ij})$ with a tabular structure:
+$$y=\begin{pmatrix}
+y_{11} & \ldots & y_{1J} \\
+\vdots & y_{ij} & \vdots \\
+y_{I1} & \ldots & y_{IJ}
+\end{pmatrix},
+$$
+$y_{ij}$ denoting the $j$-th response in group $i$. 
+
+In the model with *random effects*, it is assumed that the observations $y_{ij}$ 
+are generated in two steps. 
+First, the group means $\mu_i$ are independently generated according to a 
+Gaussian distribution ${\cal N}(\mu, \sigma^2_b)$ where $\mu$ is the overall 
+mean and $\sigma^2_b$ is the so-called *between variance*. 
+Second, the responses $y_{ij}$, $j =1,\ldots,J$, for each group $i$, are 
+independently distributed according to  a Gaussian distribution 
+${\cal N}(\mu_i, \sigma^2_w)$ with *within variance* $\sigma^2_w$ and mean
+$\mu_i$. Shortly, the model can be written:
+$$
+\begin{cases}
+\mu_i \sim_{\text{iid}} {\cal N}(\mu, \sigma^2_b) & i=1, \ldots, I \\
+ (y_{ij} \mid \mu_i) \sim_{\text{iid}} {\cal N}(\mu_i, \sigma^2_w) 
+ & j = 1, \ldots, J 
+\end{cases}.
+$$
+
+```{r anovarandommodel, echo=FALSE, fig.width=9, fig.height=6}
+set.seed(314) 
+mu <- 24
+delta <- 1.2
+sigma <- 0.8
+I <- 3
+J <- 4
+factor <- factor(rep(c("A","B","C"),rep(J,3)))
+mu1 <- rnorm(1, mu, delta)
+mu2 <- rnorm(1, mu, delta)
+mu3 <- rnorm(1, mu, delta)
+results <- c(
+  rnorm(J, mu1, sigma), rnorm(J, mu2, sigma), rnorm(J, mu3, sigma)
+)  
+dat <- data.frame(factor=factor, result=results)
+grandmean <- mean(dat$result)
+omeans <- aggregate(result~factor, data=dat, FUN=mean)[,"result"]
+#
+fplot <- function(dat, results, ocolors, cols=rep("black",nrow(dat)), 
+                  lcol="white", ylab, labs, cex=1.3, col.yaxis="black", 
+                  cex.axis=1, cex.xlab=1.7, cex.ylab=1.7, padj=0){
+  plot(c(17.5, 29.5), c(0.7, 5.8), type="n", axes=FALSE, 
+       xlab="observation", ylab=NA, cex.lab=cex.xlab)
+  axis(1, cex.axis=cex.axis, padj=padj)
+  axis(2, labels=labs, at=c(3,2,1), lwd=0, cex.axis=1.7, col.axis = col.yaxis)
+  mtext(ylab, 2, adj=0.23, padj=-3, cex=cex.ylab)
+  h <- 4.5 # plateau du haut 
+  abline(h=h)
+  points(results, rep(h,length(results)), col=cols, pch=19, cex=cex)
+  abline(h=1:3, col=lcol)
+  k <- 1
+  op <- levels(dat$factor)[k]
+  x <- dat$result[dat$factor==op]
+  points(x, rep(k,length(x)), col=ocolors[k], pch=19, cex=cex)
+  k <- 2
+  op <- levels(dat$factor)[k]
+  x <- dat$result[dat$factor==op]
+  points(x, rep(k,length(x)), col=ocolors[k], pch=19, cex=cex)
+  k <- 3
+  op <- levels(dat$factor)[k]
+  x <- dat$result[dat$factor==op]
+  points(x, rep(k,length(x)), col=ocolors[k], pch=19, cex=cex)
+}
+ocolors <- alpha(c("red","blue","green"),0.5)
+cols <- ocolors[as.numeric(factor)]
+h <- 4.5
+cex.axis <- 1.8
+ml <- 8
+par(mar=c(5.9, ml, 0, 1))
+K <- 1.8 # scale for gaussian curve
+fplot(dat, results=omeans, ocolors=ocolors, cols=ocolors, lcol="black", 
+      ylab=NA, labs=c("","group",""))
+curve(K*dnorm(x,grandmean,delta)+h, add=TRUE, lwd=3, col=1)
+text(grandmean, h-0.2, labels=expression(mu), cex=1.4, col=1) 
+k <- 1
+segments(omeans[k], h, omeans[k], k, col="red", lty=3)
+k <- 2
+segments(omeans[k], h, omeans[k], k, col="blue", lty=3)
+k <- 3
+segments(omeans[k], h, omeans[k], k, col="green", lty=3)
+k <- 1
+curve(K*dnorm(x,omeans[k],sigma)+h-1.5-(3-k), add=TRUE, lwd=2, col="red")
+text(omeans[k], h-1.5-(3-k)-0.2, labels=expression(mu[1]), cex=1.4, col="red") 
+k <- 2
+curve(K*dnorm(x,omeans[k],sigma)+h-1.5-(3-k), add=TRUE, lwd=2, col="blue")
+text(omeans[k], h-1.5-(3-k)-0.2, labels=expression(mu[2]), cex=1.4, col="blue")  
+k <- 3
+curve(K*dnorm(x,omeans[k],sigma)+h-1.5-(3-k), add=TRUE, lwd=2, col="green")
+text(omeans[k], h-1.5-(3-k)-0.2, labels=expression(mu[3]), cex=1.4, col="green")
+width <- shift <- 0.05
+inertia(x0=grandmean, y0=h-0.35, a=1.6, b=0.15, lwd=2, l=0.25, col=c("green","blue","red"), w=width, s=shift)
+a <- 1.1
+b <- 0.11
+vadj <- 0.3  
+r <- 1/4
+width <- shift <- 0.05
+k <- 1
+inertia(x0=omeans[k], y0=k-vadj, a=a, b=b, lwd=2, l=0.2, col="red", r=r, w=width, s=shift)
+k <- 2
+inertia(x0=omeans[k], y0=k-vadj, a=a, b=b, lwd=2, l=0.2, col="blue", r=r, w=width, s=shift)
+k <- 3
+inertia(x0=omeans[k], y0=k-vadj, a=a, b=b, lwd=2, l=0.2, col="green", r=r, w=width, s=shift)
+```
+
+
+An equivalent writing of this model, and from now on using capital letters for random 
+variables, is 
+$$Y_{ij} = \mu + \sigma_bA_{i} + \sigma_wG_{ij},$$
+where all random variables $A_i$ and $G_{ij}$ are independent and $\sim {\cal N}(0,1)$. 
+
+
+
+## The three summary statistics $\bar{Y}_{\bullet\bullet}$, $SS_b(Y)$, $SS_w(Y)$
+
+Using the tensor product language introduced in [this article](http://stla.github.io/stlapblog/posts/Anova1fixed.html), the model can be written 
+$$Y = \mu({\bf 1}_I\otimes{\bf 1}_J) + \sigma_b A\otimes\indic_J +\sigma_wG, 
+\qquad A \sim SN(\RR^I), \quad G \sim SN(\RR^I\otimes\RR^J).$$
+
+
+The overall mean $\bar{Y}_{\bullet\bullet}$ is given by the projection of $Y$ on the subspace 
+$[{\bf 1}_I]\otimes[{\bf 1}_J]$:  
+$$P_{[{\bf 1}_I]\otimes[{\bf 1}_J]} Y = \bar{Y}_{\bullet\bullet}({\bf 1}_I\otimes{\bf 1}_J).$$
+
+Then the variations $Y_{ij}-\bar{Y}_{\bullet\bullet}$ around the overall mean are given by the projection on the orthogonal complement ${\Bigl([\indic_I]\otimes[\indic_J]\Bigr)}^\perp$. 
+Knowing that 
+$$
+\RR^I \otimes \RR^J  = 
+\Bigl([\indic_I]\otimes[\indic_J]\Bigr) 
+\perpoplus \Bigl([\indic_I]^\perp\otimes[\indic_J]\Bigr) 
+\perpoplus \Bigl([\indic_I]\otimes[\indic_J]^\perp\Bigr) 
+\perpoplus \Bigl([\indic_I]^\perp\otimes[\indic_J]^\perp\Bigr),
+$$
+one gets
+$$
+\begin{align}
+\underset{\text{'total'}}{\underbrace{ {\Bigl([\indic_I]\otimes[\indic_J]\Bigr)}^\perp} }  & = 
+\Bigl([\indic_I]^\perp\otimes[\indic_J]\Bigr) 
+\perpoplus \Bigl([\indic_I]\otimes[\indic_J]^\perp\Bigr) 
+\perpoplus \Bigl([\indic_I]^\perp\otimes[\indic_J]^\perp\Bigr) \\
+& =  \underset{\text{'between'}}{\underbrace{\Bigl([\indic_I]^\perp\otimes[\indic_J]\Bigr)}} 
+\perpoplus 
+\underset{\text{'within'}}{\underbrace{\Bigl(\RR^I\otimes[\indic_J]^\perp\Bigr)}},
+\end{align}
+$$
+thereby yielding the decomposition of the variations:
+$$
+P^\perp_{[\indic_I]\otimes[\indic_J]}Y = 
+P_{[\indic_I]^\perp\otimes[\indic_J]}Y + P_{\RR^I\otimes[\indic_J]^\perp}Y,
+$$
+whose component formulae are: 
+
+- ${\bigl(P^\perp_{[\indic_I]\otimes[\indic_J]}Y\bigr)}_{ij}=Y_{ij}-\bar{Y}_{\bullet\bullet}$
+
+- ${\bigl(P_{[\indic_I]^\perp\otimes[\indic_J]}Y \bigr)}_{ij} = \bar{Y}_{i\bullet}-\bar{Y}_{\bullet\bullet}$ 
+
+- ${\bigl(P_{\RR^I\otimes[\indic_J]^\perp}Y\bigr)}_{ij} = Y_{ij}-\bar{Y}_{i\bullet}$ 
+
+Now we can see that the three summary statistics (*overall mean*, *between sum of squares*, *within sum of squares*)
+$$\bar{Y}_{\bullet\bullet}, \quad 
+SS_b(Y):={\Vert P_{[\indic_I]^\perp\otimes[\indic_J]}Y  \Vert}^2, \quad 
+SS_w(Y):={\Vert P_{\RR^I\otimes[\indic_J]^\perp}Y \Vert}^2,$$
+are independent random variables.
+Indeed, the overall mean $\bar{Y}_{\bullet\bullet}$ is given by 
+$$\begin{align}
+P_{[{\bf 1}_I]\otimes[{\bf 1}_J]} Y &= \bar{Y}_{\bullet\bullet}({\bf 1}_I\otimes{\bf 1}_J) \\
+& =  
+\mu({\bf 1}_I\otimes{\bf 1}_J) + \sigma_b(P_{[{\bf 1}_I]}A)\otimes\indic_J+\sigma_wP_{[{\bf 1}_I]\otimes[{\bf 1}_J]}G,
+\end{align}$$
+the between variations are 
+$$P_{[\indic_I]^\perp\otimes[\indic_J]}Y 
+= \sigma_b(P^\perp_{[\indic_I]} A)\otimes\indic_J + \sigma_w P_{[\indic_I]^\perp\otimes[\indic_J]} G,$$
+and the within variations are 
+$$P_{\RR^I\otimes[\indic_J]^\perp}Y 
+= \sigma_wP_{\RR^I\otimes[\indic_J]^\perp} G.$$
+Independence follows from the independence between $G$ and $A$ and 
+from the orthogonality between the  ranges of the different projections.
+
+It is easy to derive $\bar{Y}_{\bullet\bullet} \sim {\cal N}\left(\mu, \frac{\sigma^2}{IJ}\right)$ where $\sigma^2=J\sigma^2_b+\sigma^2_w$. 
+It is also easy to get $SS_w(Y) \sim \sigma^2_w\chi^2_{I(J-1)}$ because of 
+$$P_{\RR^I\otimes[\indic_J]^\perp}Y = \sigma_wP_{\RR^I\otimes[\indic_J]^\perp}G.$$ 
+To derive the law of $SS_b(Y)$, 
+note that 
+$$
+\begin{align}
+P_{[\indic_I]^\perp\otimes[\indic_J]} G 
+& = \begin{pmatrix} 
+\bar{G}_{1\bullet} - \bar{G}_{\bullet\bullet} & \ldots & \bar{G}_{1\bullet} - \bar{G}_{\bullet\bullet} \\
+\vdots & \vdots & \vdots \\
+\bar{G}_{I\bullet} - \bar{G}_{\bullet\bullet} & \ldots & \bar{G}_{I\bullet} - \bar{G}_{\bullet\bullet} 
+\end{pmatrix} \\
+& = (P^\perp_{[\indic_I]}G_{\text{row}}) \otimes \indic_J
+\end{align}$$
+where $G_{\text{row}} = (\bar{G}_{i\bullet})$ is the vector of row means of $G$, and then one can write  
+$$P_{[\indic_I]^\perp\otimes[\indic_J]} Y 
+= \bigl(P^\perp_{[\indic_I]}(\sigma_b A + \sigma_w G_{\text{row}})\bigr) \otimes \indic_J.$$
+Now it is easy to see that the components of $\sigma_b A + \sigma_w G_{\text{row}}$ are 
+$\sim_{\text{iid}} {\cal N}(0, \sigma^2)$, and 
+consequently $SS_b(Y) \sim \sigma^2\chi^2_{J-1}$. 
+
+
+## Confidence interval for the overall mean 
+
+By our previous derivations, the statistic 
+$$ \frac{\bar Y_{\bullet\bullet}  - \mu}{\frac{1}{\sqrt{I}}\sqrt{\frac{SS_b(Y)}{I(J-1)}}}$$
+has a Student $t$ distribution with $I-1$ degrees of freedom, wherefrom it is easy to get an exact confidence interval about the overall mean $\mu$. 
+
+Note that we would get exactly the same confidence interval if we were told only the group means $\bar{Y}_{i\bullet}$. 
+ This is the topic of [another article](http://stla.github.io/stlapblog/posts/ModelReduction.html).
+
+
