@@ -191,7 +191,7 @@ chebyshevFitR f n result = do
   poke result $ (VS.toSEXP . VS.fromList) fit
 ```
 
-We will apply it to the function $x \mapsto \cos(4\arccos(x))$, which is the Chebyshev polynomial of order $5$ for $|x| \leq 1$. Therefore, for any order $n \geq 5$, the result must theoretically be $0, 0, 0, 0, 1, 0, \ldots, 0$. 
+We will apply it to the function $x \mapsto \cos(4\arccos(x))$, which is the Chebyshev polynomial of order $4$ for $|x| \leq 1$. Therefore, for any $n \geq 5$, the result must theoretically be $0, 0, 0, 0, 1, 0, \ldots, 0$. 
 
 ```r
 > f <- function(x) cos(4*acos(x))
