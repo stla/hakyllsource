@@ -1,0 +1,218 @@
+---
+author: Stéphane Laurent
+date: '2017-09-26'
+highlighter: 'pandoc-solarized'
+output:
+  html_document:
+    highlight: haddock
+    keep_md: True
+  md_document:
+    toc: False
+    variant: markdown
+prettify: True
+prettifycss: minimal
+tags: 'haskell, R'
+title: Passing a R function to Haskell
+---
+
+Passing R objects to Haskell
+----------------------------
+
+In two previous posts I have shown some examples of calling Haskell from
+R. More precisely, the procedure consists in building a DLL with Haskell
+and using this DLL in R, with the help of the `.C` function.
+
+We can obviously pass an integer, a double or a character string in the
+`.C` function. Thanks to the `inline-r` Haskell library, we can do more:
+namely, it is possible to pass any R object, since this library
+implements the type `SEXP`.
+
+Let's give an example. In this example we pass a R vector of doubles to
+Haskell, we calculate the square of each component in Haskell and we
+send the result to R.
+
+``` {.haskell}
+{-# LANGUAGE DataKinds                #-}
+{-# LANGUAGE ForeignFunctionInterface #-}
+module Lib where
+import qualified Data.Vector.SEXP as VS
+import           Foreign
+import           Foreign.C
+import qualified Foreign.R.Type   as R
+
+foreign export ccall squaredDoubles1 :: Ptr (SEXP s 'R.Real) -> Ptr (SEXP s 'R.Real) -> IO ()
+squaredDoubles1 :: Ptr (SEXP s 'R.Real) -> Ptr (SEXP s 'R.Real) -> IO ()
+squaredDoubles1 input result = do
+  input <- peek input
+  let inputAsList = (VS.toList . VS.fromSEXP) input
+  let outputAsList = map (\x -> x*x) inputAsList
+  let output = (VS.toSEXP . VS.fromList) outputAsList :: SEXP s 'R.Real
+  poke result output
+```
+
+To call in R with the `.C` function, the R objects must be encapsulated
+in `list()`:
+
+``` {.r}
+> .C("squaredDoubles1", input = list(c(1,2,3)), result=list(0))$result[[1]]
+[1] 1 4 9
+```
+
+Instead of using `VS.toList . VS.fromSEXP` to convert the R vector to a
+Haskell list, we could use the `real` function of the `Foreign.R` module
+(this is a port of the `C` function `REAL`):
+
+``` {.haskell}
+...
+import qualified Foreign.R as FR
+
+foreign export ccall squaredDoubles2 :: Ptr (SEXP s 'R.Real) -> Ptr (SEXP s 'R.Real) -> IO ()
+squaredDoubles2 :: Ptr (SEXP s 'R.Real) -> Ptr (SEXP s 'R.Real) -> IO ()
+squaredDoubles2 input result = do
+  input <- peek input
+  inputAsListPtr <- FR.real input
+  l <- FR.length input
+  inputAsList <- peekArray l inputAsListPtr
+  let outputAsList = map (\x -> x*x) inputAsList
+  let output = (VS.toSEXP . VS.fromList) outputAsList :: SEXP s 'R.Real
+  poke result output
+```
+
+The performance is a bit better:
+
+``` {.r}
+> library(microbenchmark)
+> x <- rnorm(100000)
+> microbenchmark(
++   H1 = .C("squaredDoubles1", input = list(x), result=list(0))$result[[1]],
++   H2 = .C("squaredDoubles2", input = list(x), result=list(0))$result[[1]]
++ )
+Unit: milliseconds
+ expr      min       lq     mean   median       uq      max neval cld
+   H1 26.96348 34.70504 44.02896 38.77741 42.31139 205.2244   100   b
+   H2 24.33826 30.25337 34.39467 32.80317 35.54754 160.4622   100  a 
+```
+
+Alternatively, we can avoid the pointers and use the `.Call` function
+instead of the `.C` function:
+
+``` {.haskell}
+foreign export ccall squaredDoubles3 :: SEXP s 'R.Real -> SEXP s 'R.Real
+squaredDoubles3 :: SEXP s 'R.Real -> SEXP s 'R.Real
+squaredDoubles3 input =
+  (VS.toSEXP . VS.fromList)
+    (map (\x -> x*x) ((VS.toList . VS.fromSEXP) input))
+```
+
+``` {.r}
+> .Call("squaredDoubles3", c(1,2,3))
+[1] 1 4 9
+```
+
+More advanced usage: resorting to the FFI
+-----------------------------------------
+
+Now we will show how to evaluate a R function.
+
+The function below is written in C. It takes as arguments a R function
+`f` (that is, a `SEXP` object of class `CLOSXP`), a double `x`, and it
+evaluates `f(x)`.
+
+I'm using the C language and not `inline-r` for two reasons:
+
+-   there's no port of the C functions `allocSExp` and `defineVar` in
+    `inline-r`;
+
+-   even if these two functions were available in Haskell (we could
+    import them with the FFI), the Haskell code would be similar to the
+    C code.
+
+``` {.c}
+#include <R.h>
+#include <Rinternals.h>
+
+double myeval(SEXP f, double x) {
+    // convert x to SEXP
+    SEXP xR;
+    PROTECT(xR = allocVector(REALSXP, 1));
+    REAL(xR)[0] = x;
+    UNPROTECT(1);
+    // put f in an environment
+    SEXP envir = allocSExp(ENVSXP);
+    SEXP f_symbol = install("f");
+    defineVar(f_symbol, f, envir);
+    // evaluate f(x) - like eval(call("f", x), envir) in R
+    SEXP call = Rf_lang2(f_symbol, xR);
+    return(REAL(eval(call, envir))[0]);
+}
+```
+
+Now we need to import this function:
+
+``` {.haskell}
+{-# LANGUAGE DataKinds                #-}
+{-# LANGUAGE ForeignFunctionInterface #-}
+module Lib where
+import           Foreign.C.Types
+import           Foreign.R          (SEXP, SEXP0, unsexp)
+import qualified Foreign.R          as R
+import qualified Foreign.R.Type     as R
+
+foreign import ccall unsafe "myeval" c_myeval :: SEXP0 -> CDouble -> CDouble
+myeval :: SEXP s 'R.Closure -> Double -> Double
+myeval f x = realToFrac (c_myeval (unsexp f) (realToFrac x))
+```
+
+Let us try it. The numerous `realToFrac`'s could seem silly but for a
+more serious application we prefer the signature
+`SEXP s 'R.Closure -> Double -> Double` rather than
+`SEXP s 'R.Closure -> CDouble -> CDouble`.
+
+``` {.haskell}
+foreign export ccall myevalR :: Ptr (SEXP s 'R.Closure) -> Ptr CDouble -> Ptr CDouble -> IO ()
+myevalR :: Ptr (SEXP s 'R.Closure) -> Ptr CDouble -> Ptr CDouble -> IO ()
+myevalR f x result = do
+  f <- peek f
+  x <- peek x
+  poke result $ realToFrac $ myeval f (realToFrac x :: Double)
+```
+
+``` {.r}
+> .C("myevalR", f=list(function(x) x+1), x=3, result=0)$result
+[1] 4
+```
+
+Thus, `myeval f` is a Haskell function of signature `Double -> Double`,
+though the evaluation is not performed by Haskell.
+
+Let us see an example of application. Form R, we will call the function
+
+``` {.haskell}
+chebyshevFit :: Int -> (Double -> Double) -> [Double]
+```
+
+of the `polynomial` library.
+
+``` {.haskell}
+...
+import Math.Polynomial.Chebyshev
+
+foreign export ccall chebyshevFitR :: Ptr (SEXP s 'R.Closure) -> Ptr CInt -> Ptr (SEXP V 'R.Real) -> IO ()
+chebyshevFitR :: Ptr (SEXP s 'R.Closure) -> Ptr CInt -> Ptr (SEXP V 'R.Real) -> IO ()
+chebyshevFitR f n result = do
+  n <- peek n
+  f <- peek f
+  let fit = chebyshevFit (fromIntegral n :: Int) (myeval f)
+  poke result $ (VS.toSEXP . VS.fromList) fit
+```
+
+We will apply it to the function $x \mapsto \cos(4\arccos(x))$, which is
+the Chebyshev polynomial of order $5$ for $|x| \leq 1$. Therefore, for
+any order $n \geq 5$, the result must theoretically be
+$0, 0, 0, 0, 1, 0, \ldots, 0$.
+
+``` {.r}
+> f <- function(x) cos(4*acos(x))
+> .C("chebyshevFitR", f=list(f), n=6L, result=list(0))$result[[1]]
+[1] -1.110223e-16  3.145632e-16 -1.480297e-16  4.255855e-16  1.000000e+00  2.775558e-16
+```
