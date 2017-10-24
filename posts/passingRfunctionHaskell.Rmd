@@ -8,7 +8,7 @@ output:
     variant: markdown
   html_document:
     highlight: haddock
-    keep_md: yes
+    keep_md: no
 prettify: yes
 prettifycss: minimal
 tags: haskell, R

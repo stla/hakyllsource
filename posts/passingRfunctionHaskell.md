@@ -5,7 +5,7 @@ highlighter: 'pandoc-solarized'
 output:
   html_document:
     highlight: haddock
-    keep_md: True
+    keep_md: False
   md_document:
     toc: False
     variant: markdown

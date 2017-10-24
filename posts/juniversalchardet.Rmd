@@ -1,0 +1,41 @@
+---
+title: "File encoding detection in R"
+author: "Stéphane Laurent"
+date: "2017-10-24"
+output:
+  md_document:
+    variant: markdown
+  html_document:
+    keep_md: no
+prettify: yes
+prettifycss: twitter-bootstrap
+tags: R
+highlighter: kate
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, collapse=TRUE)
+```
+
+There is a Java port of `universalchardet`, the encoding detector library of Mozilla. 
+It is called `juniversalchardet`. I'm going to show how to use it with the `rJava` package.
+
+Firstly, download the `jar` file here: <https://code.google.com/archive/p/juniversalchardet/downloads>.
+Then, proceed as follows:
+
+```{r}
+library(rJava)
+.jinit()
+.jaddClassPath("path/to/juniversalchardet-1.0.3.jar")
+detector <- new(J("org/mozilla/universalchardet/UniversalDetector"), NULL)
+f <- "juniversalchardet.Rmd" # file whose encoding you want to know
+flength <- as.integer(file.size(f))
+.jcall(detector, "V", "handleData",
+       readBin(f, what="raw", n=flength), 0L, flength)
+.jcall(detector, "V", "dataEnd")
+.jcall(detector, "S", "getDetectedCharset")
+.jcall(detector, "V", "reset")
+```
+
