@@ -3,7 +3,7 @@ title: "The binary splitting with Haskell"
 author: "Stéphane Laurent"
 highlighter: hscolour
 date: "2017-06-05"
-tags: haskell, special-functions
+tags: haskell, special-functions, maths
 output:
   md_document:
     variant: markdown

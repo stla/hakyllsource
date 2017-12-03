@@ -11,7 +11,7 @@ output:
     variant: markdown
 prettify: True
 prettifycss: 'twitter-bootstrap'
-tags: R
+tags: 'R, maths'
 title: Extended Cholesky decomposition in R
 ---
 
