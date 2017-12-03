@@ -236,10 +236,30 @@ consequently $SS_b(Y) \sim \sigma^2\chi^2_{J-1}$.
 ## Confidence interval for the overall mean 
 
 By our previous derivations, the statistic 
-$$ \frac{\bar Y_{\bullet\bullet}  - \mu}{\frac{1}{\sqrt{I}}\sqrt{\frac{SS_b(Y)}{I(J-1)}}}$$
+$$ \frac{\bar Y_{\bullet\bullet}  - \mu}{\frac{1}{\sqrt{IJ}}\sqrt{\frac{SS_b(Y)}{I-1}}}$$
 has a Student $t$ distribution with $I-1$ degrees of freedom, wherefrom it is easy to get an exact confidence interval about the overall mean $\mu$. 
 
 Note that we would get exactly the same confidence interval if we were told only the group means $\bar{Y}_{i\bullet}$. 
  This is the topic of [another article](http://stla.github.io/stlapblog/posts/ModelReduction.html).
+
+
+```{r, echo=FALSE}
+knitr::knit_exit()
+```
+
+```{r}
+library(AOV1R)
+I <- 2; J <- 4
+nsims <- 3000
+sims <- numeric(nsims)
+for(i in 1:nsims){
+  dat <- simAV1R(I, J, 1, 2, 3)
+  fit <- aov1r(y~group, data=dat)
+  sims[i] <- (fit$grandmean - 1)/sqrt(fit$`Sums of squares`[["ssb"]])*
+    sqrt(I*J*(I-1))
+}
+curve(ecdf(sims)(x), from=-3, to=3)
+curve(pt(x, I-1), add=TRUE, col="red")
+```
 
 

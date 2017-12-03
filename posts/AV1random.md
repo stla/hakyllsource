@@ -4,7 +4,7 @@ date: '2017-07-29'
 highlighter: kate
 output:
   html_document:
-    keep_md: True
+    keep_md: False
   md_document:
     toc: True
     variant: markdown
@@ -146,7 +146,7 @@ Confidence interval for the overall mean
 ----------------------------------------
 
 By our previous derivations, the statistic
-$$ \frac{\bar Y_{\bullet\bullet}  - \mu}{\frac{1}{\sqrt{I}}\sqrt{\frac{SS_b(Y)}{I(J-1)}}}$$
+$$ \frac{\bar Y_{\bullet\bullet}  - \mu}{\frac{1}{\sqrt{IJ}}\sqrt{\frac{SS_b(Y)}{I-1}}}$$
 has a Student $t$ distribution with $I-1$ degrees of freedom, wherefrom
 it is easy to get an exact confidence interval about the overall mean
 $\mu$.
