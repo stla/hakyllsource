@@ -9,6 +9,7 @@ output:
   html_document:
     keep_md: no
 prettify: yes
+linenums: yes
 prettifycss: twitter-bootstrap
 tags: R, maths, statistics
 highlighter: kate
