@@ -101,7 +101,11 @@ $if(prettify)$
 <script>
   var pres = document.getElementsByTagName("pre");
   for (var i = 0; i < pres.length; ++i) {
+    $if(linenums)$
     pres[i].className = pres[i].className + " prettyprint linenums";
+    $else$
+    pres[i].className = pres[i].className + " prettyprint";
+    $endif$
   }
   prettyPrint();
 </script>
