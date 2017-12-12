@@ -106,7 +106,17 @@ main = do
 postCtx :: Context String
 postCtx =
     dateField "date" "%B %e, %Y" `mappend`
+    mdField "md" link            `mappend`
+    rmdField "rmd" link          `mappend`
     defaultContext
+  where link = "https://raw.githubusercontent.com/stla/hakyllsource/master/"
+
+mdField :: String -> String -> Context a
+mdField key prefix = field key $ return . ((++) prefix) . toFilePath . itemIdentifier
+
+rmdField :: String -> String -> Context a
+rmdField key prefix = field key $ 
+  return . ((++) prefix) . (flip (++) "Rmd") . (init . init) . toFilePath . itemIdentifier
 
 postCtxWithTags :: Tags -> Context String
 postCtxWithTags tags = tagsField "tags" tags `mappend` postCtx
