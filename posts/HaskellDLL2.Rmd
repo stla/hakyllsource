@@ -1,0 +1,49 @@
+---
+title: "Very smaller Haskell DLLs"
+author: "Stéphane Laurent"
+date: "2017-12-18"
+output:
+  md_document:
+    variant: markdown
+    preserve_yaml: true
+  html_document:
+    keep_md: no
+prettify: yes
+prettifycss: twitter-bootstrap
+tags: haskell
+highlighter: kate
+---
+
+I've found a way to reduce the size of one of my Haskell DLLs from 12.8 MB to 1 MB. 
+There are two steps: passing the option `-s` to the linker and using [UPX](https://upx.github.io/) to compress the DLL. In [a previous post](https://laustep.github.io/stlahblog/posts/HaskellDLL.html), I said that my Haskell DLLs do not work after compressing them with UPX. But thanks to this `-s` option, they work.
+
+Well, more exactly, I should say that *my* DLL works... Unfortunately, I have tried this method on a minimal example and the DLL does not work anymore after the UPX compression. That's strange.
+
+
+Let me share now. If you pass the verbose option `-v` to `ghc -shared`, you can see that there are two linker phases. The first one generates the `o` file. The second one generates the DLL. When I pass the option `-s` to this second phase, the size of my DLL is 4.7 MB, while it is 12.8 MB without the `-s` option. 
+
+You can pass the `-s` option to the linker like this:
+
+```bash
+ghc -shared -optl-s ...
+```
+
+But if I do like this, the compilation does not work. This command passes the `-s` option to the two linker phases. In order to pass this option to the second phase only, I proceed in two steps. I firstly run this command:
+
+```bash
+ghc -c myhaskellscript.hs
+```
+
+This generates the file `myhaskellscript.o`. Then I run this command:
+
+```bash
+ghc -shared -optl-s myhaskellscript.hs StartEnd.c -o mydll.dll
+```
+
+In this way, since `myhaskellscript.o` already exists, the first linker phase is skipped, and thus the `-s` option is passed to the second phase only.
+
+
+Then I can compress the DLL with the UPX program. As I previously said, the `-s` linking option has a role here: without this option, I can compress the DLL with UPX but the DLL does not work.
+
+
+
