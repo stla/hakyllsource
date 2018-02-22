@@ -95,7 +95,8 @@ A&A's simulation method has three steps:
 $\bullet$ **Simulation of $\mathcal{W}(\nu, J_d^1, \Theta)$**. This
 algorithm runs as follows. Let $(L,M,P)$ be an [extended Cholesky
 decomposition](https://laustep.github.io/stlahblog/posts/extendedCholesky.html)
-of $\Theta$. Set $Q = \begin{pmatrix} 1 & 0 \\ 0 & P \end{pmatrix}$ and
+of $\Theta_{2:d,2:d}$. Set
+$Q = \begin{pmatrix} 1 & 0 \\ 0 & P \end{pmatrix}$ and
 $\widetilde{\Theta} = Q\Theta Q'$, then set
 $u = L^{-1}\widetilde{\Theta}_{1, 2:(r+1)}'$ and
 $v = \widetilde{\Theta}_{1,1} - \sum_{i=1}^r u_i^2$. Take

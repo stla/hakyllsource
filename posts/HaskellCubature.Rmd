@@ -1,0 +1,19 @@
+---
+title: "Cubature in Haskell"
+author: "Stéphane Laurent"
+date: '2017-06-03'
+tags: haskell, C
+output:
+  md_document:
+    toc: yes
+    variant: markdown
+  html_document:
+    highlight: zenburn
+    keep_md: yes
+prettify: yes
+linenums: yes
+prettifycss: minimal
+highlighter: pandoc-solarized
+---
+
+This article shows how to use the C library [`cubature`](https://github.com/stevengj/cubature) in Haskell. 
