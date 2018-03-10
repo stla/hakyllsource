@@ -1,0 +1,106 @@
+---
+title: "All hypercubes with Haskell"
+author: "Stéphane Laurent"
+date: "2018-03-10"
+output:
+  md_document:
+    variant: markdown
+    preserve_yaml: true
+  html_document:
+    keep_md: no
+prettify: yes
+prettifycss: twitter-bootstrap
+tags: haskell, maths, geometry
+highlighter: kate
+---
+
+
+*Nothing really exciting in this post. But these days I did some graphics dealing with hypercubes, and the functions I show below simplified my job. Perhaps it is worth to share.*
+
+
+
+This Haskell function generates the vertices of the hypercube of a given dimension $n$:
+
+```haskell
+ncube :: Int -> [[Int]]
+ncube n = concatMap (mapM (\x -> [x,-x])) [replicate n 1]
+```
+
+For example:
+
+```haskell
+> ncube 3 
+[[1,1,1],[1,1,-1],[1,-1,1],[1,-1,-1],[-1,1,1],[-1,1,-1],[-1,-1,1],[-1,-1,-1]]
+```
+
+It can be useful to have the indices of the vertices. The `indexed` function of the nice `Data.List.Index` package is appropriate for that. I also import `Text.Show.Pretty` to get a pretty output thanks to the `pPrint` function.
+
+```haskell
+import           Data.List.Index              (indexed)
+import           Text.Show.Pretty
+```
+
+```haskell
+> pPrint $ indexed $ ncube 3
+[ ( 0 , [ 1 , 1 , 1 ] )
+, ( 1 , [ 1 , 1 , -1 ] )
+, ( 2 , [ 1 , -1 , 1 ] )
+, ( 3 , [ 1 , -1 , -1 ] )
+, ( 4 , [ -1 , 1 , 1 ] )
+, ( 5 , [ -1 , 1 , -1 ] )
+, ( 6 , [ -1 , -1 , 1 ] )
+, ( 7 , [ -1 , -1 , -1 ] )
+```
+
+Sometimes I prefer to have the index at the second position. Then I use `swap`: 
+
+
+```haskell
+import           Data.Tuple.Extra             (swap)
+```
+
+```haskell
+> pPrint $ map swap $ indexed $ ncube 3
+[ ( [ 1 , 1 , 1 ] , 0 )
+, ( [ 1 , 1 , -1 ] , 1 )
+, ( [ 1 , -1 , 1 ] , 2 )
+, ( [ 1 , -1 , -1 ] , 3 )
+, ( [ -1 , 1 , 1 ] , 4 )
+, ( [ -1 , 1 , -1 ] , 5 )
+, ( [ -1 , -1 , 1 ] , 6 )
+, ( [ -1 , -1 , -1 ] , 7 )
+```
+
+The vertices are not enough to get a graph. We need the hypercube graph $Q_n$. It is available in the `HaskellForMaths` library:
+
+```haskell
+import           Math.Combinatorics.Graph
+
+cubicalgraph :: Graph Int
+cubicalgraph = q 3
+
+edgesIdxs :: [(Int,Int)]
+edgesIdxs = map toPair $ edges cubicalgraph
+  where
+  toPair x = (x!!0, x!!1)
+```
+
+```haskell
+> pPrint edgesIdxs
+[ ( 0 , 1 )
+, ( 0 , 2 )
+, ( 0 , 4 )
+, ( 1 , 3 )
+, ( 1 , 5 )
+, ( 2 , 3 )
+, ( 2 , 6 )
+, ( 3 , 7 )
+, ( 4 , 5 )
+, ( 4 , 6 )
+, ( 5 , 7 )
+, ( 6 , 7 )
+]
+```
+
+
+
