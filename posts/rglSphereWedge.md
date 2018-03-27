@@ -10,7 +10,7 @@ output:
     variant: markdown
 prettify: True
 prettifycss: 'twitter-bootstrap'
-tags: R
+tags: 'R, graphics'
 title: Drawing spherical wedges with rgl
 ---
 
