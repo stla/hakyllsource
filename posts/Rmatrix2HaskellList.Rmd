@@ -85,3 +85,33 @@ Well, not totally perfect. But now it's a child game to complete the output befo
 [5, 4.3, 7]
 ]
 ```
+
+
+### Update 2018-03-29
+
+I've written a function which gives a better result:
+
+```r
+library(clipr)
+library(magrittr)
+matrix2list <- function(M, outfile="haskell.txt"){
+  write_clip(M, sep=", ") 
+  clipboard <- c(sprintf("%s],", head(read_clip(),-1)), 
+                 sprintf("%s]", tail(read_clip(),1)))
+  paste0(c("[", paste0(" [", clipboard))) %>% 
+    cat(sep="\n", file=outfile) %>% 
+    cat("]", sep="", file=outfile, append=TRUE)
+}
+```
+
+For example, `matrix2list(M)` generates the text file
+
+```txt
+[
+ [1, 2, 1.5],
+ [0.5, 2, 3],
+ [5, 4.3, 7]
+]
+```
+
+Nothing to change manually now. Just copy-paste.
