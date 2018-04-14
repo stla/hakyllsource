@@ -76,3 +76,41 @@ And then, here is the content of `list.txt`:
 ```
 
 Now copy-paste to Haskell, it is ready.
+
+### Update 2018-04-18
+
+I've realized there is an issue in the case when some elements of the
+list are vectors of length one. It is fixed in the following function:
+
+``` {.r}
+list2list <- function(L, outfile="list.txt"){
+  singletons_idxs <- which(lapply(L,length)==1)
+  singletons <- L[singletons_idxs]
+  L <- replace(L, singletons_idxs, sprintf("c(%s)", singletons))
+  write_clip(L, breaks="],\n", sep=", ")
+  cat("[",
+      sub("\\)", "]\n]", gsub("\\)]", "]", gsub("c\\(", "[" ,read_clip()))), 
+      sep="\n", file=outfile)
+}
+```
+
+Let's test it.
+
+``` {.r}
+L <- list(c(1,2,3), 0, c(1,2,3,4), c(1,2))
+list2list(L)
+## Warning in flat_str(content, breaks): Coercing content to character
+```
+
+Here is the content of `list.txt`:
+
+``` {.txt}
+[
+[1, 2, 3],
+[0],
+[1, 2, 3, 4],
+[1, 2]
+]
+```
+
+Fine.
