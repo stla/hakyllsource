@@ -1,50 +1,61 @@
 ---
-title: "Color palettes in Haskell"
-author: "Stéphane Laurent"
-date: "2018-04-16"
-output:
-  md_document:
-    variant: markdown
-    preserve_yaml: true
-  html_document:
-    keep_md: no
-prettify: yes
-linenums: yes
-prettifycss: twitter-bootstrap
-tags: R, haskell, graphics
-highlighter: kate
-editor_options: 
+author: Stéphane Laurent
+date: '2018-04-16'
+editor_options:
   chunk_output_type: console
+highlighter: kate
+linenums: True
+output:
+  html_document:
+    keep_md: False
+  md_document:
+    preserve_yaml: True
+    variant: markdown
+prettify: True
+prettifycss: 'twitter-bootstrap'
+tags: 'R, haskell, graphics'
+title: Color palettes in Haskell
 ---
 
-When I played with `OpenGL` in Haskell (like [here](https://github.com/stla/opengl-examples) and [here](https://github.com/stla/opengl-implicit3)), I was disappointed to not find a Haskell package providing nice color palettes. 
+When I played with `OpenGL` in Haskell (like
+[here](https://github.com/stla/opengl-examples) and
+[here](https://github.com/stla/opengl-implicit3)), I was disappointed to
+not find a Haskell package providing nice color palettes.
 
-Then I did my own functions to generate some color palettes. 
-I took the palettes provided by the `viridisLite` R package and I did a function similar to the R function `colorRampPalette`, which interpolates colors.
+Then I did my own functions to generate some color palettes. I took the
+palettes provided by the `viridisLite` R package and I did a function
+similar to the R function `colorRampPalette`, which interpolates colors.
 
-
-## The `viridis` color maps and the `colorRampPalette` function
+The `viridis` color maps and the `colorRampPalette` function
+------------------------------------------------------------
 
 Five color scales (palettes) are defined in the R package `viridisLite`:
 
 ![](figures/viridis-scales.png)
 
-See the [documentation](https://www.rdocumentation.org/packages/viridisLite/versions/0.1.3/topics/viridis) for more information about these colors.
+See the
+[documentation](https://www.rdocumentation.org/packages/viridisLite/versions/0.1.3/topics/viridis)
+for more information about these colors.
 
-The RGB values of these colors are given in the Haskell lists (of type `Palette = [[Double]]`) at the end of this post.
+The RGB values of these colors are given in the Haskell lists (of type
+`Palette = [[Double]]`) at the end of this post.
 
-Furthermore, the R function `colorRampPalette` allows to interpolate a set of given colors to create a new color palette.
+Furthermore, the R function `colorRampPalette` allows to interpolate a
+set of given colors to create a new color palette.
 
-The purpose of this article is to provide an analogous of the `colorRampPalette` function in Haskell. 
-We will use the modules `Numeric.Tools.Interpolation` and `Numeric.Tools.Mesh` of the `numeric-tools` package. 
+The purpose of this article is to provide an analogous of the
+`colorRampPalette` function in Haskell. We will use the modules
+`Numeric.Tools.Interpolation` and `Numeric.Tools.Mesh` of the
+`numeric-tools` package.
 
+The `colorRamp` function
+------------------------
 
-## The `colorRamp` function
+Here is the Haskell function `colorRamp`. It takes as argument a palette
+name (among the five `viridis` palettes), an integer `n`, and it returns
+a palette of length `n`.
 
-Here is the Haskell function `colorRamp`. 
-It takes as argument a palette name (among the five `viridis` palettes), an integer `n`, and it returns a palette of length `n`. 
-
-```haskell
+``` {.haskell}
 import           Data.Map.Strict              (Map, fromList, (!))
 import qualified Data.Vector.Unboxed          as V
 import           Numeric.Tools.Interpolation  (at, cubicSpline, tabulate)
@@ -78,9 +89,10 @@ colorRamp paletteName n =
     tbl_b = cubicSpline tab_b
 ```
 
-For example, say you want four colors based on the `magma` palette. Then do:
+For example, say you want four colors based on the `magma` palette. Then
+do:
 
-```haskell
+``` {.haskell}
 > colorRamp "magma" 4
 [ [1.46159096e-3, 4.66127766e-4, 1.386552e-2]
  ,[0.445163096, 0.122724371, 0.506900806]
@@ -88,16 +100,21 @@ For example, say you want four colors based on the `magma` palette. Then do:
  ,[0.987052509, 0.991437853, 0.749504188] ]
 ```
 
-This is a new palette, given as the RGB values of four colors. The first one and the last one are the same as the first one and the last one of the `magma` palette. The two other ones are obtained by interpolation. 
+This is a new palette, given as the RGB values of four colors. The first
+one and the last one are the same as the first one and the last one of
+the `magma` palette. The two other ones are obtained by interpolation.
 
-Note that you can give an integer `n` greater than the length of the base palette.
+Note that you can give an integer `n` greater than the length of the
+base palette.
 
+Usage for `OpenGL`
+------------------
 
-## Usage for `OpenGL`
+Here we provide the function `colorRamp'`, which has the same purpose as
+`colorRamp` but it returns a list of `Color4 GLfloat`, for usage with
+the `OpenGL` package.
 
-Here we provide the function `colorRamp'`, which has the same purpose as `colorRamp` but it returns a list of `Color4 GLfloat`, for usage with the `OpenGL` package.
-
-```haskell
+``` {.haskell}
 import           Graphics.Rendering.OpenGL.GL (Color4 (..), GLfloat)
 
 rgbToColor4 :: [Double] -> Color4 GLfloat
@@ -108,18 +125,22 @@ colorRamp' :: String -> Int -> [Color4 GLfloat]
 colorRamp' paletteName n = map rgbToColor4 (colorRamp paletteName n)
 ```
 
-## Examples
+Examples
+--------
 
-Below are two 3D pictures I did with the Haskell package `OpenGL`, with the help of `colorRamp'`. Observe that the second one is an animation: the colors rotate. 
+Below are two 3D pictures I did with the Haskell package `OpenGL`, with
+the help of `colorRamp'`. Observe that the second one is an animation:
+the colors rotate.
 
 ![*Goursat surface*](https://i.imgur.com/hMAERyo.png)
 
-![*Wavy torus*](https://thumbs.gfycat.com/NaughtyFavoriteAchillestang-size_restricted.gif)
+![*Wavy
+torus*](https://thumbs.gfycat.com/NaughtyFavoriteAchillestang-size_restricted.gif)
 
+The five `viridis` color scales
+-------------------------------
 
-## The five `viridis` color scales 
-
-```haskell
+``` {.haskell}
 type Palette = [[Double]]
 
 magma :: Palette
