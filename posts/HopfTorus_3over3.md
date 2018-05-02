@@ -15,9 +15,27 @@ tags: R, graphics, rgl
 highlighter: kate
 ---
 
-In this first and last part of our articles about Hopf tori, we will take a sinusoidal curve on $S^2$.
+---
+author: Stéphane Laurent
+date: '2018-05-01'
+highlighter: kate
+linenums: True
+output:
+  html_document:
+    keep_md: False
+  md_document:
+    preserve_yaml: True
+    variant: markdown
+prettify: True
+prettifycss: 'twitter-bootstrap'
+tags: 'R, graphics, rgl'
+title: 'Hopf Torus (3/3): the sinusoidal case'
+---
 
-```{r}
+In this first and last part of our articles about Hopf tori, we will
+take a sinusoidal curve on $S^2$.
+
+``` {.r}
 hopfinverse <- function(q, t){ 
   1/sqrt(2*(1+q[3])) * c(q[1]*cos(t)+q[2]*sin(t),
                          sin(t)*(1+q[3]),
@@ -29,8 +47,9 @@ stereog <- function(x){
 }
 ```
 
-
-In order to draw a sinusoidal curve on the sphere, I used this equation, that I found on [mathcurve.com](https://www.mathcurve.com/courbes3d/sinusoidespherique/sinusoidespherique.shtml):
+In order to draw a sinusoidal curve on the sphere, I used this equation,
+that I found on
+[mathcurve.com](https://www.mathcurve.com/courbes3d/sinusoidespherique/sinusoidespherique.shtml):
 
 $$
 \begin{equation}
@@ -40,7 +59,7 @@ z = \frac{k \cos(nu)}{1+k^2\cos^2(nu)}
 \end{equation}
 $$
 
-```{r, eval=FALSE}
+``` {.r}
 plotSphereWithSinusCurve <- function(){
   plotSphereEquator()
   view3d(0,90)
@@ -57,11 +76,9 @@ plotSphereWithSinusCurve <- function(){
 }
 ```
 
-
 ![](figures/SphereWithSinusCurve.png)
 
-
-```{r, eval=FALSE}
+``` {.r}
 open3d(windowRect=c(50,50,500,500))
 view3d(0,90)
 t_ <- seq(0, 2*pi, len=200)
@@ -81,13 +98,11 @@ for(i in 1:length(u_)){
 }
 ```
 
-This time, we obtain a Hopf torus with three lobes (because we took $n=3$ in the formula above). 
+This time, we obtain a Hopf torus with three lobes (because we took
+$n=3$ in the formula above).
 
 <!-- ![](figures/hopftorus3.gif) -->
-
 <!-- ![](figures/hopftorus3_anim.gif) -->
-
-
 <div style="text-align:center">
 <img src="./figures/hopftorus3.gif" style="float: left; width: 45%; margin-right: 1%; margin-bottom: 0.5em; border:3px solid pink">
 <img src="figures/hopftorus3_anim.gif" style="float: left; width: 45%; margin-right: 1%; margin-bottom: 0.5em; border:3px solid pink">

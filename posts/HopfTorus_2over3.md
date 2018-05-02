@@ -15,9 +15,27 @@ tags: R, graphics, rgl
 highlighter: kate
 ---
 
-In this second part, we will see what happens when we map the points lying on a bent equator.
+---
+author: Stéphane Laurent
+date: '2018-05-01'
+highlighter: kate
+linenums: True
+output:
+  html_document:
+    keep_md: False
+  md_document:
+    preserve_yaml: True
+    variant: markdown
+prettify: True
+prettifycss: 'twitter-bootstrap'
+tags: 'R, graphics, rgl'
+title: 'Hopf Torus (2/3): the bent equatorial case'
+---
 
-```{r}
+In this second part, we will see what happens when we map the points
+lying on a bent equator.
+
+``` {.r}
 hopfinverse <- function(q, t){ 
   1/sqrt(2*(1+q[3])) * c(q[1]*cos(t)+q[2]*sin(t),
                          sin(t)*(1+q[3]),
@@ -29,37 +47,8 @@ stereog <- function(x){
 }
 ```
 
-The sphere with the bent equator will be plotted thanks to the following functions.
-
-```{r, echo=FALSE, eval=FALSE}
-plotSphereEquator <- function(){
-  clear3d()
-  view3d(0,90)
-  spheres3d(0, 0, 0, radius=1, color="green", alpha=0.5)
-  phi <- 0
-  theta_ <- seq(0, 2*pi, len=300)
-  for(theta in theta_){
-    points3d(cos(theta)*cos(phi), sin(theta)*cos(phi), sin(phi), color="black")
-  }
-}
-Rx <- function(alpha) {
-  rbind(c(1, 0,          0),
-        c(0, cos(alpha), -sin(alpha)),
-        c(0, sin(alpha), cos(alpha)))
-}
-plotSphereSlopedEquator <- function(alpha){
-  plotSphereEquator()
-  theta_ <- seq(0, 2*pi, len=200)
-  phi <- 0
-  for(i in seq_along(theta_)){
-    theta <- theta_[i]
-    rotated <- c(Rx(alpha) %*% c(cos(theta)*cos(phi), sin(theta)*cos(phi), sin(phi)))
-    points3d(rotated[1], rotated[2], rotated[3], col="blue")
-  }
-}
-plotSphereSlopedEquator(-pi/8)
-snapshot3d("sphereWithSlopedEquator.png")
-```
+The sphere with the bent equator will be plotted thanks to the following
+functions.
 
 ![](figures/SphereWithSlopedEquator.png)
 
@@ -72,7 +61,7 @@ R_x = \begin{pmatrix}
 \end{pmatrix}
 $$
 
-```{r}
+``` {.r}
 Rx <- function(alpha) {
   rbind(c(1, 0, 0),
         c(0, cos(alpha), -sin(alpha)),
@@ -82,7 +71,7 @@ Rx <- function(alpha) {
 
 Now, let's see the Hopf torus.
 
-```{r, eval=FALSE}
+``` {.r}
 open3d(windowRect=c(50,50,500,500))
 view3d(45,45)
 t_ <- seq(0, 2*pi, len=200)
@@ -99,14 +88,10 @@ for(i in seq_along(theta_)){
 }
 ```
 
-
 We get a deformed torus, still made of circles:
 
 <!-- ![](figures/hopftorus2.gif) -->
-
 <!-- ![](figures/hopftorus2_anim.gif) -->
-
-
 <div style="text-align:center">
 <img src="./figures/hopftorus2.gif" style="float: left; width: 45%; margin-right: 1%; margin-bottom: 0.5em; border:3px solid pink">
 <img src="figures/hopftorus2_anim.gif" style="float: left; width: 45%; margin-right: 1%; margin-bottom: 0.5em; border:3px solid pink">
