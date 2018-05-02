@@ -1,0 +1,103 @@
+---
+title: "Hopf Torus: the bent equatorial case"
+author: "Stéphane Laurent"
+date: "2018-05-01"
+output:
+  html_document:
+    keep_md: no
+  md_document:
+    variant: markdown
+    preserve_yaml: true
+prettify: yes
+linenums: yes
+prettifycss: twitter-bootstrap
+tags: R, graphics, rgl
+highlighter: kate
+---
+
+
+
+```{r}
+hopfinverse <- function(q, t){ 
+  1/sqrt(2*(1+q[3])) * c(q[1]*cos(t)+q[2]*sin(t),
+                         sin(t)*(1+q[3]),
+                         cos(t)*(1+q[3]),
+                         q[1]*sin(t)-q[2]*cos(t)) 
+}
+stereog <- function(x){
+  c(x[1], x[2], x[3])/(1-x[4])
+}
+```
+
+```{r, echo=FALSE, eval=FALSE}
+plotSphereEquator <- function(){
+  clear3d()
+  view3d(0,90)
+  spheres3d(0, 0, 0, radius=1, color="green", alpha=0.5)
+  phi <- 0
+  theta_ <- seq(0, 2*pi, len=300)
+  for(theta in theta_){
+    points3d(cos(theta)*cos(phi), sin(theta)*cos(phi), sin(phi), color="black")
+  }
+}
+Rx <- function(alpha) {
+  rbind(c(1, 0,          0),
+        c(0, cos(alpha), -sin(alpha)),
+        c(0, sin(alpha), cos(alpha)))
+}
+plotSphereSlopedEquator <- function(alpha){
+  plotSphereEquator()
+  theta_ <- seq(0, 2*pi, len=200)
+  phi <- 0
+  for(i in seq_along(theta_)){
+    theta <- theta_[i]
+    rotated <- c(Rx(alpha) %*% c(cos(theta)*cos(phi), sin(theta)*cos(phi), sin(phi)))
+    points3d(rotated[1], rotated[2], rotated[3], col="blue")
+  }
+}
+plotSphereSlopedEquator(-pi/8)
+snapshot3d("sphereWithSlopedEquator.png")
+```
+
+![Sphere with bent equator](figures/SphereWithSlopedEquator.png)
+
+To rotate the equator to the bent equator, we used the rotation matrix
+$$
+R_x = \begin{pmatrix} 
+1 & 0 & 0 \\
+0 & \cos \alpha & -\sin \alpha \\
+0 & \sin \alpha & \cos \alpha
+\end{pmatrix}
+$$
+
+```{r}
+Rx <- function(alpha) {
+  rbind(c(1, 0, 0),
+        c(0, cos(alpha), -sin(alpha)),
+        c(0, sin(alpha), cos(alpha)))
+}
+```
+
+```{r, eval=FALSE}
+open3d(windowRect=c(50,50,500,500))
+view3d(45,45)
+t_ <- seq(0, 2*pi, len=200)
+theta_ <- seq(0, 2*pi, len=300)
+phi <- 0
+for(i in seq_along(theta_)){
+  theta <- theta_[i]
+  rotated <- c(Rx(-pi/8) %*% c(cos(theta)*cos(phi), sin(theta)*cos(phi), sin(phi)))
+  circle4d <- sapply(t_, function(t){
+    hopfinverse(rotated, t)
+  })
+  circle3d <- t(apply(circle4d, 2, stereog))
+  shade3d(cylinder3d(circle3d, radius=0.1), color="purple")
+}
+```
+
+
+We get a deformed torus, made of circles:
+
+![](figures/hopftorus2.gif)
+
+![](figures/hopftorus2_anim.gif)
