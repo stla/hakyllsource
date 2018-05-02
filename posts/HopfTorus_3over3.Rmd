@@ -28,7 +28,7 @@ stereog <- function(x){
 ```
 
 
-In order to draw a sinusoidal curve on the sphere, I used this equation:
+In order to draw a sinusoidal curve on the sphere, I used this equation, that I found on [mathcurve.com](https://www.mathcurve.com/courbes3d/sinusoidespherique/sinusoidespherique.shtml):
 
 $$
 \begin{equation}
@@ -59,3 +59,26 @@ plotSphereWithSinusCurve <- function(){
 ![Sphere with sinus curve](figures/SphereWithSinusCurve.png)
 
 
+```{r, eval=FALSE}
+open3d(windowRect=c(50,50,500,500))
+view3d(0,90)
+t_ <- seq(0, 2*pi, len=200)
+k <- 3
+u <- seq(0, 2*pi , len=300)
+for(i in 1:length(u_)){
+  u <- u_[i]
+  den <- sqrt(1+k^2*cos(3*u)^2)
+  x <- cos(u)/den
+  y <- sin(u)/den
+  z <- k*cos(3*u)/den
+  circle4d <- sapply(t_, function(t){
+    hopfinverse(c(x,y,z),t)  
+  })
+  circle3d <- t(apply(circle4d, 2, stereog))
+  shade3d(cylinder3d(circle3d, radius=0.1), color="purple")
+}
+```
+
+![](figures/hopftorus3.gif)
+
+![](figures/hopftorus3_anim.gif)
