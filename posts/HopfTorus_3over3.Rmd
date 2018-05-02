@@ -1,0 +1,61 @@
+---
+title: "Hopf Torus (3/3): the sinusoidal case"
+author: "Stéphane Laurent"
+date: "2018-05-01"
+output:
+  html_document:
+    keep_md: no
+  md_document:
+    variant: markdown
+    preserve_yaml: true
+prettify: yes
+linenums: yes
+prettifycss: twitter-bootstrap
+tags: R, graphics, rgl
+highlighter: kate
+---
+
+```{r}
+hopfinverse <- function(q, t){ 
+  1/sqrt(2*(1+q[3])) * c(q[1]*cos(t)+q[2]*sin(t),
+                         sin(t)*(1+q[3]),
+                         cos(t)*(1+q[3]),
+                         q[1]*sin(t)-q[2]*cos(t)) 
+}
+stereog <- function(x){
+  c(x[1], x[2], x[3])/(1-x[4])
+}
+```
+
+
+In order to draw a sinusoidal curve on the sphere, I used this equation:
+
+$$
+\begin{equation}
+x = \frac{\cos u}{1+k^2\cos^2(nu)} \\
+y = \frac{\sin u}{1+k^2\cos^2(nu)} \\
+z = \frac{k \cos(nu)}{1+k^2\cos^2(nu)}
+\end{equation}
+$$
+
+```{r, eval=FALSE}
+plotSphereWithSinusCurve <- function(){
+  plotSphereEquator()
+  view3d(0,90)
+  u_ <- seq(-pi, pi, len=1000) 
+  k <- 3
+  for(i in 1:length(theta_)){
+    u <- u_[i]
+    den <- sqrt(1+k^2*cos(3*u)^2)
+    x <- cos(u)/den
+    y <- sin(u)/den
+    z <- k*cos(3*u)/den
+    points3d(x,y,z, color="blue")
+  }
+}
+```
+
+
+![Sphere with sinus curve](figures/SphereWithSinusCurve.png)
+
+
