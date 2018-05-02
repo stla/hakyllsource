@@ -79,6 +79,15 @@ for(i in 1:length(u_)){
 }
 ```
 
+This time, we obtain a Hopf torus with three lobes (because we took $n=3$ in the formula above). 
+
 ![](figures/hopftorus3.gif)
 
 ![](figures/hopftorus3_anim.gif)
+
+
+<div style="text-align:center">
+<img src="./figures/hopftorus3.gif" style="float: left; width: 45%; margin-right: 1%; margin-bottom: 0.5em; border:3px solid pink">
+<img src="figures/hopftorus3_anim.gif" style="float: left; width: 45%; margin-right: 1%; margin-bottom: 0.5em; border:3px solid pink">
+<p style="clear: both;">
+</div>

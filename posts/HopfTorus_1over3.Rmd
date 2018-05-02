@@ -90,3 +90,9 @@ We get a torus, made of circles:
 ![](figures/hopftorus1.gif)
 
 ![](figures/hopftorus1_anim.gif)
+
+<div style="text-align:center">
+<img src="./figures/hopftorus1.gif" style="float: left; width: 45%; margin-right: 1%; margin-bottom: 0.5em; border:3px solid pink">
+<img src="figures/hopftorus1_anim.gif" style="float: left; width: 45%; margin-right: 1%; margin-bottom: 0.5em; border:3px solid pink">
+<p style="clear: both;">
+</div>
