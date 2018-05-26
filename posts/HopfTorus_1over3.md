@@ -1,21 +1,4 @@
 ---
-title: "Hopf Torus (1/3): the equatorial case"
-author: "Stéphane Laurent"
-date: "2018-05-01"
-output:
-  md_document:
-    variant: markdown
-    preserve_yaml: true
-  html_document:
-    keep_md: no
-prettify: yes
-linenums: yes
-prettifycss: twitter-bootstrap
-tags: R, graphics, rgl
-highlighter: kate
----
-
----
 author: Stéphane Laurent
 date: '2018-05-01'
 highlighter: kate
@@ -35,8 +18,7 @@ title: 'Hopf Torus (1/3): the equatorial case'
 In this series of three articles, we will show how to construct *Hopf
 tori*.
 
-Hopf tori takes their origins in the Hopf map $S^3 \to S^2$ defined by
-$$
+Hopf tori take their origins in the Hopf map $S^3 \to S^2$ defined by $$
 H(p) = \begin{pmatrix}
 2(p_2 p_4 - p_1 p_3) \\
 2(p_1 p_4 + p_2 p_3) \\
@@ -67,7 +49,7 @@ Then, we can draw a circle in $\mathbb{R}^3$ as follows:
 
 -   calculate the great circle on $S^3$ by applying $H^{-1}(q, S^1)$;
 
--   maps this great cirlce to $\mathbb{R}^3$ with the stereographic
+-   maps this great circle to $\mathbb{R}^3$ with the stereographic
     projection.
 
 In this article, we will show what happens when we take for $q$ a point

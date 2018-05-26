@@ -1,21 +1,4 @@
 ---
-title: "Hopf Torus (3/3): the sinusoidal case"
-author: "Stéphane Laurent"
-date: "2018-05-01"
-output:
-  md_document:
-    variant: markdown
-    preserve_yaml: true
-  html_document:
-    keep_md: no
-prettify: yes
-linenums: yes
-prettifycss: twitter-bootstrap
-tags: R, graphics, rgl
-highlighter: kate
----
-
----
 author: Stéphane Laurent
 date: '2018-05-01'
 highlighter: kate
@@ -53,9 +36,9 @@ that I found on
 
 $$
 \begin{equation}
-x = \frac{\cos u}{1+k^2\cos^2(nu)} \\
-y = \frac{\sin u}{1+k^2\cos^2(nu)} \\
-z = \frac{k \cos(nu)}{1+k^2\cos^2(nu)}
+x = \frac{\cos u}{\sqrt{1+k^2\cos^2(nu)}} \\
+y = \frac{\sin u}{\sqrt{1+k^2\cos^2(nu)}} \\
+z = \frac{k \cos(nu)}{\sqrt{1+k^2\cos^2(nu)}}
 \end{equation}
 $$
 

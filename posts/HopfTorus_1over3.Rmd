@@ -17,7 +17,7 @@ highlighter: kate
 
 In this series of three articles, we will show how to construct *Hopf tori*.
 
-Hopf tori takes their origins in the Hopf map $S^3 \to S^2$ defined by 
+Hopf tori take their origins in the Hopf map $S^3 \to S^2$ defined by 
 $$
 H(p) = \begin{pmatrix}
 2(p_2 p_4 - p_1 p_3) \\
