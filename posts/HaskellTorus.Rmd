@@ -5,8 +5,8 @@ date: '2018-05-26'
 tags: haskell, graphics, opengl
 output:
   md_document:
-    toc: yes
     variant: markdown
+    preserve_yaml: true
   html_document:
     highlight: zenburn
     keep_md: no

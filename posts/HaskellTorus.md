@@ -1,3 +1,21 @@
+---
+author: Stéphane Laurent
+date: '2018-05-26'
+highlighter: 'pandoc-solarized'
+linenums: True
+output:
+  html_document:
+    highlight: zenburn
+    keep_md: False
+  md_document:
+    preserve_yaml: True
+    variant: markdown
+prettify: True
+prettifycss: minimal
+tags: 'haskell, graphics, opengl'
+title: Drawing a torus with Haskell
+---
+
 ***Problem:*** *With the Haskell `OpenGL` library, how to draw a torus
 passing by three given points?*
 
