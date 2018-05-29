@@ -114,7 +114,7 @@ transfoMatrix <- function(p1,p2,p3){
   s <- sqrt(normal[1]^2+normal[2]^2) # TODO: case s=0
   u <- c(normal[2]/s, -normal[1]/s, 0)
   v <- geometry::extprod3d(normal, u)
-  m <- rbind(cbind(u, v, normal, center), c(0,0,0,1)) # p-e transposer le cbind
+  m <- rbind(cbind(u, v, normal, center), c(0,0,0,1)) 
   list(matrix=t(m), radius=radius)
 }
 ```
