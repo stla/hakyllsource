@@ -12,7 +12,7 @@ output:
     variant: markdown
 prettify: True
 prettifycss: minimal
-tags: 'haskell, graphics, opengl'
+tags: 'haskell, graphics, opengl, geometry'
 title: Drawing a torus with Haskell
 ---
 

@@ -2,7 +2,7 @@
 title: "Drawing a torus with Haskell"
 author: "Stéphane Laurent"
 date: '2018-05-26'
-tags: haskell, graphics, opengl
+tags: haskell, graphics, opengl, geometry
 output:
   md_document:
     variant: markdown
