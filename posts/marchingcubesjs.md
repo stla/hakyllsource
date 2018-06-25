@@ -42,5 +42,5 @@ chunks of three provides the triangles.
 As an illustration, below is a Dupin cyclide triangulated by the
 marching cubes algorithm and rendered with `three.js`.
 
-<iframe src="../frames/threejs_cyclide.html" width="100%" height="100%">
+<iframe src="../frames/threejs_cyclide.html" width="100%" height="500px" scrolling="no" frameborder="0">
 </iframe>
