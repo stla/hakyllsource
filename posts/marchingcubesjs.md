@@ -28,7 +28,7 @@ $$
 
 The triangulation is returned by
 
-``` {.js}
+``` {.javascript}
 marchingCubes(f, l, xmin, xmax, ymin, ymax, zmin, zmax, nx, ny, nz)
 ```
 
@@ -40,7 +40,10 @@ The output is a $(n \times 3)$-array of vertices. Grouping the rows by
 chunks of three provides the triangles.
 
 As an illustration, below is a Dupin cyclide triangulated by the
-marching cubes algorithm and rendered with `three.js`.
+marching cubes algorithm and rendered with `three.js`. The full code is
+available in the source. Go
+[here](https://laustep.github.io/stlahblog/frames/threejs_cyclide.html)
+for a full-page rendering.
 
 <iframe src="../frames/threejs_cyclide.html" width="100%" height="500px" scrolling="no" frameborder="0">
 </iframe>
