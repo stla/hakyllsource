@@ -11,7 +11,7 @@ output:
 prettify: yes
 linenums: yes
 prettifycss: twitter-bootstrap
-tags: R, graphics, rgl, asymptote, geometry
+tags: R, graphics, rgl, asymptote, geometry, maths
 highlighter: kate
 ---
 
