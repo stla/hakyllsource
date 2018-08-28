@@ -173,3 +173,8 @@ draw(rotate(-20,(0,1,0))*rotate(-45,(0,0,1))*rotate(90,(1,0,0))*s);
 ```
 
 ![](figures/HopfTorusParametric00_k1_R.png)
+
+
+And I also like `three.js`:
+
+<iframe src="../frames/threejs_HopfTorusParametric.html" width="100%" height="500px" scrolling="no" frameborder="0"></iframe>
