@@ -227,7 +227,7 @@ allTriangles (n_u,n_v) =
 
 Done. It remains to write the OpenGL side:
 
-```
+```haskell
 import Data.IORef
 import Graphics.Rendering.OpenGL.GL
 import Graphics.UI.GLUT
