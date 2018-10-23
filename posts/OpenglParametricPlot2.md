@@ -13,7 +13,7 @@ output:
     variant: markdown
 prettify: True
 prettifycss: 'twitter-bootstrap'
-tags: 'haskell, graphics'
+tags: 'haskell, graphics, opengl'
 title: 'Parametric surface in Haskell OpenGL, with surface normals'
 ---
 
