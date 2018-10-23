@@ -11,7 +11,7 @@ output:
 prettify: yes
 linenums: yes
 prettifycss: twitter-bootstrap
-tags: haskell, graphics
+tags: haskell, graphics, opengl
 highlighter: kate
 editor_options: 
   chunk_output_type: console
