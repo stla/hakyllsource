@@ -1,10 +1,13 @@
 ---
 author: Stéphane Laurent
 date: '2017-06-04'
+editor_options:
+  chunk_output_type: console
 highlighter: kate
 output:
   html_document: default
   md_document:
+    preserve_yaml: True
     toc: True
     variant: markdown
 prettify: True
@@ -25,6 +28,7 @@ title: |
     algorithm](#a-general-function-for-the-binary-splitting-algorithm)
 -   [The Gauss hypergeometric
     function](#the-gauss-hypergeometric-function)
+-   [Update 2018-11-13](#update-2018-11-13)
 
 In this article you will firstly see how to get rational numbers
 arbitrary close to $\pi$ by performing the *binary splitting algorithm*
@@ -102,24 +106,24 @@ of $S_n$ by summing its $2^m$ terms is twofold:
 ``` {.r}
 ## example: rational approximation of pi ##
 bs.pi <- function(m){
-    u <- function(i) as.numeric(i)
-    v <- function(i) 2*i+1
-     n <- 2^m
-     indexes <- c(1:n)
-     delta <- alpha <- u(indexes)
-    beta <- v(indexes)
-     j <- 1; l <- n
-     while(j<n){
-       l <- l/2
-       odd <- 2*c(1:l); even <- odd-1
-       alpha <- beta[odd]*alpha[even] + delta[even]*alpha[odd]
-       j <- 2*j
-       beta <- beta[odd]*beta[even]
-       delta <- delta[even]*delta[odd]
-       }
-     Sn <- alpha/beta + 1
-     out <- list(alpha=alpha, beta=beta, Sn=Sn)
-     return(out)
+  u <- function(i) as.numeric(i)
+  v <- function(i) 2*i+1
+  n <- 2^m
+  indexes <- c(1:n)
+  delta <- alpha <- u(indexes)
+  beta <- v(indexes)
+  j <- 1; l <- n
+  while(j<n){
+    l <- l/2
+    odd <- 2*c(1:l); even <- odd-1
+    alpha <- beta[odd]*alpha[even] + delta[even]*alpha[odd]
+    j <- 2*j
+    beta <- beta[odd]*beta[even]
+    delta <- delta[even]*delta[odd]
+  }
+  Sn <- alpha/beta + 1
+  out <- list(alpha=alpha, beta=beta, Sn=Sn)
+  return(out)
 }
 ```
 
@@ -130,19 +134,19 @@ print(bs.pi(7),digits=22)
 ```
 
     ## $alpha
-    ## [1] 9.5898054296397007e+254
+    ## [1] 9.589805429639700552285e+254
     ## 
     ## $beta
-    ## [1] 1.680074832206408e+255
+    ## [1] 1.680074832206408008727e+255
     ## 
     ## $Sn
-    ## [1] 1.5707963267948966
+    ## [1] 1.570796326794896557999
 
 ``` {.r}
 print(pi/2,digits=22)
 ```
 
-    ## [1] 1.5707963267948966
+    ## [1] 1.570796326794896557999
 
 But the numerator and the denominator become too gigantic when $m=8$:
 
@@ -200,19 +204,19 @@ print(bs.exp(1,1,7), digits=22)
 ```
 
     ## $alpha
-    ## [1] 6.6260466752523366e+215
+    ## [1] 6.626046675252336548016e+215
     ## 
     ## $beta
-    ## [1] 3.8562048236258041e+215
+    ## [1] 3.856204823625804071551e+215
     ## 
     ## $Sn
-    ## [1] 2.7182818284590455
+    ## [1] 2.718281828459045534885
 
 ``` {.r}
 print(exp(1), digits=22)
 ```
 
-    ## [1] 2.7182818284590451
+    ## [1] 2.718281828459045090796
 
 And for $m=8$, it crashes:
 
@@ -247,22 +251,22 @@ $(v_i)$ to sequences of `bigz` integers:
 library(gmp)
 ## rational approximation of pi with gmp ##
 bs.pi.gmp <- function(m){
-    u <- function(i) as.numeric(i)
-    v <- function(i) 2*i+1
-     n <- 2^m
-    indexes <- 1:n
-     delta <- alpha <- as.bigz(u(indexes))
-     beta <- as.bigz(v(indexes))
-     j <- 1; l <- n
-     while(j<n){
-       l <- l/2
-       odd <- 2*c(1:l); even <- odd-1
-       alpha <- beta[odd]*alpha[even] + delta[even]*alpha[odd]
-       j <- 2*j
-       beta <- beta[odd]*beta[even]
-       delta <- delta[even]*delta[odd]
-       }
-     Sn <- alpha/beta + 1
+  u <- function(i) as.numeric(i)
+  v <- function(i) 2*i+1
+  n <- 2^m
+  indexes <- 1:n
+  delta <- alpha <- as.bigz(u(indexes))
+  beta <- as.bigz(v(indexes))
+  j <- 1; l <- n
+  while(j<n){
+    l <- l/2
+    odd <- 2*c(1:l); even <- odd-1
+    alpha <- beta[odd]*alpha[even] + delta[even]*alpha[odd]
+    j <- 2*j
+    beta <- beta[odd]*beta[even]
+    delta <- delta[even]*delta[odd]
+  }
+  Sn <- alpha/beta + 1
   out <- list(Sn=Sn, eval.Sn=format(as.numeric(Sn),digits=22))
   return(out)
 }
@@ -280,7 +284,7 @@ bs.pi.gmp(3)
     ## [1] 1202048/765765
     ## 
     ## $eval.Sn
-    ## [1] "1.5697348403230755"
+    ## [1] "1.569734840323075530932"
 
 ``` {.r}
 bs.pi(3)
@@ -308,7 +312,7 @@ bs.pi.gmp(8)
     ## [1] 115056663317199981372832786803399641133848259535718238578854114440177847232763528127119686643465544336537363974090559640151844992619459739337642897335661405374200830442503779326745081494631228217510085926896107230240702464/73247346810369298651903071099557979072216039642432949710389234675732768750102001285974817825809831148661290123993641325086924401900965008305646606428886048721946203288377842830920059623434101646117412656625454480462852875
     ## 
     ## $eval.Sn
-    ## [1] "1.5707963267948966"
+    ## [1] "1.570796326794896557999"
 
 Obviously the first limitation is the width of your screen. The more
 serious limitations of the `gmp` package are beyond the scope of this
@@ -319,21 +323,21 @@ Let us come back to the exponential example:
 ``` {.r}
 ## rational approximation of exp(p/q) with gmp ##
 bs.exp.gmp <- function(p,q,m){
-      v <- function(i) i*q
-     n <- 2^m
-    indexes <- 1:n
-     delta <- alpha <- as.bigz(rep(p,n))
-    beta <- as.bigz(v(indexes))
-     j <- 1; l <- n
-     while(j<n){
-       l <- l/2
-       odd <- 2*c(1:l); even <- odd-1
-       alpha <- beta[odd]*alpha[even] + delta[even]*alpha[odd]
-       j <- 2*j
-       beta <- beta[odd]*beta[even]
-       delta <- delta[even]*delta[odd]
-       }
-     Sn <- alpha/beta + 1
+  v <- function(i) i*q
+  n <- 2^m
+  indexes <- 1:n
+  delta <- alpha <- as.bigz(rep(p,n))
+  beta <- as.bigz(v(indexes))
+  j <- 1; l <- n
+  while(j<n){
+    l <- l/2
+    odd <- 2*c(1:l); even <- odd-1
+    alpha <- beta[odd]*alpha[even] + delta[even]*alpha[odd]
+    j <- 2*j
+    beta <- beta[odd]*beta[even]
+    delta <- delta[even]*delta[odd]
+  }
+  Sn <- alpha/beta + 1
   out <- list(Sn=Sn, eval.Sn=format(as.numeric(Sn),digits=22))
   return(out)
 }
@@ -348,7 +352,7 @@ bs.exp.gmp(1,1,8)
     ## [1] 63021364076854400517126597190157042974914655085470311494152999074896589361987361775329179623527760806690590676400388872831695705790559736341994225392293021235691155101792729596391087505487119686065032680426816409018591609682896947897581062232056198801713371950662092427153111247485380584396839593243205795931189046725531379112787311119506517584752693953099433873873085939642331053890371322719954788883613838912023544946108979472116077229049863887551154910123100635718060217444974605564852221865532212127661/23184264198455206868083304640033314193453554602148259996206909469655931150085069983174061928660848877037186090333421197463708022559289093927629440229660162856206414393604561795747978584507961086161320755987057927235191284503958147694842900705427915576370346458939828967066328925689811313743116731571304256245141968042147553432082017992236165926654195533967789698937870367867112218743295876678624370999142239502871990876622238944437605633097728000000000000000000000000000000000000000000000000000000000000000
     ## 
     ## $eval.Sn
-    ## [1] "2.7182818284590451"
+    ## [1] "2.718281828459045090796"
 
 Very well.
 
@@ -361,23 +365,26 @@ $(u_i)$ and $(v_i)$:
 
 ``` {.r}
 bs.gmp <- function(u,v,m=7,value="eval"){
-     n <- 2^m
-    indexes <- 1:n
-     delta <- alpha <- as.bigz(u(indexes))
-    beta <- as.bigz(v(indexes))
-     j <- 1; l <- n
-     while(j<n){
-       l <- l/2
-       odd <- 2*c(1:l); even <- odd-1
-       alpha <- beta[odd]*alpha[even] + delta[even]*alpha[odd]
-       j <- 2*j
-       beta <- beta[odd]*beta[even]
-       delta <- delta[even]*delta[odd]
-       }
-     Sn <- alpha/beta + 1
-     eval.Sn <- format(as.numeric(Sn) ,digits=22)
-     out <- switch(value, "eval"=eval.Sn, "exact"=Sn, "both"=list(Sn=Sn, eval.Sn=eval.Sn))
-return(out)
+  n <- 2^m
+  indexes <- 1:n
+  delta <- alpha <- as.bigz(u(indexes))
+  beta <- as.bigz(v(indexes))
+  j <- 1; l <- n
+  while(j<n){
+    l <- l/2
+    odd <- 2*c(1:l); even <- odd-1
+    alpha <- beta[odd]*alpha[even] + delta[even]*alpha[odd]
+    j <- 2*j
+    beta <- beta[odd]*beta[even]
+    delta <- delta[even]*delta[odd]
+  }
+  Sn <- alpha/beta + 1
+  eval.Sn <- format(as.numeric(Sn) ,digits=22)
+  out <- switch(value, 
+                "eval"=eval.Sn, 
+                "exact"=Sn, 
+                "both"=list(Sn=Sn, eval.Sn=eval.Sn))
+  return(out)
 }
 ```
 
@@ -405,7 +412,7 @@ performed by the R function below
 hypergeo_bs <- function(a1,a2, b1,b2, c1,c2, p,q, m){
   u <- function(i) c2*(a1+(i-1)*a2)*(b1+(i-1)*b2)*p
   v <- function(i) a2*b2*i*(c1+(i-1)*c2)*q
-    bs.gmp(u,v,m)
+  bs.gmp(u,v,m)
 }
 ```
 
@@ -461,7 +468,8 @@ with the binary splitting:
 
 ``` {.r}
 Hypergeometric2F1 <- function(a, b, c, z, m=7,
-                              rnd.params=max(n.decimals(c(a,b,c))), rnd.z=n.decimals(z),
+                              rnd.params=max(n.decimals(c(a,b,c))), 
+                              rnd.z=n.decimals(z),
                               check.cv=FALSE){
   frac.a <- irred.frac(a,rnd.params)
   frac.b <- irred.frac(b,rnd.params)
@@ -492,14 +500,14 @@ z <- 0.5
 Hypergeometric2F1(a,b,c,z)
 ```
 
-    ## [1] "8057.9941396062386"
+    ## [1] "8057.994139606238604756"
 
 ``` {.r}
 Hypergeometric2F1(a,b,c,z, m=3, check.cv=TRUE)
 ```
 
     ## $result
-    ## [1] "1522.0688044013668"
+    ## [1] "1522.06880440136683319"
     ## 
     ## $convergence
     ## [1] "FALSE - m=3 need to be increased"
@@ -509,7 +517,7 @@ Hypergeometric2F1(a,b,c,z, m=7, check.cv=TRUE)
 ```
 
     ## $result
-    ## [1] "8057.9941396062386"
+    ## [1] "8057.994139606238604756"
     ## 
     ## $convergence
     ## [1] TRUE
@@ -522,3 +530,37 @@ hyperg_2F1(a,b,c,z)
 ```
 
     ## [1] 8057.994
+
+Update 2018-11-13
+=================
+
+-   Converting a `bigq` rational number to a decimal number with
+    `as.numeric` is not a good It is better to use the `mpfr` function
+    of the `Rmpfr` package, or the `q2d` function of the package `rcdd`:
+
+``` {.r}
+halfpi_bigq <- bs.pi.gmp(8)$Sn
+library(Rmpfr)
+mpfr(halfpi_bigq, 128)
+```
+
+    ## 1 'mpfr' number of precision  128   bits 
+    ## [1] 1.5707963267948966192313216916397514421
+
+``` {.r}
+library(rcdd)
+q2d(as.character(halfpi_bigq))
+```
+
+    ## [1] 1.570796
+
+-   My function `irred.frac` is not good. To convert a decimal number to
+    a `bigq` rational number, it is better to use the `d2q` function of
+    the `rcdd` package:
+
+``` {.r}
+as.bigq(d2q(pi))
+```
+
+    ## Big Rational ('bigq') :
+    ## [1] 884279719003555/281474976710656

@@ -7,10 +7,13 @@ output:
   md_document:
     variant: markdown
     toc: true
+    preserve_yaml: true
   html_document: default
 highlighter: kate
 prettify: yes
 prettifycss: twitter-bootstrap
+editor_options: 
+  chunk_output_type: console
 ---
 
 
@@ -98,26 +101,25 @@ The advantage of the binary splitting as compared to a direct evaluation of $S_n
 ```{r}
 ## example: rational approximation of pi ##
 bs.pi <- function(m){
-    u <- function(i) as.numeric(i)
-    v <- function(i) 2*i+1
-     n <- 2^m
-     indexes <- c(1:n)
-     delta <- alpha <- u(indexes)
-    beta <- v(indexes)
-     j <- 1; l <- n
-     while(j<n){
-       l <- l/2
-       odd <- 2*c(1:l); even <- odd-1
-       alpha <- beta[odd]*alpha[even] + delta[even]*alpha[odd]
-       j <- 2*j
-       beta <- beta[odd]*beta[even]
-       delta <- delta[even]*delta[odd]
-       }
-     Sn <- alpha/beta + 1
-     out <- list(alpha=alpha, beta=beta, Sn=Sn)
-     return(out)
+  u <- function(i) as.numeric(i)
+  v <- function(i) 2*i+1
+  n <- 2^m
+  indexes <- c(1:n)
+  delta <- alpha <- u(indexes)
+  beta <- v(indexes)
+  j <- 1; l <- n
+  while(j<n){
+    l <- l/2
+    odd <- 2*c(1:l); even <- odd-1
+    alpha <- beta[odd]*alpha[even] + delta[even]*alpha[odd]
+    j <- 2*j
+    beta <- beta[odd]*beta[even]
+    delta <- delta[even]*delta[odd]
+  }
+  Sn <- alpha/beta + 1
+  out <- list(alpha=alpha, beta=beta, Sn=Sn)
+  return(out)
 }
-
 ```
 
 The method very well performs while $m\leq 7$ :
@@ -191,26 +193,25 @@ Let us show how the `gmp` works on the $\pi$ example. This is very easy: we only
 library(gmp)
 ## rational approximation of pi with gmp ##
 bs.pi.gmp <- function(m){
-    u <- function(i) as.numeric(i)
-    v <- function(i) 2*i+1
-     n <- 2^m
-    indexes <- 1:n
-     delta <- alpha <- as.bigz(u(indexes))
-     beta <- as.bigz(v(indexes))
-     j <- 1; l <- n
-     while(j<n){
-       l <- l/2
-       odd <- 2*c(1:l); even <- odd-1
-       alpha <- beta[odd]*alpha[even] + delta[even]*alpha[odd]
-       j <- 2*j
-       beta <- beta[odd]*beta[even]
-       delta <- delta[even]*delta[odd]
-       }
-     Sn <- alpha/beta + 1
+  u <- function(i) as.numeric(i)
+  v <- function(i) 2*i+1
+  n <- 2^m
+  indexes <- 1:n
+  delta <- alpha <- as.bigz(u(indexes))
+  beta <- as.bigz(v(indexes))
+  j <- 1; l <- n
+  while(j<n){
+    l <- l/2
+    odd <- 2*c(1:l); even <- odd-1
+    alpha <- beta[odd]*alpha[even] + delta[even]*alpha[odd]
+    j <- 2*j
+    beta <- beta[odd]*beta[even]
+    delta <- delta[even]*delta[odd]
+  }
+  Sn <- alpha/beta + 1
   out <- list(Sn=Sn, eval.Sn=format(as.numeric(Sn),digits=22))
   return(out)
 }
-
 ```
 
 The evaluation of $S_n$ with $n=2^3$ illustrates the first advantage of the `gmp` package:
@@ -231,21 +232,21 @@ Let us come back to the exponential example:
 ```{r}
 ## rational approximation of exp(p/q) with gmp ##
 bs.exp.gmp <- function(p,q,m){
-      v <- function(i) i*q
-     n <- 2^m
-    indexes <- 1:n
-     delta <- alpha <- as.bigz(rep(p,n))
-    beta <- as.bigz(v(indexes))
-     j <- 1; l <- n
-     while(j<n){
-       l <- l/2
-       odd <- 2*c(1:l); even <- odd-1
-       alpha <- beta[odd]*alpha[even] + delta[even]*alpha[odd]
-       j <- 2*j
-       beta <- beta[odd]*beta[even]
-       delta <- delta[even]*delta[odd]
-       }
-     Sn <- alpha/beta + 1
+  v <- function(i) i*q
+  n <- 2^m
+  indexes <- 1:n
+  delta <- alpha <- as.bigz(rep(p,n))
+  beta <- as.bigz(v(indexes))
+  j <- 1; l <- n
+  while(j<n){
+    l <- l/2
+    odd <- 2*c(1:l); even <- odd-1
+    alpha <- beta[odd]*alpha[even] + delta[even]*alpha[odd]
+    j <- 2*j
+    beta <- beta[odd]*beta[even]
+    delta <- delta[even]*delta[odd]
+  }
+  Sn <- alpha/beta + 1
   out <- list(Sn=Sn, eval.Sn=format(as.numeric(Sn),digits=22))
   return(out)
 }
@@ -265,35 +266,33 @@ A general function for the binary splitting algorithm
 Before turning to the Gauss hypergeometric function we write a general function for the binary splitting taking as arguments the two sequences $(u_i)$ and $(v_i)$:
 ```{r}
 bs.gmp <- function(u,v,m=7,value="eval"){
-     n <- 2^m
-    indexes <- 1:n
-     delta <- alpha <- as.bigz(u(indexes))
-    beta <- as.bigz(v(indexes))
-     j <- 1; l <- n
-     while(j<n){
-       l <- l/2
-       odd <- 2*c(1:l); even <- odd-1
-       alpha <- beta[odd]*alpha[even] + delta[even]*alpha[odd]
-       j <- 2*j
-       beta <- beta[odd]*beta[even]
-       delta <- delta[even]*delta[odd]
-       }
-     Sn <- alpha/beta + 1
-     eval.Sn <- format(as.numeric(Sn) ,digits=22)
-     out <- switch(value, "eval"=eval.Sn, "exact"=Sn, "both"=list(Sn=Sn, eval.Sn=eval.Sn))
-return(out)
+  n <- 2^m
+  indexes <- 1:n
+  delta <- alpha <- as.bigz(u(indexes))
+  beta <- as.bigz(v(indexes))
+  j <- 1; l <- n
+  while(j<n){
+    l <- l/2
+    odd <- 2*c(1:l); even <- odd-1
+    alpha <- beta[odd]*alpha[even] + delta[even]*alpha[odd]
+    j <- 2*j
+    beta <- beta[odd]*beta[even]
+    delta <- delta[even]*delta[odd]
+  }
+  Sn <- alpha/beta + 1
+  eval.Sn <- format(as.numeric(Sn) ,digits=22)
+  out <- switch(value, 
+                "eval"=eval.Sn, 
+                "exact"=Sn, 
+                "both"=list(Sn=Sn, eval.Sn=eval.Sn))
+  return(out)
 }
-
 ```
-
-
-
 
 
 
 The Gauss hypergeometric function
 -----------------------------------------------------------------
-
 
 Now consider the *Gauss hypergeometric function*  ${}_2\!F_1$.
 This is the function ${}_2\!F_1(\alpha,\beta,\gamma; \cdot)$  
@@ -311,7 +310,7 @@ This is performed by the R function below
 hypergeo_bs <- function(a1,a2, b1,b2, c1,c2, p,q, m){
   u <- function(i) c2*(a1+(i-1)*a2)*(b1+(i-1)*b2)*p
   v <- function(i) a2*b2*i*(c1+(i-1)*c2)*q
-	bs.gmp(u,v,m)
+  bs.gmp(u,v,m)
 }
 ```
 
@@ -345,7 +344,8 @@ Finally, here is a user-friendly function for evaluating ${}_2\!F_1$ with the bi
 
 ```{r}
 Hypergeometric2F1 <- function(a, b, c, z, m=7,
-                              rnd.params=max(n.decimals(c(a,b,c))), rnd.z=n.decimals(z),
+                              rnd.params=max(n.decimals(c(a,b,c))), 
+                              rnd.z=n.decimals(z),
                               check.cv=FALSE){
   frac.a <- irred.frac(a,rnd.params)
   frac.b <- irred.frac(b,rnd.params)
@@ -384,3 +384,23 @@ Note that Robin Hankin's `gsl` package does an excellent job:
 library(gsl)
 hyperg_2F1(a,b,c,z)
 ```
+
+
+# Update 2018-11-13
+
+- Converting a `bigq` rational number to a decimal number with `as.numeric` is not a good  It is better to use the `mpfr` function of the `Rmpfr` package, or the `q2d` function of the package `rcdd`:
+
+```{r, message=FALSE}
+halfpi_bigq <- bs.pi.gmp(8)$Sn
+library(Rmpfr)
+mpfr(halfpi_bigq, 128)
+library(rcdd)
+q2d(as.character(halfpi_bigq))
+```
+
+- My function `irred.frac` is not good. To convert a decimal number to a `bigq` rational number, it is better to use the `d2q` function of the `rcdd` package:
+
+```{r}
+as.bigq(d2q(pi))
+```
+
