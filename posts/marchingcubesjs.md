@@ -47,3 +47,9 @@ for a full-page rendering.
 
 <iframe src="../frames/threejs_cyclide.html" width="100%" height="500px" scrolling="no" frameborder="0">
 </iframe>
+Below is another triangulation of the Dupin cyclide. This one has less
+triangles, but the rendering is smooth because I included the surface
+normals at each vertex.
+
+<iframe src="../frames/threejs_cyclideByMarchingCubes.html" width="100%" height="500px" scrolling="no" frameborder="0">
+</iframe>
