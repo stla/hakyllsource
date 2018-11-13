@@ -535,8 +535,9 @@ Update 2018-11-13
 =================
 
 -   Converting a `bigq` rational number to a decimal number with
-    `as.numeric` is not a good It is better to use the `mpfr` function
-    of the `Rmpfr` package, or the `q2d` function of the package `rcdd`:
+    `as.numeric` is not a good idea. It is better to use the `mpfr`
+    function of the `Rmpfr` package, or the `q2d` function of the
+    package `rcdd`:
 
 ``` {.r}
 halfpi_bigq <- bs.pi.gmp(8)$Sn
