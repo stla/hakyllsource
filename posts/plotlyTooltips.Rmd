@@ -172,7 +172,7 @@ shinyApp(ui = ui, server = server)
 Beware if you use `ggplotly`. It pertubs the order of the rows of the dataset. 
 Do in this way:
 
-```
+```r
   output[["plotly"]] <- renderPlotly({
     gg <- ggplot(dat, aes(x=variable, y=value, ids=1:nrow(dat))) + 
       geom_boxplot()

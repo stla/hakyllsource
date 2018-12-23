@@ -172,13 +172,15 @@ ggplotly
 Beware if you use `ggplotly`. It pertubs the order of the rows of the
 dataset. Do in this way:
 
-      output[["plotly"]] <- renderPlotly({
-        gg <- ggplot(dat, aes(x=variable, y=value, ids=1:nrow(dat))) + 
-          geom_boxplot()
-        ggly <- ggplotly(gg, tooltip = "y")
-        ids <- ggly$x$data[[1]]$ids
-        ggly$x$data[[1]]$text <- 
-          with(dat, paste0("<b> group: </b>", Group, "<br/>",
-                           "<b> sample: </b>", Sample, "<br/>")[ids]
-        ggly %>% onRender(addHoverBehavior)
-      })
+``` {.r}
+  output[["plotly"]] <- renderPlotly({
+    gg <- ggplot(dat, aes(x=variable, y=value, ids=1:nrow(dat))) + 
+      geom_boxplot()
+    ggly <- ggplotly(gg, tooltip = "y")
+    ids <- ggly$x$data[[1]]$ids
+    ggly$x$data[[1]]$text <- 
+      with(dat, paste0("<b> group: </b>", Group, "<br/>",
+                       "<b> sample: </b>", Sample, "<br/>")[ids]
+    ggly %>% onRender(addHoverBehavior)
+  })
+```
