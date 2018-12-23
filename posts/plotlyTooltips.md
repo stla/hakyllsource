@@ -12,7 +12,7 @@ output:
     variant: markdown
 prettify: True
 prettifycss: minimal
-tags: 'R, graphics, javascript'
+tags: 'R, graphics, javascript, plotly'
 title: Custom tooltips for plotly
 ---
 

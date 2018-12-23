@@ -2,7 +2,7 @@
 title: "Custom tooltips for plotly"
 author: "Stéphane Laurent"
 date: '2018-12-23'
-tags: R, graphics, javascript
+tags: R, graphics, javascript, plotly
 output:
   md_document:
     variant: markdown
