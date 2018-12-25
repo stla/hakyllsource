@@ -21,7 +21,7 @@ outliers of a `plotly` boxplot.
 Here I provide a solution using Shiny and the [qTip2](http://qtip2.com/) 
 Javascript library.
 
-Below is the Shiny app. Download the files `jquery.qtip.min.css` and 
+Below is the Shiny app. Download the two files `jquery.qtip.min.css` and 
 `jquery.qtip.min.js` and put them in the `www` subfolder.
 
 ```r
@@ -69,6 +69,8 @@ addHoverBehavior <- c(
   "      Shiny.setInputValue('top_pct', top_px/rect.height);",
   "      Shiny.setInputValue('d_y', d.y);",
   "      Shiny.setInputValue('d_text', d.text);",
+  "    }else{",
+  "      $('#hover_info').qtip('hide');",
   "    }",
   "  });",
   "  el.on('plotly_unhover', function(data) {",
