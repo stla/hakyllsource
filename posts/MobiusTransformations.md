@@ -1,0 +1,453 @@
+---
+author: Stéphane Laurent
+date: '2019-03-12'
+highlighter: 'pandoc-solarized'
+linenums: True
+output:
+  html_document:
+    highlight: kate
+    keep_md: False
+  md_document:
+    preserve_yaml: True
+    variant: markdown
+prettify: True
+prettifycss: minimal
+tags: 'R, maths, geometry'
+title: Generalized circles and Möbius transformations
+---
+
+It is well known that a Möbius transformation maps a generalized circle
+to a generalized circle. In this blog post, not only we prove this fact,
+but we also provide the equation of the image generalized circle.
+
+Generalized circle
+==================
+
+A *generalized circle* is a circle or a line. We shall see that a
+generalized circle $\mathcal{C}$ has equation $$
+Az\bar{z} + \bar{\gamma}z + \gamma\bar{z} = D 
+$$ where $A$ and $D$ are real numbers, $\gamma \in \mathbb{C}$, and
+
+-   $A=0$, $D \geq 0$, $\gamma \neq 0$, when $\mathcal{C}$ is a line;
+
+-   $A \neq 0$ when $\mathcal{C}$ is a circle, and
+    ${|\gamma|}^2 + AD > 0$.
+
+Circle equation
+---------------
+
+The circle with center $z_0$ and radius $R$ has equation $|z-z_0|=R$.
+Now, $$
+|z-z_0|=R \ \ \iff \ \ {|z-z_0|}^2=R^2 
+\ \ \iff (z-z_0)\overline{(z-z_0)} = R^2
+$$ $$
+\tag{1}\iff \ \ 
+z \bar z - \bar{z_0}z - z_0\bar{z} = R^2 - {|z_0|}^2.
+$$
+
+Now, let the equation $$
+Az\bar{z} + \bar{\gamma}z + \gamma\bar{z} = D 
+$$ with $A$, $D$ real numbers, $A \neq 0$, and $\gamma \in \mathbb{C}$.
+
+It is equivalent to $$
+z\bar{z} + \frac{\bar{\gamma}}{A}z + \frac{\gamma}{A}\bar{z} 
+ = \frac{D}{A}.
+$$
+
+Then it has the same form as $(1)$ with $$
+z_0 = - \frac{\gamma}{A}
+$$ and $$
+R^2 = {|z_0|}^2 + \frac{D}{A} > 0.
+$$ Thus $$
+\dfrac{{|\gamma|}^2}{A^2} + \frac{D}{A} > 0, 
+$$ that is ${|\gamma|}^2 + AD > 0$.
+
+Line equation
+-------------
+
+The general equation of a line is $$
+\cos\theta \cdot x + \sin\theta \cdot y = d 
+$$ where $\theta \in [0,2\pi)$ is the *direction* of the line, and
+$d \geq 0$ is its *offset*.
+
+Letting $z = x+iy$, it is equivalent to $$
+\bar{\gamma}z + \gamma\bar{z} = D 
+$$ with $\cos\theta = \frac{\Re(\gamma)}{|\gamma|}$ and
+$\sin\theta = \frac{\Im(\gamma)}{|\gamma|}$, hence
+$\theta = \textrm{arg}(\gamma)$, and $d = \frac{D}{2|\gamma|}$. Indeed,
+$$
+\bar{\gamma}z + \gamma\bar{z} = D  
+\ \ \iff \ \ 
+\frac{\bar{\gamma}}{|\gamma|} z + \frac{\gamma}{|\gamma|}\bar{z} 
+ = \frac{D}{|\gamma|} 
+$$ $$
+\ \ \iff
+\left( \frac{\bar{\gamma} + \gamma}{|\gamma|} \right) x 
+ + \left( \frac{\bar{\gamma} - \gamma}{|\gamma|} \right) i y 
+ = \frac{D}{|\gamma|} 
+$$ $$
+\ \ \iff
+\left( \frac{\Re(\gamma)}{|\gamma|} \right) x 
+ + \left( \frac{\Im(\gamma)}{|\gamma|} \right) y 
+ = \frac{D}{2|\gamma|}. 
+$$
+
+Conversely, if the equation
+$\cos\theta \cdot x + \sin\theta \cdot y = d$ is given, then one can
+take $\gamma = \cos\theta + i \sin\theta$, and $D = 2d$.
+
+Möbius transformations {#mobius-transformations}
+======================
+
+A *Möbius transformation* is a function
+$M \colon \hat{\mathbb{C}} \to \hat{\mathbb{C}}$ of the form $$
+M(z) = \frac{az+b}{cz+d},
+$$ where $a$, $b$, $c$, $d$ are complex numbers satisfying
+$ad - bc \neq 0$, and we agree with
+
+-   $M(\infty) = \infty$ if $c = 0$ (hence $d \neq 0$);
+
+-   otherwise, $M(\infty) = a/c$ and $M(-d/c) = \infty$.
+
+We say that the matrix $$
+A = \begin{pmatrix} a & b \\ c & d \end{pmatrix}
+$$ is *associated* with $M$. Note that $A$ is invertible because of the
+condition $ad - bc \neq 0$.
+
+Also note that $M(z) \equiv z$ means that the identity matrix is
+associated with $M$.
+
+Composition of Möbius transformations {#composition-of-mobius-transformations}
+-------------------------------------
+
+Let $M_1$ and $M_2$ be two Möbius transformations, $A_1$ a matrix
+associated with $M_1$ and $A_2$ a matrix associated with $M_2$. Then
+$M := M_1 \circ M_2$ is a Möbius transformation and $A_1A_2$ is a matrix
+associated with $M$.
+
+As a consequence, any Möbius transformation $M$ is invertible and its
+inverse is the Möbius transformation associated to the matrix
+$\begin{pmatrix} d & -b \\ -c & a \end{pmatrix}$ if
+$\begin{pmatrix} a & b \\ c & d \end{pmatrix}$ is a matrix associated
+with $M$.
+
+Image of a generalized circle
+-----------------------------
+
+We shall see that a Möbius transformations maps a generalized circle to
+a generalized circle. We denote by $M$ the Möbius transformation
+associated to $\begin{pmatrix} a & b \\ c & d \end{pmatrix}$.
+
+### Image of a circle
+
+Let $\mathcal{C}$ be the circle of center $z_0$ and radius $R$. We have
+seen that $\mathcal{C}$ has equation $$
+z \bar z - \bar{z_0}z - z_0\bar{z} = R^2 - {|z_0|}^2.
+$$ We set $H = R^2 - {|z_0|}^2$. Inserting
+$z = M^{-1}(w) = \frac{dw - b}{a - cw}$, we get $$
+(dw - b)\overline{(dw - b)} 
+ - \bar{z_0}(dw - b)\overline{(a - cw)}
+ - z_0 \overline{(dw - b)}(a-cw) \\
+ = H (a - cw)\overline{(a - cw)}, 
+$$ that is, $$
+\begin{align}
+& \Bigl( d\bar{d} + d\bar{c}\bar{z_0} + \bar{d}c z_0 
+  - H c\bar{c} \Bigr) w \bar{w} \\ 
+\qquad &  - \Bigl( d\bar{b} + d\bar{a}\bar{z_0} + c\bar{b}z_0 
+    - H c\bar{a} \Bigr) w \\ 
+\qquad &  - \Bigl( b\bar{d} + b\bar{c}\bar{z_0} + \bar{d}a z_0 
+      - H a\bar{c} \Bigr) \bar{w} \\
+ = & \; H a\bar{a} - b\bar{b} - b\bar{a}\bar{z_0} - \bar{b}a z_0.
+\end{align}
+$$ Now, $$
+\begin{align}
+d\bar{d} + d\bar{c}\bar{z_0} + \bar{d} c z_0 - H c\bar{c} 
+ & = (d + c z_0)\overline{(d + c z_0)} - R^2 c\bar{c} \\
+ & = {|d+c z_0|}^2 - R^2{|c|}^2 \\ & =: A,
+\end{align}
+$$ $$
+\begin{align}
+H a\bar{c} - b\bar{d} - b\bar{c}\bar{z_0} - \bar{d}a z_0   
+ & = R^2 a\bar{c} - (a z_0 + b)\overline{(c z_0 + d)} \\ & =: \gamma,
+\end{align}
+$$ $$
+\begin{align}
+H a\bar{a} - b\bar{b} - b\bar{a}\bar{z_0} - \bar{b}a z_0   
+ & = R^2 a\bar{a} - (b + a z_0)\overline{(b + a z_0)} \\ 
+ & = R^2{|a|}^2 - {|b + a z_0|}^2 \\ & =: D.
+\end{align}
+$$ The equation is $$
+A w\bar{w} + \bar\gamma w + \gamma\bar{w} = D.
+$$
+
+If $\boxed{A \neq 0}$, that is $|d+c z_0| \neq R|c|$, this is the
+equation of the circle with center $-\gamma/A$ and radius
+$\sqrt{\frac{{|\gamma|}^2}{A^2} + \frac{D}{A}}$.
+
+Let's check with R. To do so, we use the `circumcircle` function below,
+which returns the center and the radius of the circle passing by `z1`,
+`z2`, `z3`.
+
+``` {.r}
+circumcircle <- function(z1,z2,z3){
+  x1 <- Re(z1); y1 <- Im(z1); p1 <- c(x1,y1)
+  x2 <- Re(z2); y2 <- Im(z2); p2 <- c(x2,y2)
+  x3 <- Re(z3); y3 <- Im(z3); p3 <- c(x3,y3)
+  a <- det(cbind(rbind(p1,p2,p3),1))
+  q1 <- c(crossprod(p1))
+  q2 <- c(crossprod(p2))
+  q3 <- c(crossprod(p3))
+  q <- c(q1,q2,q3)
+  x <- c(x1,x2,x3)
+  y <- c(y1,y2,y3)
+  Dx <- det(cbind(q,y,1))
+  Dy <- -det(cbind(q,x,1))
+  c <- det(cbind(q,x,y))
+  center <- c(Dx,Dy)/a/2
+  r <- sqrt(c(crossprod(center-p1)))
+  list(center = center[1] + 1i*center[2], radius = r)
+}
+```
+
+Let's take an example:
+
+``` {.r}
+Mobius <- function(a, b, c, d){
+  function(z){
+    (a*z+b) / (c*z+d)
+  }
+}
+a <- 4; b <- 1i; c <- 2i; d <- 1+3i
+M <- Mobius(a,b,c,d)
+# define circle C
+z0 <- 2+1i; R <- 2
+# three points on M(C)
+z1 <- M(z0+R); z2 <- M(z0-R); z3 <- M(z0 + 1i*R)
+# circumcircle of z1, z2, z3
+cc <- circumcircle(z1, z2, z3)
+# calculation of A, gamma, D
+A <- Mod(d+c*z0)^2 - R^2*Mod(c)^2
+gamma <- R^2*a*Conj(c) - (a*z0 + b) * Conj(c*z0 + d)
+D <- R^2*Mod(a)^2 - Mod(b + a*z0)^2
+# center
+-gamma/A
+## [1] 0.7941176-0.8529412i
+cc$center
+## [1] 0.7941176-0.8529412i
+# radius 
+sqrt(Mod(gamma)^2/A^2 + D/A)
+## [1] 0.7892005
+cc$radius
+## [1] 0.7892005
+```
+
+We have the following alternative expressions of the center and the
+radius: $$
+w_0 = M\left(z_0 - R^2\overline{\left(\frac{d}{c}+z_0\right)} \right), \\
+R' = \bigl| w_0 - M(z_0+R) \bigr|.
+$$
+
+``` {.r}
+z <- z0 - R^2/Conj(d/c+z0) 
+( w0 <- M(z) ) # center
+## [1] 0.7941176-0.8529412i
+Mod(w0 - M(z0+R)) # radius
+## [1] 0.7892005
+```
+
+This code also works for $c = 0$:
+
+``` {.r}
+MC <- function(a, b, c, d, z0, R){
+  M <- Mobius(a,b,c,d)
+  z <- z0 - R^2/Conj(d/c+z0) 
+  w0 <- M(z) 
+  list(center = w0, radius = Mod(w0 - M(z0+R)))
+}
+c <- 0
+M <- Mobius(a,b,c,d)
+z1 <- M(z0+R); z2 <- M(z0-R); z3 <- M(z0 + 1i*R)
+circumcircle(z1, z2, z3)
+## $center
+## [1] 2.3-1.9i
+## 
+## $radius
+## [1] 2.529822
+MC(a, b, c, d, z0, R)
+## $center
+## [1] 2.3-1.9i
+## 
+## $radius
+## [1] 2.529822
+```
+
+Now, consider the case when $\boxed{A=0}$, that is $|d/c+z_0| = R$. The
+equation is $$
+\bar\gamma w + \gamma\bar{w} = D.
+$$ And this is the equation of a line, whose direction and offset are
+given by the formulas we have previously seen.
+
+### Image of a line
+
+Now, let $\mathcal{L}$ be the line having equation $$
+\bar{\gamma_0} z + \gamma_0\bar{z} = D_0.
+$$ Inserting $z = M^{-1}(w) = \frac{dw - b}{a - cw}$, we get the
+following equation for $M(\mathcal{L})$: $$
+\bar{\gamma_0} (dw - b)\overline{(a-cw)} 
+ + \gamma_0 \overline{(dw - b)}(a-cw) 
+ = D_0(a-cw)\overline{(a-cw)}.
+$$ It is equivalent to $$
+\begin{align*}
+& -\Bigl( \bar{\gamma_0}d\bar{c} + \gamma_0 \bar{d}c 
+    + D_0 c\bar{c} \Bigr) w\bar{w}  \\
+\qquad & 
+ + \Bigl( \bar{\gamma_0}d\bar{a} + \gamma_0 \bar{b}c + D_0 c\bar{a} \Bigr) w \\ 
+\qquad & 
+ + \Bigl( \bar{\gamma_0}b\bar{c} + \gamma_0 \bar{d}a + D_0 \bar{c}a \Bigr) \bar{w} \\
+ & \qquad = \; D_0 a \bar{a} + \bar{\gamma_0}b\bar{a} + \gamma_0\bar{b}a, 
+\end{align*}
+$$ that is $$
+A w\bar{w} + \bar{\gamma}w + \gamma\bar{w} = D
+$$ with $$
+A = -2\;\Re(\gamma_0 c \bar{d}) - D_0 {|c|}^2, \\ 
+\gamma = \bar{\gamma_0}b\bar{c} + \gamma_0 \bar{d}a + D_0 \bar{c}a, \\ 
+D = D_0{|a|}^2 + 2\;\Re(\gamma_0 \bar{b}a).
+$$
+
+Again, there are two cases. We get a circle if $A \neq 0$, and a line
+otherwise.
+
+Let's check an example with $A=0$. Our current value of $c$ in R is $0$,
+so we have $A=0$.
+
+``` {.r}
+# define the line L
+theta <- 1
+offset <- 2
+# three points on M(L)
+x <- c(0,1,2)
+y <- (offset - cos(theta)*x) / sin(theta)
+z1 <- M(x[1] + 1i*y[1]) 
+z2 <- M(x[2] + 1i*y[2]) 
+z3 <- M(x[3] + 1i*y[3])
+# these points are aligned:
+Im((z2-z1)/(z3-z1)) # aligned <=> 0
+## [1] -7.157799e-17
+```
+
+Now let's check an example with $A \neq 0$:
+
+``` {.r}
+# Mobius transformation
+c <- 6 # don't take c = 0, otherwise A=0
+M <- Mobius(a,b,c,d)
+# three points on M(L)
+z1 <- M(x[1] + 1i*y[1]) 
+z2 <- M(x[2] + 1i*y[2]) 
+z3 <- M(x[3] + 1i*y[3])
+# calculation of A, gamma, D
+gamma0 <- cos(theta) + 1i * sin(theta)
+D0 <- 2 * offset
+A <- -2 * Re(gamma0*c*Conj(d)) - D0*Mod(c)^2 
+gamma <- Conj(gamma0)*b*Conj(c) + gamma0*Conj(d)*a + D0*Conj(c)*a
+D <- D0 * Mod(a)^2 + 2*Re(gamma0*Conj(b)*a)
+# circumcircle
+cc <- circumcircle(z1, z2, z3)
+# center
+-gamma/A
+## [1] 0.626783+0.0006863i
+cc$center
+## [1] 0.626783+0.0006863i
+# radius 
+sqrt(Mod(gamma)^2/A^2 + D/A)
+## [1] 0.03988958
+cc$radius
+## [1] 0.03988958
+```
+
+R code
+======
+
+``` {.r}
+Mobius <- function(a, b, c, d){
+  function(z){
+    (a*z+b) / (c*z+d)
+  }
+}
+
+Mod2 <- function(z){
+  Re(z)^2 + Im(z)^2
+}
+
+MobiusImageOfCircle <- function(a, b, c, d, z0, R){
+  gamma <- R*R*a*Conj(c) - (a*z0 + b) * Conj(c*z0 + d)
+  D <- R*R*Mod2(a) - Mod2(b + a*z0)
+  x1 <- Mod2(d+c*z0)
+  x2 <- R*R*Mod2(c)
+  if(x1 != x2){
+    A <- x1 - x2
+    out <- list(center = -gamma/A, radius = sqrt(Mod2(gamma)/A/A + D/A))
+    attr(out, "type") <- "circle"
+  }else{
+    out <- list(theta = Arg(gamma) %% (2*pi), offset = D/2/Mod(gamma))
+    attr(out, "type") <- "line"
+  }
+  out
+}
+
+MobiusImageOfLine <- function(a, b, c, d, theta, offset){
+  gamma0 <- cos(theta) + 1i*sin(theta)
+  D0 <- 2 * offset
+  A <- -2 * Re(gamma0*c*Conj(d)) - D0*Mod2(c) 
+  gamma <- Conj(gamma0)*b*Conj(c) + gamma0*Conj(d)*a + D0*Conj(c)*a
+  D <- D0*Mod2(a) + 2*Re(gamma0*Conj(b)*a)
+  if(A != 0){
+    out <- list(center = -gamma/A, radius = sqrt(Mod2(gamma)/A/A + D/A))
+    attr(out, "type") <- "circle"
+  }else{
+    out <- list(theta = Arg(gamma) %% (2*pi), offset = D/2/Mod(gamma))
+    attr(out, "type") <- "line"
+  }
+  out
+}
+
+MobiusImage <- function(a, b, c, d, gcircle){
+  if(attr(gcircle, "type") == "circle"){
+    MobiusImageOfCircle(a, b, c, d, gcircle$center, gcircle$radius)
+  }else{
+    MobiusImageOfLine(a, b, c, d, gcircle$theta, gcircle$offset)
+  }
+}
+
+# plot ####
+drawLine <- function(line, ...){
+  theta <- line$theta; offset <- line$offset
+  if(sin(theta) != 0){
+    abline(a = offset/sin(theta), b = -1/tan(theta), ...)
+  }else{
+    abline(v = offset/cos(theta), ...)
+  }
+}
+
+drawCircle <- function(circle, ...){
+  plotrix::draw.circle(Re(circle$center), Im(circle$center), 
+                       circle$radius, ...)
+}
+
+drawGCircle <- function(gcircle, color = "black", ...){
+  if(attr(gcircle, "type") == "circle"){
+    drawCircle(gcircle, border = color, ...)
+  }else{
+    drawLine(gcircle, col = color, ...)
+  }
+}
+```
+
+References
+==========
+
+-   D. A. Brannan, M. F. Esplen, J. J. Gray. *Geometry*, second edition.
+    Cambridge University Press, 2012.
+
+-   D. Mumford, C. Series, D. Wright. *Indra's Pearls: The Vision of
+    Felix Klein*. Cambridge University Press, 2002.
