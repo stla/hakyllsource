@@ -341,3 +341,219 @@ cos(L$theta)*Re(w2) + sin(L$theta)*Im(w2) # = L$offset
 cos(L$theta)*Re(w3) + sin(L$theta)*Im(w3) # = L$offset
 ## [1] -4.440892e-16
 ```
+
+Finally, let's put things together in a single function.
+
+``` {.r}
+iotaGcircle <- function(c, r, gcircle){
+  if(attr(gcircle, "type") == "circle"){
+    iotaCircle(c, r, gcircle)
+  }else{
+    iotaLine(c, r, gcircle)
+  }
+}
+```
+
+Illustration
+============
+
+We will make a beautiful picture of inverted circles. This is borrowed
+from this [circle inversion
+gallery](http://xahlee.info/SpecialPlaneCurves_dir/InversionGallery_dir/inversionGallery.html).
+
+Firstly, let's write a function which draws a generalized circle. We use
+the `draw.circle` function of the `plotrix` package.
+
+``` {.r}
+library(plotrix)
+drawLine <- function(line, ...){
+  theta <- line$theta; offset <- line$offset
+  if(sin(theta) != 0){
+    abline(a = offset/sin(theta), b = -1/tan(theta), ...)
+  }else{
+    abline(v = offset/cos(theta), ...)
+  }
+}
+drawCircle <- function(circle, ...){
+  draw.circle(Re(circle$center), Im(circle$center), circle$radius, ...)
+}
+drawGcircle <- function(gcircle, color = "black", ...){
+  if(attr(gcircle, "type") == "circle"){
+    drawCircle(gcircle, border = color, ...)
+  }else{
+    drawLine(gcircle, col = color, ...)
+  }
+}
+```
+
+We start with five circles.
+
+``` {.r}
+# generation 0
+gen0 <- sapply(c(0, pi/2, pi, 3*pi/2), function(beta){
+  out <- list(center = cos(beta)+1i*sin(beta), radius = 1, gen = 0)
+  attr(out, "type") <- "circle"
+  out
+}, simplify = FALSE)
+gen0[[5]] <- list(center = 0+0i, radius = 2, gen = 0)
+attr(gen0[[5]], "type") <- "circle"
+# plot
+par(bg = "black", mar = c(0,0,0,0))
+plot(0, 0, type="n", xlim=c(-2.3,2.3), ylim=c(-2.3,2.3),   
+     asp=1, axes=FALSE, xlab=NA, ylab=NA)
+invisible(lapply(gen0, drawGcircle, color = "yellow", lwd = 2))
+```
+
+![](./figures/Inversions-gen0-1.png)
+
+Now, we invert each of these five circles with respect to the other
+ones:
+
+``` {.r}
+# generation 1
+n0 <- length(gen0)
+n1 <- n0*(n0-1)
+gen1 <- vector("list", n1)
+k <- 0
+while(k < n1){
+  for(j in 1:n0){
+    for(i in 1:n0){
+      if(i != j){
+        k <- k+1
+        gen1[[k]] <- 
+          iotaGcircle(gen0[[i]]$center, gen0[[i]]$radius, gen0[[j]])
+        gen1[[k]]$base <- i
+        gen1[[k]]$gen <- 1
+      }
+    }
+  }
+}
+```
+
+We continue so on: we invert the obtained generalized circles with
+respect to the starting circles.
+
+``` {.r}
+# generation 2
+n2 <- n0*n1-n1
+gen2 <- vector("list", n2)
+k <- 0
+while(k < n2){
+  for(j in 1:n1){
+    for(i in 1:n0){
+      if(gen1[[j]]$base != i){
+        k <- k+1
+        gen2[[k]] <- 
+          iotaGcircle(gen0[[i]]$center, gen0[[i]]$radius, gen1[[j]])
+        gen2[[k]]$base <- i
+        gen2[[k]]$gen <- 2
+      }
+    }
+  }
+}
+# generation 3
+n3 <- n0*n2-n2
+gen3 <- vector("list", n3)
+k <- 0
+while(k < n3){
+  for(j in 1:n2){
+    for(i in 1:n0){
+      if(gen2[[j]]$base != i){
+        k <- k+1
+        gen3[[k]] <- 
+          iotaGcircle(gen0[[i]]$center, gen0[[i]]$radius, gen2[[j]])
+        gen3[[k]]$gen <- 3
+      }
+    }
+  }
+}
+```
+
+Let's put all the obtained generalized circles together:
+
+``` {.r}
+gcircles <- c(gen0, gen1, gen2, gen3)
+length(gcircles)
+## [1] 425
+```
+
+There are 425 generalized circles, but some of them are duplicated. To
+remove the duplicates, we use the `uniqueWith` function below. This
+function takes as arguments an atomic vector or a list `v` and a
+function `f` of two arguments, two elements of `v`, and which returns
+`TRUE` or `FALSE`, according to whether the two elements are considered
+as duplicates.
+
+``` {.r}
+uniqueWith <- function(v, f){
+  size <- length(v)
+  for(i in seq_len(size-1L)){
+    j <- i + 1L
+    while(j <= size){
+      if(f(v[[j]],v[[i]])){
+        v <- v[-j]
+        size <- size - 1L
+      }else{
+        j <- j + 1L
+      }
+    }
+  }
+  v[1L:size]
+}
+# examples ####
+v <- c(1,1,2,1,3,4,3,5,5)
+uniqueWith(v, `==`)
+## [1] 1 2 3 4 5
+uniqueWith(v, function(x,y) (x-y) %% 3 == 0)
+## [1] 1 2 3
+v <- list(a="you", b="are", c="great")
+uniqueWith(v, function(x,y) nchar(x) == nchar(y))
+## $a
+## [1] "you"
+## 
+## $c
+## [1] "great"
+```
+
+So let's define the function `f` which identifies two equal generalized
+circles.
+
+``` {.r}
+f <- function(gcircle1, gcircle2){
+  if(attr(gcircle1, "type") == attr(gcircle2, "type")){
+    if(attr(gcircle1, "type") == "circle"){
+      Mod(gcircle1$center-gcircle2$center) < 1e-5 && 
+        abs(gcircle1$radius-gcircle2$radius) < 1e-5
+    }else{
+      abs(cos(gcircle1$theta)-cos(gcircle2$theta)) < 1e-5 &&
+        abs(sin(gcircle1$theta)-sin(gcircle2$theta)) < 1e-5 &&
+        abs(gcircle1$offset-gcircle2$offset) < 1e-5
+    }
+  }else{
+    FALSE
+  }
+}
+```
+
+And now, let's remove the duplicates:
+
+``` {.r}
+gcircles <- uniqueWith(gcircles, f)
+length(gcircles)
+## [1] 161
+```
+
+Now we plot the generalized circles, with a color indicating the
+generation.
+
+``` {.r}
+draw <- function(gcircle, colors=rainbow(4), ...){
+  drawGcircle(gcircle, color = colors[1+gcircle$gen], ...)
+}
+par(mar = c(0,0,0,0), bg = "black")
+plot(0, 0, type="n", xlim=c(-2.3,2.3), ylim=c(-2.3,2.3),  
+     asp=1, axes=FALSE, xlab=NA, ylab=NA)
+invisible(lapply(gcircles, draw, lwd=2))
+```
+
+![](./figures/Inversions-picture-1.png)
