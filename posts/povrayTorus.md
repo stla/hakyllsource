@@ -26,7 +26,7 @@ namely the macro `Circle_Line_out`. However I tested it and I noticed
 that the rendering is very slow. With the macro I wrote, provided below,
 the rendering is not slow.
 
-``` {.javascript}
+``` {.povray}
 // -------------------------- the Torus macro ------------------------------- //
     // 3x3 matrix Functions ----------------------------------------------------
 #macro det(A)
@@ -138,7 +138,7 @@ the rendering is not slow.
 Let me give an example now. I take a tetrahedron and I draw the torus
 passing by the three vertices of a face, for each of the four faces.
 
-``` {.javascript}
+``` {.povray}
 #version 3.7;
 global_settings { assumed_gamma 1 }
 #default{ finish{ ambient 0.1 diffuse 0.9 }}
