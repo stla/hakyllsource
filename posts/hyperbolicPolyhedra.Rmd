@@ -244,7 +244,8 @@ gyrosubdiv <- function(A1, A2, A3, s=1, depth=5){
     }))
   }
   vertices <- 
-    do.call(cbind, lapply(subd, function(triplet) do.call(cbind, triplet)))
+    do.call(cbind, 
+            lapply(subd, function(triplet) do.call(cbind, triplet)))
   indices <- matrix(1:ncol(vertices), nrow = 3)
   tmesh3d(
     vertices = vertices,
@@ -886,6 +887,57 @@ object{
 ```
 
 ![](figures/hyperbolicPolyhedra-povray.png)
+
+
+## Update 2019-04-09
+
+I've realized that the `addNormals` function of the `rgl` package is not 
+appropriate when there are duplicated vertices in the mesh (it adds different 
+normals to the duplicated vertices). 
+And there are (a lot of) duplicated vertices in the mesh created by the 
+`gyrosubdiv` function. 
+
+To remove the duplicated vertices, one can use the `vcgClean` function of the 
+`Rvcg` package (which also adds the normals). Observe the difference:
+
+```{r triangle-dupVertices, rgl=TRUE}
+idx <- faces[1,]
+A <- vertices[idx[1],]
+B <- vertices[idx[2],]
+C <- vertices[idx[3],]
+mesh <- gyrosubdiv(A, B, C, s = s, depth = 4)
+view3d(30, 30, zoom = 0.9)
+shade3d(mesh, color = "navy")
+```
+
+```{r triangle-undupVertices, rgl=TRUE}
+mesh <- Rvcg::vcgClean(mesh, sel = c(0,7), silent = TRUE)
+view3d(30, 30, zoom = 0.9)
+shade3d(mesh, color = "navy")
+```
+
+So a better `gyrosubdiv` function is:
+
+```{r}
+gyrosubdiv <- function(A1, A2, A3, s=1, depth=5){
+  subd <- gyrosubdiv0(A1, A2, A3, s)
+  for(i in seq_len(depth-1)){
+    subd <- purrr::flatten(lapply(subd, function(triplet){
+      gyrosubdiv0(triplet[[1]], triplet[[2]], triplet[[3]], s)
+    }))
+  }
+  vertices <- 
+    do.call(cbind, 
+            lapply(subd, function(triplet) do.call(cbind, triplet)))
+  indices <- matrix(1:ncol(vertices), nrow = 3)
+  mesh <- tmesh3d(
+    vertices = vertices,
+    indices = indices,
+    homogeneous = FALSE
+  )
+  Rvcg::vcgClean(mesh, sel = c(0,7), silent = TRUE)
+}
+```
 
 
 ## Reference
