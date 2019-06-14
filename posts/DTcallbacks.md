@@ -206,7 +206,7 @@ Child tables
 ============
 
 This callback allows to display child tables in the table. The indices
-of the selected rows of the child tables are sent to the shiny server.
+of the selected rows of the child tables are sent to the Shiny server.
 
 ``` {.r}
 library(shiny)
@@ -277,7 +277,6 @@ callback = JS(
   "",
   "// row callback to style the rows background colors of the child tables",
   "var rowCallback = function(row, dat, displayNum, index){",
-  "  $(row).addClass('childrow');",
   "  if($(row).hasClass('odd')){",
   "    $(row).css('background-color', 'papayawhip');",
   "    $(row).hover(function(){",
@@ -322,6 +321,7 @@ callback = JS(
   "             'info': false,",
   "             'lengthChange': false,",
   "             'ordering': d[n].length > 1,",
+  "             'order': [],",
   "             'paging': false,",
   "             'scrollX': false,",
   "             'scrollY': false,",
