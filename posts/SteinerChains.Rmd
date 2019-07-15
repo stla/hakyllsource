@@ -389,7 +389,7 @@ Pause_when_Done = off
 
 <br/> 
 
-We get a nice result of we map a picture to the spheres:
+We get a nice result when we map a picture to the spheres:
 
 ```povray
 #if(Depth=1)
