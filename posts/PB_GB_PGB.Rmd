@@ -101,10 +101,32 @@ Thus this is also the distribution of $\frac{Y/U}{\theta}$
 where $Y \sim \mathcal{G}(\nu,1)$ is independent of 
 $U \sim \mathcal{B}(a,b)$, and then this is a scaled 
 *confluent hypergeometric function kind one distribution* 
-(the distribution of $Y/U$; as far as I know, this name firstly occurs 
+(the distribution of $Y/U$). As far as I know, this name firstly occurs 
 in the book *Matrix variate distributions* by Gupta and Nagar, 
 who studied the matrix-valued confluent hypergeometric function 
-kind one distribution).
+kind one distribution. 
+In the paper 
+*Properties of Matrix Variate Confluent Hypergeometric Function Distribution*, 
+Gupta & al. more deeply study this distribution. Moreover they 
+introduce a scale parameter in this distribution. With their 
+notations, 
+$$
+\mathcal{G}\mathcal{B}(\nu, a, b, \theta) = 
+CH_1(\nu, a+\nu, a+b+\nu, 1/\theta),
+$$
+that is, 
+$$
+CH_1(\nu, \alpha, \beta, \theta) = 
+\mathcal{G}\mathcal{B}(\nu, \alpha-\nu, \beta-\alpha, 1/\theta).
+$$
+However the $CH_1$ distribution is more general than the 
+$\mathcal{G}\mathcal{B}$ distribution, because the above equality 
+makes sense only for $\beta > \alpha$, whereas the constraints on 
+the parameters of $CH_1(\nu, \alpha, \beta, \theta)$ are $\nu>0$, 
+$\alpha>\nu$, $\boxed{\beta > \nu}$ and $\theta > 0$. 
+Thus the constraints on the parameters in 
+$CH_1(\nu, a+\nu, a+b+\nu, 1/\theta)$ are $\nu>0$, $a>0$, 
+$\boxed{b>-a}$, $\theta > 0$.
 
 The density function of $\mathcal{G}{B}(\nu,a,b,\theta)$ at 
 $x \geqslant 0$ is, thanks to 
@@ -114,15 +136,21 @@ $$
 \theta^\nu \frac{\Gamma(a+b)}{B(a,\nu)\Gamma(a+b+\nu)}x^{\nu-1}
 {}_1\!F_1(a+\nu, a+b+\nu; -\theta x).
 $$
+Indeed, this expression makes sense for $b > -a$. 
 
 ```{r}
-dGB <- function(x, nu, a, b, theta){
+dGB <- function(x, nu, a, b, theta = 1){
   stopifnot(nu>0, a>0, b>0, theta>0)
   out <- numeric(length(x))
-  positive <- x > 0
+  positive <- x >= 0
   x <- x[positive]
-  d <- exp(lgamma(a+b)-lbeta(a,nu)-lgamma(a+b+nu)+(nu-1)*log(x)+nu*log(theta))*
-    hyperg_1F1(a+nu, a+b+nu, -x*theta)
+  nu_eq_1 <- rep(nu == 1, length(x))
+  log_x_power_nu_minus_one <- 
+    ifelse(nu_eq_1, 0, (nu-1)*log(x))
+  C <- exp(lgamma(a+b) - lbeta(a,nu) - lgamma(a+b+nu) + 
+             log_x_power_nu_minus_one + nu*log(theta))
+  d <- ifelse(C == Inf, # occurs when x=0 and nu < 1
+              Inf, C*hyperg_1F1(a+nu, a+b+nu, -x*theta))
   out[positive] <- d
   out
 }

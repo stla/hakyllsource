@@ -61,7 +61,7 @@ a <- 10; b <- 5; theta <- 2
 nsims <- 200000
 sims <- rPB(nsims, a, b, theta)
 sum(sims <= 3) / nsims
-## [1] 0.95017
+## [1] 0.949975
 sum(dPB(0:3, a, b, theta))
 ## [1] 0.9499529
 ```
@@ -92,9 +92,25 @@ $U \sim \mathcal{B}(a,b)$. Thus this is also the distribution of
 $\frac{Y/U}{\theta}$ where $Y \sim \mathcal{G}(\nu,1)$ is independent of
 $U \sim \mathcal{B}(a,b)$, and then this is a scaled *confluent
 hypergeometric function kind one distribution* (the distribution of
-$Y/U$; as far as I know, this name firstly occurs in the book *Matrix
+$Y/U$). As far as I know, this name firstly occurs in the book *Matrix
 variate distributions* by Gupta and Nagar, who studied the matrix-valued
-confluent hypergeometric function kind one distribution).
+confluent hypergeometric function kind one distribution. In the paper
+*Properties of Matrix Variate Confluent Hypergeometric Function
+Distribution*, Gupta & al. more deeply study this distribution. Moreover
+they introduce a scale parameter in this distribution. With their
+notations, $$
+\mathcal{G}\mathcal{B}(\nu, a, b, \theta) = 
+CH_1(\nu, a+\nu, a+b+\nu, 1/\theta),
+$$ that is, $$
+CH_1(\nu, \alpha, \beta, \theta) = 
+\mathcal{G}\mathcal{B}(\nu, \alpha-\nu, \beta-\alpha, 1/\theta).
+$$ However the $CH_1$ distribution is more general than the
+$\mathcal{G}\mathcal{B}$ distribution, because the above equality makes
+sense only for $\beta > \alpha$, whereas the constraints on the
+parameters of $CH_1(\nu, \alpha, \beta, \theta)$ are $\nu>0$,
+$\alpha>\nu$, $\boxed{\beta > \nu}$ and $\theta > 0$. Thus the
+constraints on the parameters in $CH_1(\nu, a+\nu, a+b+\nu, 1/\theta)$
+are $\nu>0$, $a>0$, $\boxed{b>-a}$, $\theta > 0$.
 
 The density function of $\mathcal{G}{B}(\nu,a,b,\theta)$ at
 $x \geqslant 0$ is, thanks to [this integral
@@ -102,16 +118,21 @@ representation](https://en.wikipedia.org/wiki/Confluent_hypergeometric_function#
 of the Kummer function ${}_1\!F_1$, $$
 \theta^\nu \frac{\Gamma(a+b)}{B(a,\nu)\Gamma(a+b+\nu)}x^{\nu-1}
 {}_1\!F_1(a+\nu, a+b+\nu; -\theta x).
-$$
+$$ Indeed, this expression makes sense for $b > -a$.
 
 ``` {.r}
-dGB <- function(x, nu, a, b, theta){
+dGB <- function(x, nu, a, b, theta = 1){
   stopifnot(nu>0, a>0, b>0, theta>0)
   out <- numeric(length(x))
-  positive <- x > 0
+  positive <- x >= 0
   x <- x[positive]
-  d <- exp(lgamma(a+b)-lbeta(a,nu)-lgamma(a+b+nu)+(nu-1)*log(x)+nu*log(theta))*
-    hyperg_1F1(a+nu, a+b+nu, -x*theta)
+  nu_eq_1 <- rep(nu == 1, length(x))
+  log_x_power_nu_minus_one <- 
+    ifelse(nu_eq_1, 0, (nu-1)*log(x))
+  C <- exp(lgamma(a+b) - lbeta(a,nu) - lgamma(a+b+nu) + 
+             log_x_power_nu_minus_one + nu*log(theta))
+  d <- ifelse(C == Inf, # occurs when x=0 and nu < 1
+              Inf, C*hyperg_1F1(a+nu, a+b+nu, -x*theta))
   out[positive] <- d
   out
 }
@@ -193,7 +214,7 @@ pGB <- function(q, nu, a, b, theta = 1){
 pGB(3, nu, a, b, theta)
 ## [1] 0.3726581
 sum(sims < 3)/nsims
-## [1] 0.37344
+## [1] 0.37214
 ```
 
 Poisson-Gamma-Beta distribution
@@ -257,7 +278,7 @@ And let's check:
 ``` {.r}
 sims <- rPGB(nsims, nu, a, b, theta)
 sum(sims <= 5) / nsims
-## [1] 0.76356
+## [1] 0.764005
 sum(dPGB(0:5, nu, a, b, theta))
 ## [1] 0.7643542
 ```
