@@ -61,7 +61,7 @@ a <- 10; b <- 5; theta <- 2
 nsims <- 200000
 sims <- rPB(nsims, a, b, theta)
 sum(sims <= 3) / nsims
-## [1] 0.949975
+## [1] 0.94941
 sum(dPB(0:3, a, b, theta))
 ## [1] 0.9499529
 ```
@@ -104,13 +104,16 @@ CH_1(\nu, a+\nu, a+b+\nu, 1/\theta),
 $$ that is, $$
 CH_1(\nu, \alpha, \beta, \theta) = 
 \mathcal{G}\mathcal{B}(\nu, \alpha-\nu, \beta-\alpha, 1/\theta).
-$$ However the $CH_1$ distribution is more general than the
-$\mathcal{G}\mathcal{B}$ distribution, because the above equality makes
-sense only for $\beta > \alpha$, whereas the constraints on the
-parameters of $CH_1(\nu, \alpha, \beta, \theta)$ are $\nu>0$,
-$\alpha>\nu$, $\boxed{\beta > \nu}$ and $\theta > 0$. Thus the
-constraints on the parameters in $CH_1(\nu, a+\nu, a+b+\nu, 1/\theta)$
-are $\nu>0$, $a>0$, $\boxed{b>-a}$, $\theta > 0$.
+$$ The constraints on the parameters of
+$CH_1(\nu, \alpha, \beta, \theta)$ are $\nu>0$, $\alpha>\nu$,
+$\beta \geqslant \alpha$ and $\theta > 0$. Thus it is not more general
+than the $\mathcal{G}\mathcal{B}$ distribution, except for the case
+$\beta = \alpha$. We will see that it is a Gamma distribution in this
+case. The condition $\beta \geqslant \alpha$ is not mentionned in the
+literature; Gupta & Nagar, Gupta & al., wrote $\beta > \nu$. However the
+density function they give is a positive quantity multiplied by
+${}_1F_1\left(\alpha, \beta; -\frac{x}{\theta}\right)$, which can take
+negative values when $\beta < \alpha$.
 
 The density function of $\mathcal{G}{B}(\nu,a,b,\theta)$ at
 $x \geqslant 0$ is, thanks to [this integral
@@ -118,18 +121,31 @@ representation](https://en.wikipedia.org/wiki/Confluent_hypergeometric_function#
 of the Kummer function ${}_1\!F_1$, $$
 \theta^\nu \frac{\Gamma(a+b)}{B(a,\nu)\Gamma(a+b+\nu)}x^{\nu-1}
 {}_1\!F_1(a+\nu, a+b+\nu; -\theta x).
-$$ Indeed, this expression makes sense for $b > -a$.
+$$ Indeed, this expression makes sense for $b = 0$. One has
+${}_1\!F_1(\alpha, 0; -\theta x) = \exp(-\theta x)$, and thus we get the
+density of $\mathcal{G}(\nu, \theta)$ when $b=0$. This is not suprising
+because $\mathcal{B}(a,b) \to \delta_1$ when $b \to 0^+$.
+
+Thanks to the identity $$
+{}_1\!F_1(a+\nu, a+b+\nu; -\theta x) = 
+\exp(-\theta x) {}_1\!F_1(b, a+b+\nu; \theta x),
+$$ we can easily see that the density function is indeed positive.
+
+Now let's implement this density in R:
 
 ``` {.r}
 dGB <- function(x, nu, a, b, theta = 1){
-  stopifnot(nu>0, a>0, b>0, theta>0)
+  stopifnot(nu > 0, a > 0, b >= 0, theta > 0)
+  if(b == 0){
+    return(dgamma(x, shape = nu, rate = theta))
+  }
   out <- numeric(length(x))
   positive <- x >= 0
   x <- x[positive]
   nu_eq_1 <- rep(nu == 1, length(x))
   log_x_power_nu_minus_one <- 
     ifelse(nu_eq_1, 0, (nu-1)*log(x))
-  C <- exp(lgamma(a+b) - lbeta(a,nu) - lgamma(a+b+nu) + 
+  C <- exp(-lbeta(a,nu) - lnpoch(a+b,nu) + 
              log_x_power_nu_minus_one + nu*log(theta))
   d <- ifelse(C == Inf, # occurs when x=0 and nu < 1
               Inf, C*hyperg_1F1(a+nu, a+b+nu, -x*theta))
@@ -203,7 +219,10 @@ pGBintegrand <- function(uv, theta, q){
   u^(a+nu-1)*(1-u)^(b-1)*v^(nu-1)*exp(-q*u*v*theta)
 }
 pGB <- function(q, nu, a, b, theta = 1){
-  stopifnot(nu>0, a>0, b>0, theta>0)
+  stopifnot(nu > 0, a > 0, b >= 0, theta > 0)
+  if(b == 0){
+    return(pgamma(q, shape = nu, rate = theta))
+  }
   if(q <= 0) return(0)
   if(q == Inf) return(1)
   integral_ <- 
@@ -214,7 +233,7 @@ pGB <- function(q, nu, a, b, theta = 1){
 pGB(3, nu, a, b, theta)
 ## [1] 0.3726581
 sum(sims < 3)/nsims
-## [1] 0.37214
+## [1] 0.37207
 ```
 
 Poisson-Gamma-Beta distribution
@@ -278,7 +297,7 @@ And let's check:
 ``` {.r}
 sims <- rPGB(nsims, nu, a, b, theta)
 sum(sims <= 5) / nsims
-## [1] 0.764005
+## [1] 0.764015
 sum(dPGB(0:5, nu, a, b, theta))
 ## [1] 0.7643542
 ```
