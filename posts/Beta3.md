@@ -15,13 +15,17 @@ output:
 prettify: True
 prettifycss: minimal
 tags: 'maths, statistics, R, special-functions'
-title: The Beta distribution of the third kind
+title: 'The Beta distribution of the third kind (or generalised Beta prime)'
 ---
 
 -   [Preliminaries: the (scaled) Beta prime
     distribution](#preliminaries-the-scaled-beta-prime-distribution)
 -   [Beta distribution of the third
     kind](#beta-distribution-of-the-third-kind)
+-   [Update 2019-09-05: generalised Beta
+    distribution](#update-2019-09-05-generalised-beta-distribution)
+-   [Cumulative distribution
+    function](#cumulative-distribution-function)
 -   [Sampling the Beta distribution of the third
     kind](#sampling-the-beta-distribution-of-the-third-kind)
 -   [Application to the Bayesian binomial
@@ -124,6 +128,29 @@ by an elementary transformation: $$
 \frac{\Theta}{1-\Theta} \sim 
 \mathcal{B}_3\left(c, d, c+d-\kappa, \frac{1}{\tau}\right).
 $$
+
+Update 2019-09-05: generalised Beta distribution
+================================================
+
+I've just discovered that the $GB4$ distribution appears in the paper
+*On Kummer’s distributions of type two and generalized Beta
+distributions* written by Hamza & Vallois. It is named *generalised Beta
+distribution* in this paper, it is denoted by $\beta_\delta(a,b,c)$ and
+its density function at $u \in [0,1]$ is given by $$
+\frac{1}{\beta(a,b){}_2\!F_1(-c,a;a+b;1-\delta)}
+u^{a-1}(1-u)^{b-1}\bigl(1+(\delta-1)u\bigr)^c
+$$ for $a,b,\delta>0$ and $c \in \mathbb{R}$.
+
+We have the following relation: if
+$\Phi \sim \mathcal{B}_3(c, d, \kappa, \tau)$, then $$
+\frac{\Phi}{1+\Phi} \sim \beta_{\frac{1}{\tau}}(c, d, \kappa-c-d).
+$$
+
+So, maybe a better name for $\mathcal{B}_3$ would be *generalised Beta
+prime distribution*.
+
+Cumulative distribution function
+================================
 
 The cumulative distribution function of $\mathcal{B}_3$ involves the
 *Appell hypergeometric function* $F_1$. A Fortran implementation of this
