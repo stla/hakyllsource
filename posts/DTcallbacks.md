@@ -15,7 +15,7 @@ output:
 prettify: True
 prettifycss: minimal
 tags: 'R, shiny, javascript, datatables'
-title: Useful callbacks for DT in Shiny
+title: 'Useful callbacks for DT (in Shiny)'
 ---
 
 -   [Edit cells on pressing Tab and arrow
@@ -140,6 +140,50 @@ shinyApp(ui, server)
 ```
 
 ![](figures/DTcallback_selectOnDrag.gif)
+
+Unfortunately there is an issue: when you sort a column, the selected
+rows are lost. Below is another code which overcomes this issue; it uses
+a slightly different callback and the option `server = FALSE`.
+
+``` {.r}
+library(shiny)
+library(DT)
+
+callback <- c(
+  "var dt = table.table().node();",
+  "$(dt).selectable({",
+  "  distance : 10,",
+  "  selecting: function(evt, ui){",
+  "    $(this).find('tbody tr').each(function(i){",
+  "      if($(this).hasClass('ui-selecting')){",
+  "        table.row(':eq(' + i + ')').select();",
+  "      }",
+  "    });",
+  "  }",
+  "}).on('dblclick', function(){table.rows().deselect();});"
+)
+
+ui <- fluidPage(
+  DTOutput("dt")
+)
+
+server <- function(input, output){
+  output[["dt"]] <- renderDT({
+    dtable <- datatable(
+      iris, extensions = "Select", 
+      callback = JS(callback), selection = "multiple"
+    )
+    dep <- htmltools::htmlDependency("jqueryui", "1.12.1",
+                                     "www/shared/jqueryui",
+                                     script = "jquery-ui.min.js",
+                                     package = "shiny")
+    dtable$dependencies <- c(dtable$dependencies, list(dep))
+    dtable
+  }, server = FALSE)
+}
+
+shinyApp(ui, server)
+```
 
 Edit columns headers
 ====================
