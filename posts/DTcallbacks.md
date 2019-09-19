@@ -21,6 +21,7 @@ title: 'Useful callbacks for DT (in Shiny)'
 -   [Edit cells on pressing Tab and arrow
     keys](#edit-cells-on-pressing-tab-and-arrow-keys)
 -   [Select rows on click and drag](#select-rows-on-click-and-drag)
+    -   [Getting the selected rows](#getting-the-selected-rows)
 -   [Edit columns headers](#edit-columns-headers)
 -   [Child tables](#child-tables)
 -   [Change row CSS properties on clicking an
@@ -180,6 +181,104 @@ server <- function(input, output){
     dtable$dependencies <- c(dtable$dependencies, list(dep))
     dtable
   }, server = FALSE)
+}
+
+shinyApp(ui, server)
+```
+
+### Getting the selected rows
+
+With the above code, `input[["dt_selected_rows"]]` provides only the
+rows selected by clicking, not the ones selected by dragging. Here is a
+code allowing to get both. The rows selected by clicking are given in
+`input[["dt_selected_rows"]]`, while the ones selected by dragging are
+given in `input[["dt_selected_rows2"]]`. There are some duplicates so we
+have to use `unique`.
+
+``` {.r}
+library(shiny)
+library(DT)
+
+callback <- c(
+  "function distinct(value, index, self){ 
+    return self.indexOf(value) === index;
+  }",
+  "var dt = table.table().node();",
+  "var tblID = $(dt).closest('.datatables').attr('id');",
+  "var inputName = tblID + '_rows_selected2'",
+  "var selected = [];",
+  "$(dt).selectable({",
+  "  distance : 10,",
+  "  selecting: function(evt, ui){",
+  "    $(this).find('tbody tr').each(function(i){",
+  "      if($(this).hasClass('ui-selecting')){",
+  "        var row = table.row(':eq(' + i + ')')",
+  "        row.select();",
+  "        var rowIndex = parseInt(row.id().split('-')[1]);",
+  "        selected.push(rowIndex);",
+  "        selected = selected.filter(distinct);",
+  "        Shiny.setInputValue(inputName, selected);",
+  "      }",
+  "    });",
+  "  }",
+  "}).on('dblclick', function(){table.rows().deselect();});",
+  "table.on('click', 'tr', function(){",
+  "  var row = table.row(this);",
+  "  if(!$(this).hasClass('selected')){",
+  "    var rowIndex = parseInt(row.id().split('-')[1]);",
+  "    var index = selected.indexOf(rowIndex);",
+  "    if(index > -1){",
+  "       selected.splice(index, 1);",
+  "    }",
+  "  }",
+  "  Shiny.setInputValue(inputName, selected);",
+  "});"
+)
+
+ui <- fluidPage(
+  DTOutput("dt"),
+  br(),
+  verbatimTextOutput("selectedRows")
+)
+
+dat <- iris
+dat$ROWID <- paste0("row-", 1:nrow(dat))
+
+rowNames <- TRUE # whether to show row names in the table
+colIndex <- as.integer(rowNames)
+
+server <- function(input, output){
+  output[["dt"]] <- renderDT({
+    dtable <- datatable(
+      dat, rownames = rowNames,  
+      extensions = "Select", 
+      callback = JS(callback),
+      selection = "multiple", 
+      options = list(
+        rowId = JS(sprintf("function(data){return data[%d];}", 
+                           ncol(dat)-1L+colIndex)),
+        columnDefs = list( # hide the ROWID column
+          list(visible = FALSE, targets = ncol(dat)-1L+colIndex)
+        )
+      )
+    )
+    dep <- htmltools::htmlDependency("jqueryui", "1.12.1",
+                                     "www/shared/jqueryui",
+                                     script = "jquery-ui.min.js",
+                                     package = "shiny")
+    dtable$dependencies <- c(dtable$dependencies, list(dep))
+    dtable
+  }, server = FALSE)
+  
+  selectedRows <- reactive({
+    unique(
+      c(input[["dt_rows_selected"]], input[["dt_rows_selected2"]])
+    )
+  })
+  
+  output[["selectedRows"]] <- renderText({
+    selectedRows()
+  })
 }
 
 shinyApp(ui, server)
