@@ -1092,16 +1092,16 @@ plane { <0,1,0>, 0
         subdiv(
             vertices[faces[i][0]], 
             vertices[faces[i][1]], 
-            vertices[faces[i][2]], depth);
+            vertices[faces[i][2]], r, depth);
     #declare stereoTriangles[i] = array[dimension_size(triangles4,1)][3];
     #for(j, 0, dimension_size(triangles4,1)-1)
         #local trgl4 = triangles4[j];
         #declare stereoTriangles[i][j][0] = 
-            StereographicProjection(rotate4d(theta, beta, xi, trgl4[0]));
+            StereographicProjection(rotate4d(theta, phi, xi, trgl4[0]), r);
         #declare stereoTriangles[i][j][1] = 
-            StereographicProjection(rotate4d(theta, beta, xi, trgl4[1]));
+            StereographicProjection(rotate4d(theta, phi, xi, trgl4[1]), r);
         #declare stereoTriangles[i][j][2] = 
-            StereographicProjection(rotate4d(theta, beta, xi, trgl4[2]));
+            StereographicProjection(rotate4d(theta, phi, xi, trgl4[2]), r);
     #end
 #end
 
