@@ -1,0 +1,24 @@
+---
+title: "My JavaScript artworks"
+author: "Stéphane Laurent"
+date: '2020-01-17'
+tags: javascript
+output:
+  md_document:
+    variant: markdown
+    preserve_yaml: true
+  html_document:
+    highlight: kate
+    keep_md: no
+highlighter: pandoc-solarized
+---
+
+Here are the links to my JavaScript artworks:
+
+- [three.js](../frames/threejs_index.html)
+
+- [paper.js](../frames/paperjs_index.html)
+
+- [React](../frames/react_index.html)
+
+- [Miscellanous](../frames/misc_index.html)
