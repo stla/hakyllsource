@@ -269,31 +269,49 @@ Another way is to use the relation with the *first Appell hypergeometric
 function*: $$
 E(\phi, m) = \sin\phi \times 
 F_1\Bigl(\frac12, \frac12, -\frac{3}{2}, \sin^2\phi, m\sin^2\phi\Bigr),
-$$ and the Euler integral representation $$
+$$ for $-\frac{\pi}{2} \leqslant \Re(\phi) \leqslant \frac{\pi}{2}$, and
+the Euler integral representation $$
 F_1\Bigl(\frac12, \frac12, -\frac{3}{2}, z_1, z_2\Bigr) = 
 \frac12\int_0^1 \frac{\sqrt{1-z_2t}}{\sqrt{t}\sqrt{1-z_1t}}\,\mathrm{d}t.
 $$
 
 ``` {.r}
-f <- function(t, z1, z2){
+integrand <- function(t, z1, z2){
   sqrt(1-t*z2) / sqrt(t) / sqrt(1-t*z1)
 }
-f1 <- function(t, z1, z2) Re(f(t, z1, z2))
-f2 <- function(t, z1, z2) Im(f(t, z1, z2))
+integrandRe <- function(t, z1, z2) Re(integrand(t, z1, z2))
+integrandIm <- function(t, z1, z2) Im(integrand(t, z1, z2))
+E <- function(phi, m){
+  if(phi == 0){
+    0
+  }else if(phi == pi/2 && m == 1){
+    1
+  }else if(Re(phi) >= -pi/2 && Re(phi) <= pi/2){
+    sine <- sin(phi)
+    sine2 <- sine*sine
+    re <- integrate(integrandRe, 0, 1, z1 = sine2, z2 = m*sine2)
+    im <- integrate(integrandIm, 0, 1, z1 = sine2, z2 = m*sine2)
+    sine/2 * (re$value + 1i*im$value)
+  }else if(Re(phi) > pi/2){
+    k <- 0
+    while(Re(phi) > pi/2){
+      phi <- phi - pi
+      k <- k + 1
+    }
+    2*k*E(pi/2, m) + E(phi, m)
+  }else{
+    k <- 0
+    while(Re(phi) < -pi/2){
+      phi <- phi + pi
+      k <- k - 1
+    }
+    2*k*E(pi/2, m) + E(phi, m)
+  }
+}
 #
-phi <- 1+1i; sine <- sin(phi)
-m <- -5i
-I1 <- integrate(f1, 0, 1, z1 = sine^2, z2 = m*sine^2)
-I2 <- integrate(f2, 0, 1, z1 = sine^2, z2 = m*sine^2)
-sine/2 * (I1$value + 1i*I2$value)
+E(1+1i, -5i)
 ## [1] -0.664216+1.746635i
-E(phi,m)
-## [1] -0.66421+1.746623i
 #
-phi <- 7+2i; sine <- sin(phi)
-m <- -5i
-I1 <- integrate(f1, 0, 1, z1 = sine^2, z2 = m*sine^2)
-I2 <- integrate(f2, 0, 1, z1 = sine^2, z2 = m*sine^2)
-sine/2 * (I1$value + 1i*I2$value) # same as Wolfram
-## [1] 6.421623-0.321337i
+E(7+2i, -5i) # same as Wolfram
+## [1] 14.95287+4.83346i
 ```
