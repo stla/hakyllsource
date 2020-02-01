@@ -1,6 +1,8 @@
 ---
 author: Stéphane Laurent
 date: '2020-01-30'
+editor_options:
+  chunk_output_type: console
 highlighter: 'pandoc-solarized'
 linenums: True
 output:
@@ -54,6 +56,8 @@ functions `ellint_RF` and `ellint_RD`.
 E <- function(phi, m){
   if(phi == 0){
     0
+  }else if(phi == pi/2 && m == 1){
+    1
   }else if(phi >= -pi/2 && phi <= pi/2){
     sine <- sin(phi)
     sine2 <- sine*sine
@@ -108,6 +112,8 @@ $$ for any $k \in \mathbb{Z}$.
 E <- function(phi, m){
   if(phi == 0){
     0
+  }else if(phi == pi/2 && m == 1){
+    1
   }else if(phi >= -pi/2 && phi <= pi/2){
     sine <- sin(phi)
     sine2 <- sine*sine
@@ -206,6 +212,8 @@ the second kind allowing complex values of $\phi$:
 E <- function(phi, m){
   if(phi == 0){
     0
+  }else if(phi == pi/2 && m == 1){
+    1
   }else if(Re(phi) >= -pi/2 && Re(phi) <= pi/2){
     sine <- sin(phi)
     sine2 <- sine*sine
@@ -250,4 +258,42 @@ E(phi = 1+1i, m = -5i) # same as Wolfram
 ## [1] -0.66421+1.746623i
 E(phi = 7+2i, m = -5i) # not the same as Wolfram
 ## [1] -0.78406+2.057178i
+```
+
+So this implementation is not perfect.
+
+Resorting to the Appell function
+--------------------------------
+
+Another way is to use the relation with the *first Appell hypergeometric
+function*: $$
+E(\phi, m) = \sin\phi \times 
+F_1\Bigl(\frac12, \frac12, -\frac{3}{2}, \sin^2\phi, m\sin^2\phi\Bigr),
+$$ and the Euler integral representation $$
+F_1\Bigl(\frac12, \frac12, -\frac{3}{2}, z_1, z_2\Bigr) = 
+\frac12\int_0^1 \frac{\sqrt{1-z_2t}}{\sqrt{t}\sqrt{1-z_1t}}\,\mathrm{d}t.
+$$
+
+``` {.r}
+f <- function(t, z1, z2){
+  sqrt(1-t*z2) / sqrt(t) / sqrt(1-t*z1)
+}
+f1 <- function(t, z1, z2) Re(f(t, z1, z2))
+f2 <- function(t, z1, z2) Im(f(t, z1, z2))
+#
+phi <- 1+1i; sine <- sin(phi)
+m <- -5i
+I1 <- integrate(f1, 0, 1, z1 = sine^2, z2 = m*sine^2)
+I2 <- integrate(f2, 0, 1, z1 = sine^2, z2 = m*sine^2)
+sine/2 * (I1$value + 1i*I2$value)
+## [1] -0.664216+1.746635i
+E(phi,m)
+## [1] -0.66421+1.746623i
+#
+phi <- 7+2i; sine <- sin(phi)
+m <- -5i
+I1 <- integrate(f1, 0, 1, z1 = sine^2, z2 = m*sine^2)
+I2 <- integrate(f2, 0, 1, z1 = sine^2, z2 = m*sine^2)
+sine/2 * (I1$value + 1i*I2$value) # same as Wolfram
+## [1] 6.421623-0.321337i
 ```
