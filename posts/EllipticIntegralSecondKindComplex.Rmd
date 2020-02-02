@@ -4,12 +4,12 @@ author: "Stéphane Laurent"
 date: '2020-01-30'
 tags: R, maths, special-functions
 output:
-  html_document:
-    highlight: kate
-    keep_md: no
   md_document:
     variant: markdown
     preserve_yaml: true
+  html_document:
+    highlight: kate
+    keep_md: no
 prettify: yes
 linenums: yes
 prettifycss: minimal
@@ -150,7 +150,7 @@ and compare with
 on WolframAlpha.
 
 
-# Extending $E(\phi \mid m)$ to complex $\phi$
+# Extending $E(\phi \mid m)$ to complex $\phi$ and $m$
 
 Now we will construct the analytical continuation of $E(\phi \mid m)$.
 
@@ -163,7 +163,7 @@ RF <- function(x, y, z, minerror = 1e-7){
   x <- as.complex(x); y <- as.complex(y); z <- as.complex(z)
   dx <- dy <- dz <- Inf
   while(max(dx,dy,dz) > minerror){
-    lambda <- sqrt(x*y) + sqrt(y*z) + sqrt(z*x)
+    lambda <- sqrt(x)*sqrt(y) + sqrt(y)*sqrt(z) + sqrt(z)*sqrt(x)
     x <- (x + lambda) / 4
     y <- (y + lambda) / 4
     z <- (z + lambda) / 4
@@ -182,7 +182,7 @@ RD <- function(x, y, z, minerror = 1e-7){
   dx <- dy <- dz <- Inf
   s <- 0; fac <- 1
   while(max(dx,dy,dz) > minerror){
-    lambda <- sqrt(x*y) + sqrt(y*z) + sqrt(z*x)
+    lambda <- sqrt(x)*sqrt(y) + sqrt(y)*sqrt(z) + sqrt(z)*sqrt(x)
     s <- s + fac / (sqrt(z) * (z + lambda))
     fac <- fac/4
     x <- (x + lambda) / 4
@@ -204,8 +204,19 @@ RD <- function(x, y, z, minerror = 1e-7){
 }
 ```
 
+An important note. In the link I gave above, the author takes
+$$
+\lambda = \sqrt{xy} + \sqrt{yz} + \sqrt{zx}
+$$
+whereas I take 
+$$
+\lambda = \sqrt{x}\sqrt{y} + \sqrt{y}\sqrt{z} + \sqrt{z}\sqrt{x}.
+$$
+This is important: the square root of a product is not equal to the product of 
+the square roots in general, for complex numbers!
+
 Now here is the implementation of the incomplete elliptic integral of the 
-second kind allowing complex values of $\phi$:
+second kind allowing complex values of $\phi$ and $m$:
 
 ```{r}
 E <- function(phi, m){
@@ -246,25 +257,29 @@ and compare with
 [`EllipticE[7+2I,-5]`](https://www.wolframalpha.com/input/?i=EllipticE%5B7%2B2I%2C+-5%5D) 
 on WolframAlpha.
 
-I also find the same results as the ones of WolframAlpha when $\phi$ is real 
-and $m$ is complex, but not always when both are complex.
+I also find the same results as the ones of WolframAlpha when $\phi$  
+and $m$ are complex.
 
 ```{r}
 E(phi = 1+1i, m = -5i) # same as Wolfram
-E(phi = 7+2i, m = -5i) # not the same as Wolfram
+E(phi = 7+2i, m = -5i) # same as Wolfram
 ```
 
-So this implementation is not perfect. 
 
 ## Resorting to the Appell function
 
-Another way is to use the relation with the 
-*first Appell hypergeometric function*:
+As a sanity check, let's propose another way. 
+
+This way consists in using the relation between the incomplete elliptic integral 
+of the second kind and the *first Appell hypergeometric function*:
 $$
 E(\phi, m) = \sin\phi \times 
 F_1\Bigl(\frac12, \frac12, -\frac{3}{2}, \sin^2\phi, m\sin^2\phi\Bigr),
 $$
-for $-\frac{\pi}{2} \leqslant \Re(\phi) \leqslant \frac{\pi}{2}$, and the Euler integral representation 
+for $-\frac{\pi}{2} \leqslant \Re(\phi) \leqslant \frac{\pi}{2}$. 
+
+Unfortunately there's no available R implementation of $F_1$ allowing complex 
+values of the variables. Then we will use the Euler integral representation 
 $$
 F_1\Bigl(\frac12, \frac12, -\frac{3}{2}, z_1, z_2\Bigr) = 
 \frac12\int_0^1 \frac{\sqrt{1-z_2t}}{\sqrt{t}\sqrt{1-z_1t}}\,\mathrm{d}t.
@@ -304,8 +319,10 @@ E <- function(phi, m){
   }
 }
 #
-E(1+1i, -5i)
+E(1+1i, -5i) # almost the same as before
 #
-E(7+2i, -5i) # same as Wolfram
+E(7+2i, -5i) # almost the same as before
 ```
 
+The slight differences are due to the numerical integrations. The previous way 
+is preferable. 
