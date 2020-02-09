@@ -30,7 +30,6 @@ $\mathcal{C}_1$).
 When this is an inversion on a circle, this circle of inversion is called 
 a *mid-circle* of $\mathcal{C}_1$ and $\mathcal{C}_2$. 
 
-Hereafter, we set $\rho = \frac{r_1}{r_2}$.
 
 # Congruent case
 
@@ -82,4 +81,73 @@ invertCircle(I, k, C1) # should be C2
 invertCircle(I, k, C2) # should be C1
 ```
 
+
+# Non-congruent case 
+
+Now we assume $r_1 \neq r_2$. We set $\rho = \frac{r_1}{r_2}$.
+
+## Non-intersecting circles
+
+We firstly consider the case when the two circles do not intersect. 
+They can be outside each other, or one of them can contain the other, and 
+we distinguish these two cases. 
+In both cases, there are two inversions which swap the two circles, one with a 
+positive power and the other with a negative power. 
+So the first one defines a mid-circle, and this is the only one.
+
+### Case when the circles are outside each other
+
+The inversion with positive power has pole 
+$I = O_1 - \frac{\rho}{1-\rho} * (O_2-O_1)$, and power 
+$k = \rho|IO_2^2 - r_2^2|$.
+
+The inversion with negative power has pole 
+$I = O_1 + \frac{\rho}{1+\rho} * (O_2-O_1)$, and power 
+$k = -\rho|IO_2^2 - r_2^2|$.
+
+### Case when one circle contains the other
+
+The inversion with positive power has pole 
+$I = O_1 + \frac{\rho}{1+\rho} * (O_2-O_1)$, and power 
+$k = \rho|IO_2^2 - r_2^2|$.
+
+The inversion with negative power has pole 
+$I = O_1 - \frac{\rho}{1-\rho} * (O_2-O_1)$, and power 
+$k = -\rho|IO_2^2 - r_2^2|$.
+
+
+## Circles intersecting at two points
+
+In this case, there are two mid-circles.  
+The first inversion has pole 
+$I = O_1 - \frac{\rho}{1-\rho} * (O_2-O_1)$, and power 
+$k = \rho|IO_2^2 - r_2^2|$. 
+The second inversion has pole 
+$I = O_1 + \frac{\rho}{1+\rho} * (O_2-O_1)$, and power 
+$k = \rho|IO_2^2 - r_2^2|$. 
+
+```{r}
+# TODO: faire les figures
+circ1 <- Circle$new(c(5,4), 2)
+circ2 <- Circle$new(c(8,5), 3)
+#
+iota <- inversionSwappingTwoCircles(circ1, circ2, TRUE)
+iota
+a <- circ1$radius/circ2$radius
+I2 <- circ1$center + a/(1+a) * (circ2$center - circ1$center)
+k2 <- a * abs(c(crossprod(I2-circ2$center) - circ2$radius^2))
+iota2 <- Inversion$new(I2, k2)
+iota2$invertCircle(circ1)
+```
+
+
+## Tangent circles
+
+In the case when the two circles are tangent, there is only one inversion 
+which swaps the two circles, and this is an inversion on a circle 
+(the unique mid-circle). 
+
+This inversion has pole 
+$I = O_1 - \frac{\rho}{1-\rho} * (O_2-O_1)$, and power 
+$k = \rho|IO_2^2 - r_2^2|$. 
 
