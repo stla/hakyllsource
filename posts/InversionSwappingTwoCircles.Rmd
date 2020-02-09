@@ -39,6 +39,7 @@ line); obviously, this line is the perpendicular bisector of the segment
 joining the two centers $O_1$ and $O_2$. 
 We could say that this line is a mid-circle, if 
 we allow the mid-circle to be a generalized circle. 
+
 If the two circles are tangent, this is the unique mid-circle.
 
 When $r_1 = r_2$, the two circles $\mathcal{C}_1$ and $\mathcal{C}_2$ can be 
@@ -53,7 +54,7 @@ circles. But they can be swapped by an inversion with a negative power;
 the pole of this inversion is 
 $I = \frac{1}{2}(O_1+O_2)$, and its power is $k = -|IO_2^2 - r_2^2|$. 
 
-Let's check this third claim. In a [previous post](./Inversions.html), I 
+Let's check this latest claim. In a [previous post](./Inversions.html), I 
 gave a formula to calculate the image of a circle by an inversion on a circle. 
 A more general formula for the image circle $\mathcal{C}'(O',r')$ of the 
 circle $\mathcal{C}(O,r)$ by the inversion of pole $I$ and possibly negative 
@@ -98,11 +99,11 @@ So the first one defines a mid-circle, and this is the only one.
 ### Case when the circles are outside each other
 
 The inversion with positive power has pole 
-$I = O_1 - \frac{\rho}{1-\rho} * (O_2-O_1)$, and power 
+$I = O_1 - \frac{\rho}{1-\rho}(O_2-O_1)$, and power 
 $k = \rho|IO_2^2 - r_2^2|$.
 
 The inversion with negative power has pole 
-$I = O_1 + \frac{\rho}{1+\rho} * (O_2-O_1)$, and power 
+$I = O_1 + \frac{\rho}{1+\rho}(O_2-O_1)$, and power 
 $k = -\rho|IO_2^2 - r_2^2|$.
 
 Here is a picture of the mid-circle:
@@ -114,11 +115,12 @@ rho <- r1/r2
 I <- O1 - rho/(1-rho)*(O2-O1)
 k <- rho * abs(c(crossprod(I-O2))-r2^2)
 library(plotrix)
+opar <- par(mar = c(4,4,1,1))
 plot(NULL, asp = 1, xlim = c(-3, 6), ylim = c(-1,6), 
      xlab = NA, ylab = NA)
 draw.circle(O1[1], O1[2], r1, lwd = 2)
 draw.circle(O2[1], O2[2], r2, lwd = 2)
-draw.circle(I[1], I[2], sqrt(k), lwd = 2, border = "red")
+draw.circle(I[1], I[2], sqrt(k), lwd = 3, border = "red")
 # check
 invertCircle(I, k, list(center=O1, radius=r1)) # should be C2
 invertCircle(I, k, list(center=O2, radius=r2)) # should be C1
@@ -128,11 +130,11 @@ invertCircle(I, k, list(center=O2, radius=r2)) # should be C1
 ### Case when one circle contains the other
 
 The inversion with positive power has pole 
-$I = O_1 + \frac{\rho}{1+\rho} * (O_2-O_1)$, and power 
+$I = O_1 + \frac{\rho}{1+\rho}(O_2-O_1)$, and power 
 $k = \rho|IO_2^2 - r_2^2|$.
 
 The inversion with negative power has pole 
-$I = O_1 - \frac{\rho}{1-\rho} * (O_2-O_1)$, and power 
+$I = O_1 - \frac{\rho}{1-\rho}(O_2-O_1)$, and power 
 $k = -\rho|IO_2^2 - r_2^2|$.
 
 Here is a picture of the mid-circle:
@@ -143,11 +145,12 @@ O2 <- c(0.7,1); r2 <- 0.7
 rho <- r1/r2
 I <- O1 + rho/(1+rho)*(O2-O1)
 k <- rho * abs(c(crossprod(I-O2))-r2^2)
+opar <- par(mar = c(4,4,1,1))
 plot(NULL, asp = 1, xlim = c(-3, 3), ylim = c(-3,3), 
      xlab = NA, ylab = NA)
 draw.circle(O1[1], O1[2], r1, lwd = 2)
 draw.circle(O2[1], O2[2], r2, lwd = 2)
-draw.circle(I[1], I[2], sqrt(k), lwd = 2, border = "red")
+draw.circle(I[1], I[2], sqrt(k), lwd = 3, border = "red")
 # check
 invertCircle(I, k, list(center=O1, radius=r1)) # should be C2
 invertCircle(I, k, list(center=O2, radius=r2)) # should be C1
@@ -158,24 +161,32 @@ invertCircle(I, k, list(center=O2, radius=r2)) # should be C1
 
 In this case, there are two mid-circles.  
 The first inversion has pole 
-$I = O_1 - \frac{\rho}{1-\rho} * (O_2-O_1)$, and power 
+$I = O_1 - \frac{\rho}{1-\rho}(O_2-O_1)$, and power 
 $k = \rho|IO_2^2 - r_2^2|$. 
 The second inversion has pole 
-$I = O_1 + \frac{\rho}{1+\rho} * (O_2-O_1)$, and power 
+$I = O_1 + \frac{\rho}{1+\rho}(O_2-O_1)$, and power 
 $k = \rho|IO_2^2 - r_2^2|$. 
 
-```{r}
-# TODO: faire les figures
-circ1 <- Circle$new(c(5,4), 2)
-circ2 <- Circle$new(c(8,5), 3)
-#
-iota <- inversionSwappingTwoCircles(circ1, circ2, TRUE)
-iota
-a <- circ1$radius/circ2$radius
-I2 <- circ1$center + a/(1+a) * (circ2$center - circ1$center)
-k2 <- a * abs(c(crossprod(I2-circ2$center) - circ2$radius^2))
-iota2 <- Inversion$new(I2, k2)
-iota2$invertCircle(circ1)
+```{r midcircle_intersect, fig.width=5, fig.height=5}
+O1 <- c(5,4); r1 <- 2
+O2 <- c(8,5); r2 <- 3
+rho <- r1/r2
+I1 <- O1 - rho/(1-rho)*(O2-O1)
+k1 <- rho * abs(c(crossprod(I1-O2))-r2^2)
+I2 <- O1 + rho/(1+rho)*(O2-O1)
+k2 <- rho * abs(c(crossprod(I2-O2))-r2^2)
+opar <- par(mar = c(4,4,1,1))
+plot(NULL, asp = 1, xlim = c(-3, 11), ylim = c(2,8), 
+     xlab = NA, ylab = NA)
+draw.circle(O1[1], O1[2], r1, lwd = 2)
+draw.circle(O2[1], O2[2], r2, lwd = 2)
+draw.circle(I1[1], I1[2], sqrt(k1), lwd = 3, border = "red")
+draw.circle(I2[1], I2[2], sqrt(k2), lwd = 3, border = "red")
+# check
+invertCircle(I1, k1, list(center=O1, radius=r1)) # should be C2
+invertCircle(I1, k1, list(center=O2, radius=r2)) # should be C1
+invertCircle(I2, k2, list(center=O1, radius=r1)) # should be C2
+invertCircle(I2, k2, list(center=O2, radius=r2)) # should be C1
 ```
 
 
@@ -183,9 +194,30 @@ iota2$invertCircle(circ1)
 
 In the case when the two circles are tangent, there is only one inversion 
 which swaps the two circles, and this is an inversion on a circle 
-(the unique mid-circle). 
+(thus the unique mid-circle). 
 
 This inversion has pole 
-$I = O_1 - \frac{\rho}{1-\rho} * (O_2-O_1)$, and power 
+$I = O_1 - \frac{\rho}{1-\rho}(O_2-O_1)$, and power 
 $k = \rho|IO_2^2 - r_2^2|$. 
+
+```{r midcircle_tangent, fig.width=5, fig.height=5}
+O1 <- c(5,4); r1 <- 2
+O2 <- c(8,4); r2 <- 1
+rho <- r1/r2
+I <- O1 - rho/(1-rho)*(O2-O1)
+k <- rho * abs(c(crossprod(I-O2))-r2^2)
+opar <- par(mar = c(4,4,1,1))
+plot(NULL, asp = 1, xlim = c(3, 9), ylim = c(2,6), 
+     xlab = NA, ylab = NA)
+draw.circle(O1[1], O1[2], r1, lwd = 2)
+draw.circle(O2[1], O2[2], r2, lwd = 2)
+draw.circle(I[1], I[2], sqrt(k), lwd = 3, border = "red")
+# check
+invertCircle(I, k, list(center=O1, radius=r1)) # should be C2
+invertCircle(I, k, list(center=O2, radius=r2)) # should be C1
+```
+
+```{r}
+par(opar)
+```
 

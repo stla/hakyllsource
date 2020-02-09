@@ -257,8 +257,8 @@ and compare with
 [`EllipticE[7+2I,-5]`](https://www.wolframalpha.com/input/?i=EllipticE%5B7%2B2I%2C+-5%5D)
 on WolframAlpha.
 
-I also find the same results as the ones of WolframAlpha when $\phi$\
-and $m$ are complex.
+I also find the same results as the ones of WolframAlpha when $\phi$ and
+$m$ are complex.
 
 ``` {.r}
 E(phi = 1+1i, m = -5i) # same as Wolfram
