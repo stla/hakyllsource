@@ -105,6 +105,26 @@ The inversion with negative power has pole
 $I = O_1 + \frac{\rho}{1+\rho} * (O_2-O_1)$, and power 
 $k = -\rho|IO_2^2 - r_2^2|$.
 
+Here is a picture of the mid-circle:
+
+```{r midcircle_outside, fig.width=5, fig.height=5}
+O1 <- c(0,2); r1 <- 3
+O2 <- c(4,5); r2 <- 1
+rho <- r1/r2
+I <- O1 - rho/(1-rho)*(O2-O1)
+k <- rho * abs(c(crossprod(I-O2))-r2^2)
+library(plotrix)
+plot(NULL, asp = 1, xlim = c(-3, 6), ylim = c(-1,6), 
+     xlab = NA, ylab = NA)
+draw.circle(O1[1], O1[2], r1, lwd = 2)
+draw.circle(O2[1], O2[2], r2, lwd = 2)
+draw.circle(I[1], I[2], sqrt(k), lwd = 2, border = "red")
+# check
+invertCircle(I, k, list(center=O1, radius=r1)) # should be C2
+invertCircle(I, k, list(center=O2, radius=r2)) # should be C1
+```
+
+
 ### Case when one circle contains the other
 
 The inversion with positive power has pole 
@@ -114,6 +134,24 @@ $k = \rho|IO_2^2 - r_2^2|$.
 The inversion with negative power has pole 
 $I = O_1 - \frac{\rho}{1-\rho} * (O_2-O_1)$, and power 
 $k = -\rho|IO_2^2 - r_2^2|$.
+
+Here is a picture of the mid-circle:
+
+```{r midcircle_contains, fig.width=5, fig.height=5}
+O1 <- c(0,0); r1 <- 3
+O2 <- c(0.7,1); r2 <- 0.7
+rho <- r1/r2
+I <- O1 + rho/(1+rho)*(O2-O1)
+k <- rho * abs(c(crossprod(I-O2))-r2^2)
+plot(NULL, asp = 1, xlim = c(-3, 3), ylim = c(-3,3), 
+     xlab = NA, ylab = NA)
+draw.circle(O1[1], O1[2], r1, lwd = 2)
+draw.circle(O2[1], O2[2], r2, lwd = 2)
+draw.circle(I[1], I[2], sqrt(k), lwd = 2, border = "red")
+# check
+invertCircle(I, k, list(center=O1, radius=r1)) # should be C2
+invertCircle(I, k, list(center=O2, radius=r2)) # should be C1
+```
 
 
 ## Circles intersecting at two points
