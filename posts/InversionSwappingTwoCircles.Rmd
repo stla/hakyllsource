@@ -1,0 +1,85 @@
+---
+title: "Inversion swapping two circles"
+author: "Stéphane Laurent"
+date: '2020-02-09'
+tags: R, maths, geometry
+output:
+  md_document:
+    variant: markdown
+    preserve_yaml: true
+  html_document:
+    highlight: kate
+    keep_md: no
+prettify: yes
+linenums: yes
+prettifycss: minimal
+highlighter: pandoc-solarized
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, 
+                      fig.path = "figures/InversionSwappingCircles-")
+```
+
+Consider two circles $\mathcal{C}_1(O_1,r_1)$ and $\mathcal{C}_2(O_2,r_2)$. 
+There is always an inversion which swaps $\mathcal{C}_1$ and $\mathcal{C}_2$ 
+(which maps $\mathcal{C}_1$ to $\mathcal{C}_2$ and $\mathcal{C}_2$ to 
+$\mathcal{C}_1$). 
+When this is an inversion on a circle, this circle of inversion is called 
+a *mid-circle* of $\mathcal{C}_1$ and $\mathcal{C}_2$. 
+
+Hereafter, we set $\rho = \frac{r_1}{r_2}$.
+
+# Congruent case
+
+When $r_1 = r_2$, the two circles $\mathcal{C}_1$ and $\mathcal{C}_2$ can be 
+swapped by an inversion on a line (that is, a reflection with respect to this 
+line); obviously, this line is the perpendicular bisector of the segment 
+joining the two centers $O_1$ and $O_2$. 
+We could say that this line is a mid-circle, if 
+we allow the mid-circle to be a generalized circle. 
+If the two circles are tangent, this is the unique mid-circle.
+
+When $r_1 = r_2$, the two circles $\mathcal{C}_1$ and $\mathcal{C}_2$ can be 
+swapped by an inversion on a circle if they intersect each other at two 
+points. The pole of this inversion is 
+$I = \frac{1}{2}(O_1+O_2)$, and its power is $k = |IO_2^2 - r_2^2|$. 
+That is, the circle of center $I$ and radius $\sqrt{k}$ is a mid-circle. 
+
+When $r_1 = r_2$ and the two circles $\mathcal{C}_1$ and $\mathcal{C}_2$ do 
+not intersect each other, there is no inversion on a circle which swaps these 
+circles. But they can be swapped by an inversion with a negative power; 
+the pole of this inversion is 
+$I = \frac{1}{2}(O_1+O_2)$, and its power is $k = -|IO_2^2 - r_2^2|$. 
+
+Let's check this third claim. In a [previous post](./Inversions.html), I 
+gave a formula to calculate the image of a circle by an inversion on a circle. 
+A more general formula for the image circle $\mathcal{C}'(O',r')$ of the 
+circle $\mathcal{C}(O,r)$ by the inversion of pole $I$ and possibly negative 
+power $k$, is: $O' = I + \frac{k}{d}(O-I)$ and 
+$r' = \left|\frac{k}{d}\right|r$ at condition that 
+$d := OI^2 - r^2 \neq 0$ (if $d=0$, the image of $\mathcal{C}$ is a line).
+
+```{r}
+invertCircle <- function(I, k, circle){
+  O <- circle$center; r <- circle$radius
+  d <- c(crossprod(O-I)) - r^2
+  list(
+    center = I + k/d*(O-I),
+    radius = abs(k/d)*r
+  )
+}
+# two congruent circles which do not intersect each other
+C1 <- list(center = c(1,2), radius = 3)
+C2 <- list(center = c(14,15), radius = 3)
+# inversion which swaps the two circles
+I <- (C1$center + C2$center) / 2
+k <- -abs(c(crossprod(I-C2$center) - C2$radius^2))
+# check
+invertCircle(I, k, C1) # should be C2
+invertCircle(I, k, C2) # should be C1
+```
+
+
