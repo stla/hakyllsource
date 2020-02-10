@@ -196,7 +196,7 @@ In the case when the two circles are tangent, there is only one inversion
 which swaps the two circles, and this is an inversion on a circle 
 (thus the unique mid-circle). 
 
-This inversion has pole 
+- *If the two circles are externally tangent*, this inversion has pole 
 $I = O_1 - \frac{\rho}{1-\rho}(O_2-O_1)$, and power 
 $k = \rho|IO_2^2 - r_2^2|$. 
 
@@ -216,6 +216,29 @@ draw.circle(I[1], I[2], sqrt(k), lwd = 3, border = "red")
 invertCircle(I, k, list(center=O1, radius=r1)) # should be C2
 invertCircle(I, k, list(center=O2, radius=r2)) # should be C1
 ```
+
+- *If the two circles are internally tangent*, the inversion has pole 
+$I = O_1 + \frac{\rho}{1+\rho}(O_2-O_1)$, and power 
+$k = \rho|IO_2^2 - r_2^2|$. 
+
+```{r midcircle_tangent2, fig.width=5, fig.height=5}
+O1 <- c(5,4); r1 <- 2
+O2 <- c(6,4); r2 <- 1
+rho <- r1/r2
+I <- O1 + rho/(1+rho)*(O2-O1)
+k <- rho * abs(c(crossprod(I-O2))-r2^2)
+opar <- par(mar = c(4,4,1,1))
+plot(NULL, asp = 1, xlim = c(3, 7), ylim = c(2,6), 
+     xlab = NA, ylab = NA)
+draw.circle(O1[1], O1[2], r1, lwd = 2)
+draw.circle(O2[1], O2[2], r2, lwd = 2)
+draw.circle(I[1], I[2], sqrt(k), lwd = 3, border = "red")
+# check
+invertCircle(I, k, list(center=O1, radius=r1)) # should be C2
+invertCircle(I, k, list(center=O2, radius=r2)) # should be C1
+```
+
+
 
 ```{r}
 par(opar)
