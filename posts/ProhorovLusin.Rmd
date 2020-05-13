@@ -4,12 +4,12 @@ author: "Stéphane Laurent"
 date: '2020-05-13'
 tags: maths
 output:
-  md_document:
-    variant: markdown
-    preserve_yaml: true
   html_document:
     highlight: kate
     keep_md: no
+  md_document:
+    variant: markdown
+    preserve_yaml: true
 prettifycss: minimal
 highlighter: pandoc-solarized
 ---

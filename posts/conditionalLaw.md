@@ -44,7 +44,10 @@ of probabilities on $E$ such that the conditional law
 $\mathcal{L}(X\mid\mathfrak{B})$ is a $\Pr(E)$-valued random variable.
 
 I am unable to find a self-contained reference for this result. I aim to
-prove it in these notes, in a self-contained way.
+prove it in these notes in a self-contained way, except that I don't
+give a proof of Prohorov's theorem here. However, I give a proof of
+Prohorov's theorem for Lusin spaces in another post ([Probabilities on a
+Lusin space](ProhorovLusin.html)), and Polish spaces are Lusin.
 
 Polish spaces
 =============
@@ -108,7 +111,7 @@ only if $x \in \overline{A}$.
 *Proof.* Let $E$ be a Polish metric space, and $A \subset E$ be open.
 Then $A$ is separable by the previous corollary. Assume $A \neq E$ and
 let $d$ be a compatible metric on $E$ under which $E$ is complete. For
-$x,y\in E$, define $$
+$x,y\in A$, define $$
 d'(x,y) = d(x,y) + \left|\frac{1}{d(x,A^c)}-\frac{1}{d(y,A^c)}\right|.
 $$ It is easy to check that $d'$ is a metric on $A$. Using the
 continuity of $x \mapsto d(x,A^c)$, it is easy to see that convergence
@@ -186,7 +189,7 @@ instead of $g$, we finally get $\bigl|\nu(g)-\mu(g)\bigl| < \epsilon'$.
 □
 
 The following proposition follows from this lemma; it will be used in
-the last section.
+[Probabilities on a Lusin space](ProhorovLusin.html).
 
 **Proposition.** *Let $\mu\in\Pr(E)$ and $(\mu_n)$ be a sequence in
 $\Pr(E)$. If $\limsup \mu_n(F) \leqslant \mu(F)$ for all closed sets
@@ -314,7 +317,7 @@ previous theorem to get $f_i\in C_b(E)$ with value $1$ on $F_i$, value
 $0$ outside $F_i^{\eta_i}$, and value everywhere contained in $[0,1]$.
 If $\bigl|\nu(f_i)-\mu(f_i)\bigr| < \frac{\epsilon}{2}$, then $$
 \nu(F_i) \leqslant \nu(f_i) < \mu(f_i) + \frac{\epsilon}{2} 
-\leqslant \mu(F_i^{\eta_i}) + \frac{\epsilon_i}{2} < \mu(F_i) + \epsilon.
+\leqslant \mu(F_i^{\eta_i}) + \frac{\epsilon}{2} < \mu(F_i) + \epsilon.
 $$ Thus, each set in the canonical neighborhood at $\mu$ is contained in
 a set of family *(i)*.
 
@@ -343,7 +346,8 @@ $\bigl|\nu(F^\eta)-\mu(F^\eta)\bigr| < \frac{\epsilon}{2}$. Then $$
 < \mu(F) + \epsilon.
 $$ Thus each set of family *(i)* contains a set of family *(iii)*. □
 
-The following proposition will be used in the last section.
+The following proposition will be used in [Probabilities on a Lusin
+space](ProhorovLusin.html).
 
 **Proposition.** *Assume $E$ is metric. Let $\mu\in\Pr(E)$ and $(\mu_n)$
 be a sequence in $\Pr(E)$, such that $(\mu_n)$ converges to $\mu$. Then
@@ -651,256 +655,6 @@ $f_n(x) \to f(x)$ for every $x\in E$. By dominated convergence,
 $\Gamma_\omega(f_n) \to \Gamma_\omega(f)$, hence $f \in V$. By the
 previous lemma, $\Gamma$ is measurable. □
 
-Prohorov's theorem in the Lusin case
-====================================
-
-Here we give a proof of Prohorov's theorem for a Lusin space $E$, *i.e.*
-$E$ is homeomorphic to a Borel subset of a compact metric space. We
-follow \[7\]. We will only admit Stone-Weierstrass's theorem and Riesz's
-representation theorem, and the theorems used in the proof of the
-following theorem, which shows that the Lusin assumption is enough for
-us.
-
-**Theorem.** *A Polish space is Lusin. More precisely, a Polish space is
-homeomorphic to a $G_\delta$ subset of the Hilbert cube
-${[0,1]}^\mathbb{N}$.*
-
-*Proof.* See theorems 3.11 and 4.14 in \[6\]. □
-
-**Proposition.** *Let $(K,d)$ be a compact metric space. Then $C(K)$ is
-separable and $\Pr(K)$ is compact metrizable*.
-
-*Proof.* As a compact metric space, $K$ is separable. Let $(x_n)$ be a
-dense sequence of $K$ and define $h_n \in C(K)$ by $h_n(x)=d(x,x_n)$.
-The family of functions $\{h_n\}$ separates points of $K$, that is to
-say, for every $x,y \in K$, there exists $i$ such that
-$h_i(x) \neq h_i(y)$. Indeed, let $x,y\in K$ be distinct. Take $(n_j)$
-such that $d(x,x_{n_j}) \to 0$. If we had $h_i(x) = h_i(y)$ for every
-$i$, we would have $d(y,x_{n_j}) \to 0$, therefore we would have $x=y$.
-
-Consider the subalgebra $A$ of $C(K)$ consisting of all polynomials in
-the $h_k$, that is, the class of functions that are finite sums of the
-form $$
-q\mathbf{1} + 
-\sum q_{k_1,\ldots,k_r;n_1,\ldots,n_r}h_{k_1}^{n_1}\cdots h_{k_r}^{n_r},
-$$ where $q$ and the $q_{k_1,\ldots,k_r;n_1,\ldots,n_r}$ are rational
-constants. The closure of this subalgebra is a subalgebra of $C(J)$, it
-contains all constant functions and it separates points of $K$.
-Therefore, by Stone-Weierstrass's theorem (see \[8\]), $A$ is dense in
-$C(K)$. Hence $C(K)$ is separable because $A$ is countable. Let $(f_n)$
-be a dense sequence in $C(K)$. Consider the map $$
-\begin{array}{rccl}
-\Phi\colon & \Pr(K) & \to & V := 
-\displaystyle\prod_{n=1}^\infty
-\bigl[-{\Vert f_n\Vert}_\infty, {\Vert f_n\Vert}_\infty\bigr] \\
-& \mu & \mapsto & \bigl(\mu(f_1), \mu(f_2), \ldots \bigr)
-\end{array}.
-$$
-
--   The map $\Phi$ is injective: if $\mu,\nu\in\Pr(K)$ satisfy
-    $\mu(f_n) = \nu(f_n)$ for every $n$, then $\mu(f)=\nu(f)$ for every
-    $f\in C(K)$ by dominated convergence; this implies $\mu=\nu$
-    (Theorem 1.2 in \[3\]).
-
--   The map $\Phi$ is continuous because each coordinate map
-    $\mu\mapsto\mu(f_n)$ is continuous.
-
--   The map $\Phi^{-1}$ is continuous. Indeed, take a net
-    ${(v_\lambda)}_{\lambda\in\Lambda}$ in $\Phi(V)$ converging to
-    $v_\infty \in \Phi(V)$. Let $\mu_\lambda$ such that
-    $v_\lambda = \Phi(\mu_\lambda)$ for every
-    $\lambda \in \Lambda\cup\{\infty\}$. Thus
-    $\mu_\lambda(f_j) \to \mu_\infty(f_j)$ for every $j \geqslant 1$.
-    For any $f\in C(K)$, we have $$
-    \bigl|\mu_\lambda(f) - \mu_\infty(f)\bigr| \leqslant 
-    2{\Vert f-f_j\Vert}_\infty + 
-    \bigl|\mu_\lambda(f_j) - \mu_\infty(f_j)\bigr|
-    $$ for every $\lambda$ and every $j$. Hence $$
-    \limsup_{\lambda} \bigl|\mu_\lambda(f) - \mu_\infty(f)\bigr| 
-    \leqslant 2{\Vert f-f_j\Vert}_\infty.
-    $$ There exists a subsequence of ${\Vert f-f_j\Vert}_\infty$
-    converging to $0$. It follows that $$
-    \limsup_{\lambda} \bigl|\mu_\lambda(f) - \mu_\infty(f)\bigr| = 0 
-    = \lim_{\lambda} \bigl|\mu_\lambda(f) - \mu_\infty(f)\bigr|
-    $$ for all $f\in C(K)$, hence $\mu_\lambda \to \mu_\infty$.
-
-Thus $\Phi$ is a homeomorphism. It remains to show that
-$\Phi\bigl(\Pr(K)\bigr)$ is closed in the compact space $V$. Since $V$
-is metrizable (as a countable product of metrizable spaces), it suffices
-to show that a sequence of $\Phi\bigl(\Pr(K)\bigr)$ converges in
-$\Phi\bigl(\Pr(K)\bigr)$ whenever it converges in $V$. Let $(\mu_k)$ be
-a sequence in $\Pr(K)$ such that the sequence $\bigl(\Phi(\mu_k)\bigr)$
-converges to $(\alpha_n) \in V$. Let $f \in C_b(K)$. There exists a
-sequence $(j_r)$ of integers such that
-${\Vert f_{j_r} - f \Vert}_\infty \to 0$. We have $$
-\bigl|\mu_n(f) - \mu_m(f)\bigr| \leqslant 2{\Vert f-f_{j_r}\Vert}_\infty + 
-\bigl|\mu_n(f_{j_r}) - \mu_m(f_{j_r})\bigr|.
-$$ The second term of the sum goes to $0$ as $m,n\to\infty$ because
-$\mu_k(f_{j_r})$ is the $j_r$-th component of $\Phi(\mu_k)$, which goes
-to $\alpha_{j_r}$. Hence $$
-\limsup_{m,n\to\infty} 
-\bigl|\mu_n(f) - \mu_m(f)\bigr| \leqslant 2{\Vert f-f_{j_r}\Vert}_\infty,
-$$ therefore $$
-\limsup_{m,n\to\infty} \bigl|\mu_n(f) - \mu_m(f)\bigr| = 0.
-$$ Thus the limit $\lim \mu_n(f) =: \Lambda(f)$ exists. The map
-$f \mapsto \Lambda(f)$ is an increasing linear functional on $C(K)$
-which maps $\mathbf{1}$ to $1$. By Riesz's representation theorem (see
-\[8\]), there exists $\mu\in\Pr(K)$ such that $\Lambda(f) = \mu(f)$. In
-particular $\mu(f_j) = \alpha_j$, thus
-$\Phi(\mu) = (\alpha_1,\alpha_2,\ldots)$. In other words,
-$\Phi\bigl(\Pr(K)\bigr)$ is closed in $V$. □
-
-Hereafter, $E$ denotes a *Lusin space*, so that $E$ is homeomorphic to a
-Borel subset $E'$ of a compact metric space $(K,d)$. Let $A\subset K$ be
-a Borel set.\
-Any $\mu\in\Pr(E)$ can be extended to a probability $\hat\mu\in\Pr(K)$
-by setting $$
-\hat\mu(A') = \mu\bigl(\iota^{-1}(A'\cap E')\bigr) 
-= \mu\bigl(\iota^{-1}(A')\cap E\bigr)
-$$ where $\iota\colon E \to E'$ is a homeomorphism. Observe that
-$\hat\mu(K\setminus E') = 0$. The map $\mu \mapsto \hat\mu$ is injective
-because $\iota$ is a bimeasurable bijection. Its image is the set $$
-Q = \bigl\{\nu \in \Pr(K) \mid \nu(E')=1\bigr\}.
-$$ Indeed, if $\nu \in Q$, then $\nu = \hat\mu$ for the probability
-$\mu \in \Pr(E)$ defined by $\mu(A) = \nu(\iota(A))$.
-
-**Lemma.** *The subset $Q$ of $\Pr(K)$ is homeomorphic to $\Pr(E')$. The
-map $\Phi\colon\Pr(E')\to Q$ defined by $\Phi(\nu)(A) = \nu(A\cap E')$
-is a homeomorphism.*
-
-*Proof.* Denote by $Q$ this subset of $\Pr(K)$. One has
-$\mathcal{B}_{E'} = \{A\cap E' \mid A \in \mathcal{B}_K\}$. Let
-$\Phi\colon\Pr(E')\to Q$ defined by $\Phi(\nu)(A) = \nu(A\cap E')$.
-Obviously, $\Phi$ is injective. Let $\nu\in Q$ and
-$A'\in\mathcal{B}_{E'}$. One has $A' = A\cap E'$ for a certain
-$A \in \mathcal{B}_K$. Define $\nu'(A') = \nu(A)$. But
-$\nu(A) = \nu(A\cap E')=\nu(A')$ therefore the definition of $\nu'(A')$
-does not depend on the choice of $A$. In fact
-$\nu' = \nu_{|\mathcal{B}_{E'}}$. So $\nu' \in \Pr(E')$ and
-$\Phi(\nu') = \nu$. Thus $\Phi$ is surjective.
-
-Now we will show that $\Phi$ is a homeomorphism. The space $\Pr(E')$ is
-pseudometrizable: we know from the previous proposition that $\Pr(K)$ is
-metrizable, and with the help of a metric $\rho$ on $\Pr(K)$ one can
-define a pseudometric $\rho'$ on $\Pr(E')$ by
-$\rho'(\mu',\nu') = \rho\bigl(\Phi(\mu'),\Phi(\nu')\bigr)$. Therefore
-$\Pr(E')$ is first-countable and then $\Phi$ is continuous whenever if
-it is sequentially continuous. Indeed:
-
--   (see \[9\]) if $X$ is a first-countable space and $A \subset X$,
-    then $x \in \bar{A}$ if and only if there exists a sequence in $A$
-    that converges to $x$;
-
--   therefore, in a first-countable space $X$, a subset $A \subset X$ is
-    closed if and only if it is sequentially closed (*i.e.* the limit of
-    a $X$-convergent sequence of elements of $A$ belongs to $A$);
-
--   let $f\colon X \to Y$ sequentially continuous, where $Y$ is an
-    arbitrary topological space, and let $B\subset Y$ be closed; let
-    $(x_n)$ be a sequence in $f^{-1}(B)$ such that $x_n \to x \in X$,
-    then $f(x_n) \to f(x)$, but $f(x_n) \in B$ so $f(x) \in B$, which
-    says that $x \in f^{-1}(B)$; thus $f^{-1}(B)$ is sequentially closed
-    and hence it is closed, thereby showing that $f$ is continuous.
-
-The space $Q$, as a subspace of the metrizable space $\Pr(K)$, is
-metrizable. Then $\Phi^{-1}$ is continuous whenever it is sequentially
-continuous.
-
-Thus, to show that $\Phi$ is a homeomorphism, it suffices to show the
-sequential continuity of $\Phi$ and $\Phi^{-1}$.
-
-The map $\Phi$ is sequentially continuous. Indeed, consider a sequence
-$(\nu_n)$ in $\Pr(E')$ and $\nu_\infty \in \Pr(E')$ such that
-$\nu_n \mapsto \nu_\infty$ in $\Pr(E')$. By the proposition just before
-the lemma *"regularity of probabilities on metric spaces"*, one has
-$\limsup\nu_n(F')\leqslant\nu_\infty(F')$ for all closed
-$F' \subset E'$. Let $F \subset K$ be closed. One has
-$\Phi(\nu_n)(F) = \nu_n(F \cap E')$. But $F \cap E'$ is closed in $E'$.
-Therefore $$
-\limsup \Phi(\nu_n)(F) = \limsup \nu_n(F \cap E') 
-\leqslant \nu_\infty(F \cap E') = \Phi(\nu_\infty)(F).
-$$ By the first proposition of the previous section,
-$\Phi(\nu_n) \to \Phi(\nu_\infty)$ in $\Pr(K)$, that is, for every
-$\Pr(K)$-neighborhood $V$ of $\Phi(\nu_\infty)$, there exists $N$ such
-that $\Phi(\nu_n) \in V$ for every $n \geq N$. Let $W$ be a
-$Q$-neighborhood of $\Phi(\nu_\infty)$, thus $W = V \cap Q$ where $V$ is
-a $\Pr(K)$-neighborhood of $\Phi(\nu_\infty)$, hence there exists $N$
-such that $\Phi(\nu_n) \in V$ for every $n \geq N$. But
-$\Phi(\nu_n) \in Q$, hence $\Phi(\nu_n) \in W$. That shows the
-sequential continuity of $\Phi$.
-
-The map $\Phi^{-1}$ is sequentially continuous. Indeed, consider a
-sequence $(\nu'_n)$ in $Q$ and $\nu'_\infty \in Q$ such that
-$\nu'_n \to \nu'_\infty$ in $Q$. Hence $\nu'_n \to \nu'_\infty$ in
-$\Pr(K)$. By the proposition just before the lemma *"regularity of
-probabilities on metric spaces"*, one has $$
-\forall F\subset K \text{ closed}, \limsup \nu'_n(F) 
-\leqslant \nu'_\infty(F). 
-$$ Let $F' \subset E'$ closed: $F' = F \cap E'$ with $F \subset K$
-closed. Hence $\nu'_n(F') \leqslant \nu'_n(F)$ and $$
-\limsup \nu'_n(F') \leqslant \limsup \nu'_n(F) 
-\leqslant \nu'_\infty(F).
-$$ But $\nu'_\infty \in Q$, therefore
-$\nu'_\infty(F) = \nu'_\infty(F')$. By the first proposition of the
-previous section, $\nu'_n \to \nu'_\infty$ in $\Pr(E')$. □
-
-**Theorem.** *The map $\mu\mapsto\hat\mu$ defined above is a
-homeomorphism of $\Pr(E)$ to the subset $Q$ of $\Pr(K)$. Hence $\Pr(E)$
-is metrizable.*
-
-*Proof.* This map is bijective. Let $(\mu_\lambda)$ be a net in $\Pr(E)$
-and $\mu_\infty\in\Pr(E)$. We must show that the $\Pr(E)$-convergence
-$\mu_\lambda\to\mu_\infty$ and the $Q$-convergence
-$\widehat{\mu_\lambda}\to\widehat{\mu_\infty}$ are equivalent. By the
-previous lemma, this $Q$-convergence is equivalent to the
-$\Pr(E')$-convergence
-$\Phi(\widehat{\mu_\lambda})\to\Phi(\widehat{\mu_\infty})$.
-
-Observe that $\nu(f) = \Phi(\hat\nu)(f\circ\iota^{-1})$ for every
-$\nu \in \Pr(E)$ and all $f\in C_b(E)$. Indeed, this is true when $f$ is
-the indicator function of a Borel set of $E$ and hence this is also true
-when $f$ is a finite linear combination of such indicator functions. But
-every $f \in C_b(E)$ is the dominated limit of a sequence of such linear
-combinations, as we have seen in the proof of the theorem of the
-previous sections. Therefore the equality holds for every $f\in C_b(E)$
-by dominated convergence.
-
-Assume that $\mu_\lambda\to\mu_\infty$ and take $f' \in C_b(E')$. Then
-$f' = f \circ \iota^{-1}$ for $f = f'\circ\iota \in C_b(E)$, and
-$\nu(f) = \Phi(\hat\nu)(f')$ for all $\nu\in\Pr(E)$. Therefore $$
-\Phi(\widehat{\mu_\lambda})(f') = \mu_\lambda(f) \to \mu_\infty(f) 
-= \Phi(\widehat{\mu_\infty})(f').
-$$ That shows that
-$\Phi(\widehat{\mu_\lambda}) \to \Phi(\widehat{\mu_\infty})$.
-
-Now assume that
-$\Phi(\widehat{\mu_\lambda})\to\Phi(\widehat{\mu_\infty})$ in $\Pr(E')$.
-Let $f \in C_b(E)$ and define $f' = f \circ \iota^{-1} \in C_b(E')$.
-Then $$
-\mu_\lambda(f) = \Phi(\widehat{\mu_\lambda})(f') 
-\to \Phi(\widehat{\mu_\infty})(f') = \mu_\infty(f).
-$$ Therefore $\mu_\lambda \to \mu_\infty$. □
-
-**Theorem (Prohorov).** *If $\Lambda \subset \Pr(E)$ is tight, then
-every sequence in $\Lambda$ has a convergent subsequence.*
-
-*Proof.* For every $\epsilon>0$, let $K_\epsilon \subset E$ be a compact
-subset of $E$ such that $\mu(K_\epsilon) > 1-\epsilon$ for all
-$\mu\in\Lambda$. Let $(\mu_n)$ be a sequence in $\Lambda$. We know by
-the first proposition of this section that $\Pr(K)$ is compact
-metrizable, therefore the sequence $(\widehat{\mu_n})$ has a convergent
-subsequence $(\widehat{\mu_{n_k}})$. Denote by $\nu \in \Pr(K)$ its
-limit. Let $A_\epsilon = \iota(K_\epsilon) \subset E'$. One has
-$\widehat{\mu_{n_k}}(A_\epsilon) = \mu_{n_k}(K_\epsilon) > 1-\epsilon$.
-By the proposition just before the lemma *"regularity of probabilities
-on metric spaces"*, one has
-$\limsup_k \widehat{\mu_{n_k}}(A_\epsilon) \leqslant \nu(A_\epsilon)$.
-Therefore $\nu(E') \geqslant \nu(A_\epsilon) \geqslant 1-\epsilon$.
-Since this is true for every $\epsilon>0$, $\nu(E') = 1$. Thus the
-sequence $(\widehat{\mu_{n_k}})$ is a sequence in $Q$ and its limit is
-in $Q$. Therefore it converges in $Q$. By the previous theorem, the
-sequence $(\mu_{n_k})$ converges in $\Pr(E)$. □
-
 References
 ==========
 
@@ -920,12 +674,3 @@ References
 
 -   \[6\] Alexander S. Kechris. *Classical descriptive set
     theory.* 1995.
-
--   \[7\] L. C. G. Rogers, David Williams. *Diffusions, Markov
-    Processes, and Martingales. Volume 1: Foundations.* Second
-    edition, 1994.
-
--   \[8\] N. Dunford, J. T. Schwartz. *Linear Operators: Part I, General
-    Theory*. 1958.
-
--   \[9\] Stephen Willard. *General topology*. 1980.
