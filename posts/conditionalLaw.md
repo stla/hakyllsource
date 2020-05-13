@@ -299,7 +299,7 @@ $\bigl\{\nu \in \Pr(E) \mid \nu(O_i)>\mu(O_i)-\epsilon, i\in [\![1,k]\!]\bigr\}$
 $\epsilon > 0$.
 
 *(iii)*
-$\Bigl\{\nu \in \Pr(E) \mid \bigl|\nu(A_i)-\mu(A_i)\bigr|+\epsilon, i\in [\![1,k]\!]\Bigr\}$,
+$\Bigl\{\nu \in \Pr(E) \mid \bigl|\nu(A_i)-\mu(A_i)\bigr|<\epsilon, i\in [\![1,k]\!]\Bigr\}$,
 *where $k \geqslant 1$ is an integer, the $A_i$ are Borelian in $E$ and
 satisfy* $\mu(\partial A_i)=0$, *and* $\epsilon > 0$.
 
@@ -468,8 +468,8 @@ uncountable disjoint union of Borel sets, and hence all but a countable
 number of them must have $\mu$-measure zero. Therefore every sphere
 $S_\eta(x)$ contains a sphere $S_{\eta'}(x)$, $\eta'\leqslant\eta$ such
 that $\mu\bigl(B_{\eta'}(x)\bigr)=0$. Picking such a sphere for every
-$x\in E$, one gets the first claim of the lemma. If $E$ is separable,
-one picks such a sphere for every $x$ in a dense subset of $E$. □
+$x\in E$, one gets the first claim of the lemma. If $E$ is separable, it
+is Lindelöf, and the last statement follows. □
 
 **Theorem.** *The Prohorov distance defines a metric on $\Pr(E)$. The
 topology it induces is finer than the narrow topology. These two
@@ -532,10 +532,10 @@ $\textrm{diam}(A_j)<\eta$, one has $x \in B^\eta$.
 
 One has $B \subset A' \cup {\bigl(\bigcup_{i=1}^kA_i\bigr)}^c$. Thus $$
 \mu(B) \leqslant \mu(A') + \mu\Bigl(\bigl(\bigcup_{i=1}^kA_i\bigr)^c\Bigr) 
-\leqslant \nu(A') + 2\eta \leqslant \nu(B^\eta)+2\delta,
-$$ hence $d_P(\mu,\nu) \leqslant 2\delta < \epsilon$. That is, every
-open $d_P$-ball contains a set of type *(iii)* in proposition
-*"neighborhood bases of the narrow topology"*. □
+\leqslant \nu(A') + 2\eta \leqslant \nu(B^\eta)+2\eta,
+$$ hence $d_P(\mu,\nu) \leqslant 2\eta < \epsilon$. That is, every open
+$d_P$-ball contains a set of type *(iii)* in proposition *"neighborhood
+bases of the narrow topology"*. □
 
 We refer the reader to \[3\] for a proof of the following theorem. But
 we will give a proof of this theorem in the last section for a Lusin
@@ -884,15 +884,13 @@ $$ Therefore $\mu_\lambda \to \mu_\infty$. □
 **Theorem (Prohorov).** *If $\Lambda \subset \Pr(E)$ is tight, then
 every sequence in $\Lambda$ has a convergent subsequence.*
 
-*Proof.* We know that $\Pr(E)$ is metrizable from the previous theorem.
-(NOT USED - si, pour que la convergence séquentielle soit pertinente)
-For every $\epsilon>0$, let $K_\epsilon \subset E$ be a compact subset
-of $E$ such that $\mu(K_\epsilon) > 1-\epsilon$ for all $\mu\in\Lambda$.
-Let $(\mu_n)$ be a sequence in $\Lambda$. We know by the first
-proposition of this section that $\Pr(K)$ is compact metrizable,
-therefore the sequence $(\widehat{\mu_n})$ has a convergent subsequence
-$(\widehat{\mu_{n_k}})$. Denote by $\nu \in \Pr(K)$ its limit. Let
-$A_\epsilon = \iota(K_\epsilon) \subset E'$. One has
+*Proof.* For every $\epsilon>0$, let $K_\epsilon \subset E$ be a compact
+subset of $E$ such that $\mu(K_\epsilon) > 1-\epsilon$ for all
+$\mu\in\Lambda$. Let $(\mu_n)$ be a sequence in $\Lambda$. We know by
+the first proposition of this section that $\Pr(K)$ is compact
+metrizable, therefore the sequence $(\widehat{\mu_n})$ has a convergent
+subsequence $(\widehat{\mu_{n_k}})$. Denote by $\nu \in \Pr(K)$ its
+limit. Let $A_\epsilon = \iota(K_\epsilon) \subset E'$. One has
 $\widehat{\mu_{n_k}}(A_\epsilon) = \mu_{n_k}(K_\epsilon) > 1-\epsilon$.
 By the proposition just before the lemma *"regularity of probabilities
 on metric spaces"*, one has

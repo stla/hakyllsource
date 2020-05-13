@@ -155,8 +155,8 @@ strongly Lindelöf, and let $f\colon E_1 \to E_2$ be a continuous
 function. Let $O_2 \subset E_2$ be an open subset of $f(E_1)$ and let
 $\mathcal{C}_2$ be an open cover of $O_2$. Then
 $\bigl\{f^{-1}(C) \mid C \in \mathcal{C}_2\bigr\}$ is an open cover of
-the open set $O_1 := f^{-1}(O_2)$. Then it has a countable subcover:
-$O_1 \subset \bigl\{f^{-1}(C) \mid C \in \mathcal{D}_2\bigr\} =: \mathcal{D}_1$
+the open set $O_1 := f^{-1}(O_2)$. Then it has a countable subcover
+$\bigl\{f^{-1}(C) \mid C \in \mathcal{D}_2\bigr\} =: \mathcal{D}_1$
 where $\mathcal{D}_2$ is a countable subset of $\mathcal{C}_2$. One has
 $f\bigl(f^{-1}(C)\bigr) = C$ for every $C \subset f(E_1)$, therefore
 $f(\mathcal{D}_1) = \mathcal{D}_2$ is an open subcover of
