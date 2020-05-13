@@ -49,7 +49,7 @@ prove it in these notes, in a self-contained way.
 Polish spaces
 =============
 
-A topological space $E$ is said to be *Lindelôf* if there is a countable
+A topological space $E$ is said to be *Lindelöf* if there is a countable
 subcover of every open cover of $E$. It is said to be *second-countable*
 when it has a countable basis.
 
@@ -353,7 +353,7 @@ $\limsup \mu_n(F) \leqslant \mu(F)$ for all closed sets $F\subset E$.*
 $\limsup \mu_n(F) > \mu(F)$. Let $\epsilon>0$ such that
 $\limsup \mu_n(F) > \mu(F)+\epsilon$. Then there are infinitely many $n$
 such that $\mu_n(F) \geqslant \mu(F)+\epsilon$. The set $$
-V = \bigl\{\nu \in \Pr(E) \mid \nu(F)<\mu(F)+\epsilon\bigr\}.
+V = \bigl\{\nu \in \Pr(E) \mid \nu(F)<\mu(F)+\epsilon\bigr\}
 $$ is a neighborhood of $\mu$ by the previous proposition. But for every
 $N \geq 0$, there exists $n \geqslant N$ for which $\mu_n\not\in V$.
 That shows that $(\mu_n)$ does not converge to $\mu$. □
@@ -594,7 +594,7 @@ random variable in the Polish space $\Pr(E)$.
 **Lemma.** *Let $E$ be a Polish space and $\Omega$ be a probability
 space. Then a map $\Gamma\colon\Omega\to\Pr(E)$ is measurable if and
 only if $\omega\mapsto\Gamma_\omega(f)$ is measurable for every
-$f\in C_b(E)$, where we denote by $\Gamma_\omega$ the probability\
+$f\in C_b(E)$, where we denote by $\Gamma_\omega$ the probability
 $\mathcal{B}_E \ni A \mapsto \Gamma(\omega)(A)$.*
 
 *Proof.* The "only if" part is obvious (and does not require the Polish
@@ -689,7 +689,7 @@ contains all constant functions and it separates points of $K$.
 Therefore, by Stone-Weierstrass's theorem (see \[8\]), $A$ is dense in
 $C(K)$. Hence $C(K)$ is separable because $A$ is countable. Let $(f_n)$
 be a dense sequence in $C(K)$. Consider the map $$
-\begin{array}{rcl}
+\begin{array}{rccl}
 \Phi\colon & \Pr(K) & \to & V := 
 \displaystyle\prod_{n=1}^\infty
 \bigl[-{\Vert f_n\Vert}_\infty, {\Vert f_n\Vert}_\infty\bigr] \\
@@ -760,7 +760,7 @@ by setting $$
 $$ where $\iota\colon E \to E'$ is a homeomorphism. Observe that
 $\hat\mu(K\setminus E') = 0$. The map $\mu \mapsto \hat\mu$ is injective
 because $\iota$ is a bimeasurable bijection. Its image is the set $$
-Q = \bigl\{\nu \in \Pr(K) \mid \nu(E')=1\bigr\}
+Q = \bigl\{\nu \in \Pr(K) \mid \nu(E')=1\bigr\}.
 $$ Indeed, if $\nu \in Q$, then $\nu = \hat\mu$ for the probability
 $\mu \in \Pr(E)$ defined by $\mu(A) = \nu(\iota(A))$.
 
