@@ -42,7 +42,7 @@ hence $A \cup B \in \mathcal{R}'$.
 &square;
 
 **Proposition.** *Let $E$ be a topological space. A class of Borel 
-sets of $E$ is equal to yhe Borel $\sigma$-field $\mathcal{B}_E$ 
+sets of $E$ is equal to the Borel $\sigma$-field $\mathcal{B}_E$ 
 whenever it contains all open sets and 
 closed sets and it is closed under countable intersections and 
 countable disjoint unions.*
@@ -56,8 +56,8 @@ Therefore, by the lemma above, $\mathcal{C}$ contains $\sigma(\mathcal{E})$.
 &square;
 
 
-**Corollary.** *Let $E$ be a metric space. A class of Borel 
-sets of $E$ is equal to $\mathcal{B}_E$ whenever it contains all open sets and 
+**Corollary.** *Let $E$ be a metric space. A class of subsets 
+of $E$ contains $\mathcal{B}_E$ whenever it contains all open sets and 
 it is closed under countable intersections and disjoint countable unions.*
 
 *Proof.* A closed set in a metric space is the countable intersection of 
@@ -89,7 +89,7 @@ If $I$ is countable and the $X_i$ are second-countable,
 then $\bigsqcup_{i \in I} X_i$ is second-countable. 
 Now assume the $X_i$ are metrizable, and for each $i \in I$ take a metric 
 $d_i \leqslant 1$ on $X_i$ compatible with the topology of $X_i$. For 
-$i,j \in I$, $x \in X_i$ and $y \in Y_j$, define 
+$i,j \in I$, $x \in X_i$ and $y \in X_j$, define 
 $$
 d\bigl((x,i), (y,j)\bigr) = 
 \begin{cases}

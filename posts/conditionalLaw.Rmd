@@ -413,7 +413,7 @@ $\mu(F^\eta) < \mu(F) + \frac{\epsilon}{2}$.
 Indeed, firstly one can obviously take $\lambda$ such that 
 $\mu(F^\lambda) < \mu(F) + \frac{\epsilon}{2}$. Since the 
 $\partial F^\eta$ for $\eta \in ]0, \lambda[$ have empty intersection 
-(since $\partial F^\eta = \bigl\{x\in E \mid d(x,F) = \eta \bigr\}$), 
+(NOOOOOOOOOO XXXX SI ? since $\partial F^\eta = \bigl\{x\in E \mid d(x,F) = \eta \bigr\}$), 
 there is $\eta \in ]0, \lambda[$ such that $\mu(\partial F^\eta) = 0$. 
 Obviously $\mu(F^\eta) \leqslant \mu(F^\lambda)$. The claim is proved. 
 Now take $\nu$ such that 
@@ -569,8 +569,10 @@ For every $\eta>0$, one can cover $E$ by open balls $\{S_i\}$
 satisfying $\mu(\partial S_i)=0$ and $\textrm{diam}(S_i) < \eta$ for all $i$. 
 If $E$ is separable, one can cover $E$ by countably many such balls.*
 
+XXX à refaire 
+
 *Proof.* Denote by $S_\eta(x)$ the open sphere of radius $\eta$ centered 
-at $x$, and by 
+at $x$, and by XXXX
 $B_\eta(x)=\partial S_\eta(x) = \bigl\{y \mid d(x,y)=\eta\bigr\}$ the 
 boundary of this sphere. 
 One has $S_\eta(x) = \bigcup_{0\leqslant\eta'<\eta}B_\eta(x)$. 
@@ -658,7 +660,7 @@ contains a set of type *(iii)* in proposition
 
 
 We refer the reader to [3] for a proof of the following theorem. 
-But we will give a proof of this theorem in the last section for a 
+But we will give a proof of this theorem in XXXX the last section for a 
 Lusin space $E$, which is enough for our purpose (since a Polish 
 space is Lusin).
 

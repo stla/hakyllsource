@@ -1,0 +1,110 @@
+---
+title: "The definitions of a standard Borel space"
+author: "Stéphane Laurent"
+date: "14 mai 2020"
+output: html_document
+---
+
+One can find two definitions of a *standard Borel space* in the literature: 
+a measurable space is said to be a standard Borel space if *1)* it is 
+isomorphic to the Borel space of a Polish space or if *2)* it is isomorphic 
+to a Borel subset of a Polish space. 
+We present a proof of the equivalence between these two definitions.
+
+
+Let $E$ be a Polish space. A set $A \subset E$ is said to be *analytic* if 
+there exist a Polish space $Z$ and a continuous function $f \colon Z \to E$ 
+such that $f(Z) = A$.
+
+**Lemma.** *Let $E$ be a Polish space. Then every open subset of $E$ 
+is analytic.*
+
+*Proof.* 
+[An open subset of a Polish space is Polish](./conditionalLaw.html). 
+Therefore the lemma follows from the continuity of the canonical injection 
+of a subspace of $E$ into $E$.
+&square;
+
+
+**Proposition.** *Let $E$ be a Polish space, and let $A_1, A_2, \ldots$ be 
+analytic subsets of $E$. Then $\bigcup_k A_k$ and $\bigcap_k A_k$ are 
+analytic.*
+
+*Proof.* For each $k$ choose a Polish space $Z_k$ and a continous function 
+$f_k \colon Z_k \to E$ such that $f_k(Z_k) = A_k$. Let $Z$ be the 
+[disjoint union](./Lusin.html) of the $Z_k$. Define $f \colon Z \to E$ by 
+$f\bigl((x,k)\bigr) = f_k(x)$. Then $f$ is continuous and 
+$f(Z) = \bigcup_k A_k$. Since $Z$ is Polish, $\bigcup_k A_k$ is analytic. 
+Now take the product space $\prod_k Z_k$ and let $Z$ be its subspace consisting 
+of sequences $(z_k)$ such that $f_i(z_i) = f_j(z_j)$ holds for all $i$ and $j$. 
+Then $\bigcap_k A_k$ is the image of $Z$ under the continuous function that 
+sends $(z_k)$ to $f_1(z_1)$, hence $\bigcap_k A_k$ is analytic since 
+$Z$ is Polish. 
+&square;
+
+
+**Proposition.** *Every Borel subset of a Polish space is analytic.*
+
+*Proof.* We have just seen that the collection of analytic subsets of $E$ 
+contains the open sets and is closed under countable intersection and 
+countable union. 
+[Therefore it contains the Borel subsets](./Lusin.html). 
+&square;
+
+
+We denote by $\mathcal{B}_E$ the Borel $\sigma$-field of a 
+topological space $E$.
+
+An *analytic measurable space* is a measurable space $(X,\mathcal{A})$ such 
+that there exist a Polish space $Z$ and an analytic subset $A$ of $Z$ such 
+that $(X,\mathcal{A})$ is Borel-isomorphic to $(A,\mathcal{B}_A)$. 
+By the above proposition, a Borel subset of a Polish space equipped with its 
+Borel $\sigma$-algebra is an analytic measurable space. 
+
+
+**Theorem.** *A bijective measurable map between analytic measurable spaces 
+is a Borel isomorphism.*
+
+*Proof.* See [1]. &square;
+
+
+A *standard Borel space* is a measurable space isomorphic to the Borel space 
+of a Polish space. 
+
+
+**Theorem.** *A measurable space is a standard Borel space if and only if 
+it is isomorphic to a Borel subset of a Polish space.*
+
+*Proof.* The "only if" part is obvious. Now assume that the measurable 
+space $(X,\mathcal{A})$ is isomorphic to the Borel space 
+$(B,\mathcal{B}_B)$ of a Borel subset $B$ of a Polish space $E$. 
+By the key proposition of 
+[Lusin spaces are strongly Lindelöf](./Lusin.html), 
+there exist a Polish space $Z$ and a continuous bijection $f$ from 
+$Z$ onto $B$. The measurable spaces $(Z,\mathcal{B}_Z)$ and 
+$(B,\mathcal{B}_B)$ are analytic measurable spaces. 
+By the above theorem, $f$ is a Borel isomorphism. 
+Thus $(X,\mathcal{A})$ is isomorphic to $(Z,\mathcal{B}_Z)$. 
+&square;
+
+
+**Corollary.** *The Borel space of a [Lusin space](./Lusin.html) is 
+standard Borel.*
+
+*Proof.* A compact metric space is Polish, and a homeomorphism is 
+a Borel isomorphism. 
+&square;
+
+
+Let us mention another result, proved in [2]: the Borel space of 
+a separable metric space $E$ is standard Borel if and only if $E$ is 
+*homeomorphic* to a Borel subset of a Polish space.
+
+
+# References
+
+- [1] Donald L. Cohn. 
+*Measure theory*. Second edition, 2013.
+
+- [2] S. M. Srivastava. 
+*A Course on Borel Sets*. 1998.
