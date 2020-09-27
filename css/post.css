@@ -15,25 +15,13 @@ body {
 
 body {
     /*color: black;*/
-    width: 1150px;
+    /* width: 1150px; */
     font-size: 20px;
     margin: 0 auto 0 auto;
 }
 
-.main {
-  width: 840px;
-  float: right;
-  margin-right: 10px;
-}
-
 .content p {
   text-align: justify;
-}
-.sidebar {
-  width: 280px;
-  float: left;
-  margin-right: 40px;
-  position: absolute;
 }
 
 div.sidebar a {
@@ -130,4 +118,8 @@ div.info {
 
 pre {
   overflow-x: auto;
+}
+
+code {
+  color: #e83e8c;
 }
