@@ -2,15 +2,15 @@
 author: Stéphane Laurent
 date: '2020-05-08'
 highlighter: 'pandoc-solarized'
-linenums: True
+linenums: yes
 output:
   html_document:
     highlight: kate
-    keep_md: False
+    keep_md: no
   md_document:
     preserve_yaml: True
     variant: markdown
-prettify: True
+prettify: yes
 prettifycss: minimal
 tags: 'R, datatables, shiny, javascript'
 title: 'Child tables with DT, editing, exporting'
@@ -87,9 +87,9 @@ callback <- JS(
   "for(let i = 0; i < nrows; ++i){",
   "  var $cell = table.cell(i,j0).nodes().to$();",
   "  if(parentRows.indexOf(i) > -1){",
-  "    cell.css({cursor: 'pointer'});",
+  "    $cell.css({cursor: 'pointer'});",
   "  }else{",
-  "    cell.removeClass('details-control');",
+  "    $cell.removeClass('details-control');",
   "  }",
   "}",
   "",
