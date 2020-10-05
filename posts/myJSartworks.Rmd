@@ -21,4 +21,6 @@ Here are the links to my JavaScript artworks:
 
 - [React](../frames/react_index.html)
 
+- [Shaders](../frames/shaders_index.html)
+
 - [Miscellanous](../frames/misc_index.html)

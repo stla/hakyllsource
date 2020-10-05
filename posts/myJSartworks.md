@@ -5,7 +5,7 @@ highlighter: 'pandoc-solarized'
 output:
   html_document:
     highlight: kate
-    keep_md: False
+    keep_md: no
   md_document:
     preserve_yaml: True
     variant: markdown
@@ -20,5 +20,7 @@ Here are the links to my JavaScript artworks:
 -   [paper.js](../frames/paperjs_index.html)
 
 -   [React](../frames/react_index.html)
+
+-   [Shaders](../frames/shaders_index.html)
 
 -   [Miscellanous](../frames/misc_index.html)
