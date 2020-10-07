@@ -66,8 +66,9 @@ main = do
     match "posts/*.md" $ do
         route $ setExtension "html"
         compile $ pandocMathCompiler
-            >>= loadAndApplyTemplate "templates/info.html" (postCtxWithTags tags)
             >>= loadAndApplyTemplate "templates/post.html" (postCtxWithTags tags)
+            >>= saveSnapshot "content"
+            >>= loadAndApplyTemplate "templates/info.html" (postCtxWithTags tags)
             >>= relativizeUrls
 
     create ["archive.html"] $ do
@@ -101,6 +102,13 @@ main = do
 
     match "templates/*" $ compile templateBodyCompiler
 
+    create ["rss.xml"] $ do
+        route idRoute
+        compile $ do
+            let feedCtx = postCtx `mappend` bodyField "description"
+            posts <- fmap (take 10) . recentFirst =<<
+                loadAllSnapshots "posts/*" "content"
+            renderRss myFeedConfiguration feedCtx posts    
 
 --------------------------------------------------------------------------------
 postCtx :: Context String
@@ -131,3 +139,12 @@ pandocMathCompiler =
                           writerHTMLMathMethod = MathJax ""
                         }
     in pandocCompilerWith defaultHakyllReaderOptions writerOptions
+
+myFeedConfiguration :: FeedConfiguration
+myFeedConfiguration = FeedConfiguration
+    { feedTitle       = "Saturn Elephant"
+    , feedDescription = "A blog about R and more."
+    , feedAuthorName  = "Stéphane Laurent"
+    , feedAuthorEmail = "laurent_step@outlook.fr"
+    , feedRoot        = "https://laustep.github.io/stlahblog/"
+    }
