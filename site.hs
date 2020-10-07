@@ -146,5 +146,5 @@ myFeedConfiguration = FeedConfiguration
     , feedDescription = "A blog about R and more."
     , feedAuthorName  = "Stéphane Laurent"
     , feedAuthorEmail = "laurent_step@outlook.fr"
-    , feedRoot        = "https://laustep.github.io/stlahblog/"
+    , feedRoot        = "https://laustep.github.io/stlahblog"
     }
