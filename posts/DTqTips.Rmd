@@ -3,6 +3,7 @@ title: "Tooltips for the headers of a datatable in Shiny"
 author: "Stéphane Laurent"
 date: '2020-02-16'
 tags: R, datatables, javascript, shiny
+rbloggers: yes
 output:
   md_document:
     variant: markdown

@@ -3,6 +3,7 @@ title: "Focal quadrics and their lines of curvature"
 author: "Stéphane Laurent"
 date: '2020-05-03'
 tags: R, graphics, rgl, geometry, maths
+rbloggers: yes
 output:
   md_document:
     variant: markdown

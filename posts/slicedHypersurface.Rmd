@@ -3,6 +3,7 @@ title: "Drawing slices of a hypersurface with R"
 author: "Stéphane Laurent"
 date: '2020-05-01'
 tags: R, graphics, rgl, geometry, maths
+rbloggers: yes
 output:
   md_document:
     variant: markdown

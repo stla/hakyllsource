@@ -3,6 +3,7 @@ title: "Useful callbacks for DT (in Shiny)"
 author: "Stéphane Laurent"
 date: '2019-06-14'
 tags: R, shiny, javascript, datatables
+rbloggers: yes
 output:
   md_document:
     variant: markdown

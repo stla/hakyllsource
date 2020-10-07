@@ -3,6 +3,7 @@ title: "Child tables with DT, editing, exporting"
 author: "Stéphane Laurent"
 date: '2020-05-08'
 tags: R, datatables, shiny, javascript
+rbloggers: yes
 output:
   md_document:
     variant: markdown

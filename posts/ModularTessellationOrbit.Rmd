@@ -3,6 +3,7 @@ title: "An orbit of the modular tessellation"
 author: "Stéphane Laurent"
 date: '2020-02-19'
 tags: R, maths, geometry
+rbloggers: yes
 output:
   md_document:
     variant: markdown

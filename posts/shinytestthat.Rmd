@@ -3,6 +3,7 @@ title: "A shinytest script in testthat"
 author: "Stéphane Laurent"
 date: '2019-11-23'
 tags: shiny, R
+rbloggers: yes
 output:
   md_document:
     variant: markdown
