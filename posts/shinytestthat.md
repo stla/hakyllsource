@@ -13,6 +13,7 @@ output:
 prettify: True
 prettifycss: minimal
 tags: 'shiny, R'
+rbloggers: yes
 title: A shinytest script in testthat
 ---
 

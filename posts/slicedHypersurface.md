@@ -13,6 +13,7 @@ output:
 prettify: True
 prettifycss: minimal
 tags: 'R, graphics, rgl, geometry, maths'
+rbloggers: yes
 title: Drawing slices of a hypersurface with R
 ---
 

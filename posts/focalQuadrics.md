@@ -13,6 +13,7 @@ output:
 prettify: True
 prettifycss: minimal
 tags: 'R, graphics, rgl, geometry, maths'
+rbloggers: yes
 title: Focal quadrics and their lines of curvature
 ---
 

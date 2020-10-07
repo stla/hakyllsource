@@ -13,6 +13,7 @@ output:
 prettify: True
 prettifycss: minimal
 tags: 'R, maths, geometry'
+rbloggers: yes
 title: An orbit of the modular tessellation
 ---
 

@@ -13,6 +13,7 @@ output:
 prettify: True
 prettifycss: minimal
 tags: 'R, datatables, javascript, shiny'
+rbloggers: yes
 title: Tooltips for the headers of a datatable in Shiny
 ---
 

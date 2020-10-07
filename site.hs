@@ -102,13 +102,15 @@ main = do
 
     match "templates/*" $ compile templateBodyCompiler
 
-    create ["rss.xml"] $ do
+    create ["feed.xml"] $ do
         route idRoute
         compile $ do
             let feedCtx = postCtx `mappend` bodyField "description"
             posts <- fmap (take 10) . recentFirst =<<
                 loadAllSnapshots "posts/*" "content"
-            renderRss myFeedConfiguration feedCtx posts    
+            rssTemplate <- unsafeCompiler $ readFile "templates/rss.xml"
+            rssItemTemplate <- unsafeCompiler $ readFile "templates/rss-item.xml"
+            renderRssWithTemplates rssTemplate rssItemTemplate myFeedConfiguration feedCtx posts    
 
 --------------------------------------------------------------------------------
 postCtx :: Context String

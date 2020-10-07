@@ -15,6 +15,7 @@ output:
 prettify: True
 prettifycss: minimal
 tags: 'R, shiny, javascript, datatables'
+rbloggers: yes
 title: 'Useful callbacks for DT (in Shiny)'
 ---
 

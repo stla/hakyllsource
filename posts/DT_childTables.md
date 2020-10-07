@@ -13,6 +13,7 @@ output:
 prettify: yes
 prettifycss: minimal
 tags: 'R, datatables, shiny, javascript'
+rbloggers: yes
 title: 'Child tables with DT, editing, exporting'
 ---
 
