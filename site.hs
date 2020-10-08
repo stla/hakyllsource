@@ -66,9 +66,9 @@ main = do
     match "posts/*.md" $ do
         route $ setExtension "html"
         compile $ pandocMathCompiler
+            >>= loadAndApplyTemplate "templates/info.html" (postCtxWithTags tags)
             >>= loadAndApplyTemplate "templates/post.html" (postCtxWithTags tags)
             >>= saveSnapshot "content"
-            >>= loadAndApplyTemplate "templates/info.html" (postCtxWithTags tags)
             >>= relativizeUrls
 
     create ["archive.html"] $ do
