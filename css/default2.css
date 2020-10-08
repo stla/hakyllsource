@@ -1,3 +1,23 @@
+@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700);
+
+strong, b {
+  font-weight: 700;
+}
+
+h1, h2, h3, h4 {
+    font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #111;
+    font-weight: 700;
+}   
+
+h1 {
+    font-size: 24px;
+}
+
+h2 {
+    font-size: 20px;
+}
+
 body {
     font-family: 'Source Sans Pro', Helvetica;
     line-height: 24px;
@@ -19,6 +39,7 @@ div#header {
     border-bottom: 2px solid black;
     margin-bottom: 30px;
     padding: 12px 0px 12px 0px;
+    background-color: seashell;
 }
 
 div#logo a {
@@ -51,14 +72,6 @@ div#footer {
     text-align: right;
 }
 
-h1 {
-    font-size: 24px;
-}
-
-h2 {
-    font-size: 20px;
-}
-
 div.info {
     color: #555;
     font-size: 14px;
@@ -79,4 +92,18 @@ div.info {
 	-moz-border-radius: 3px;
 	border-radius: 3px;
 	text-decoration: none;
+}
+
+#logos {
+    margin-top: 50px;
+}
+
+#logos .row {
+    align-items: center;
+}
+
+#logos .center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
