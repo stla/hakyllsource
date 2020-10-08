@@ -1,19 +1,19 @@
 ---
-title: "My Asymptote artworks"
-author: "Stéphane Laurent"
+author: Stéphane Laurent
 date: '2020-10-08'
-tags: geometry, graphics, asymptote
+highlighter: 'pandoc-solarized'
 output:
-  md_document:
-    variant: markdown
-    preserve_yaml: true
   html_document:
     highlight: kate
     keep_md: no
-highlighter: pandoc-solarized
+  md_document:
+    preserve_yaml: True
+    variant: markdown
+tags: 'geometry, graphics, asymptote'
+title: My Asymptote artworks
 ---
 
-These are some of my artworks realized with Asymptote. Source code is 
+These are some of my artworks realized with Asymptote. Source code is
 available in [my gists](https://gist.github.com/stla).
 
 ![](https://camo.githubusercontent.com/9ed893af8b74fda67babdf85cc0fcd7d0f85c8de/68747470733a2f2f7468756d62732e6766796361742e636f6d2f496d706f6c6974655175617272656c736f6d6549736c616e6477686973746c65722d73697a655f726573747269637465642e676966)

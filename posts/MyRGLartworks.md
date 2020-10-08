@@ -1,22 +1,21 @@
 ---
-title: "My RGL artworks"
-author: "Stéphane Laurent"
+author: Stéphane Laurent
 date: '2020-10-08'
-tags: geometry, graphics, R, rgl
-rbloggers: yes
+highlighter: 'pandoc-solarized'
 output:
-  md_document:
-    variant: markdown
-    preserve_yaml: true
   html_document:
     highlight: kate
     keep_md: no
-highlighter: pandoc-solarized
+  md_document:
+    preserve_yaml: True
+    variant: markdown
+rbloggers: yes
+tags: 'geometry, graphics, R, rgl'
+title: My RGL artworks
 ---
 
-These are some of my artworks realized with the R package `rgl`. Source code is 
-available in [my gists](https://gist.github.com/stla).
-
+These are some of my artworks realized with the R package `rgl`. Source
+code is available in [my gists](https://gist.github.com/stla).
 
 ![](https://camo.githubusercontent.com/3a27a77e8d60a10ea347017bb4f78a85f28dce7f/68747470733a2f2f7468756d62732e6766796361742e636f6d2f45737465656d656453686f7779446f6c7068696e2d73697a655f726573747269637465642e676966)
 
