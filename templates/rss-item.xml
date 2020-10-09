@@ -1,3 +1,4 @@
+$if(rbloggers)$
 <item>
     <title>$title$</title>
     <link>$root$$url$</link>
@@ -5,7 +6,6 @@
     <pubDate>$published$</pubDate>
     <guid>$root$$url$</guid>
     <dc:creator>$authorName$</dc:creator>
-    $if(rbloggers)$
-        <category>R</category>
-    $endif$
+    <category>R</category>
 </item>
+$endif$
