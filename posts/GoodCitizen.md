@@ -34,9 +34,9 @@ position:absolute;
 top:95px;   
 left:-50px;
 }
-.slick-prev:before, .slick-next:before { 
+.slick-prev::before, .slick-next::before { 
 color:red !important;
-font-size: 30px;
+font-size: 30px !important;
 }
 #slickcontainer {
 margin: auto;
