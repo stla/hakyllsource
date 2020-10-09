@@ -2,9 +2,16 @@
   text-align: justify;
 }
 
+p a, .info a {
+  font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: 600;
+  color: darkred; /* #404040 */
+  text-decoration: none;
+}
+
 a {
- color: darkred; /* #404040 */
- text-decoration: none;
+  color: darkred; /* #404040 */
+  text-decoration: none;
 }
 
 h3 > a {
@@ -52,5 +59,6 @@ pre {
 
 p code {
   color: #e83e8c;
+  font-family: 'Source Code Pro', monospace;
   font-weight: bold;
 }
