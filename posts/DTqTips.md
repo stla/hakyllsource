@@ -2,18 +2,15 @@
 author: Stéphane Laurent
 date: '2020-02-16'
 highlighter: 'pandoc-solarized'
-linenums: True
 output:
   html_document:
     highlight: kate
-    keep_md: False
+    keep_md: no
   md_document:
     preserve_yaml: True
     variant: markdown
-prettify: True
-prettifycss: minimal
-tags: 'R, datatables, javascript, shiny'
 rbloggers: yes
+tags: 'R, datatables, javascript, shiny'
 title: Tooltips for the headers of a datatable in Shiny
 ---
 
@@ -29,7 +26,7 @@ elements to create (this will be the number of columns of the table),
 and `prefixID`; the i-th `div` will have the identifier
 `{prefixID}-{i}`. We also set a class to each `div`, namely `qtip-big`.
 
-``` {.r}
+``` {.r .numberLines}
 createDiv <- function(n, prefixID){
   sprintf(paste(
     "for(var i = 1; i <= %d; i++){",
@@ -72,7 +69,7 @@ column, otherwise the information we provide in the `div` element is the
 number of levels of the contents of the column, an enumeration of the
 levels (at most three), and the number of missing values.
 
-``` {.r}
+``` {.r .numberLines}
 fillDiv <- function(dat, i, prefixID){
   x <- dat[[i]]
   if(is.numeric(x)){
@@ -155,7 +152,7 @@ Finally we write a function returning the JavaScript code of the `qTip`
 tooltips. Its arguments are `n`, the number of columns of the table, and
 `prefixID` as before.
 
-``` {.r}
+``` {.r .numberLines}
 tooltips <- function(n, prefixID){
   settings <- sprintf(paste(
     "{",
@@ -221,7 +218,7 @@ Now we are ready to write the Shiny app. Put the files
 subfolder. We use the `shinyjs` package to run the JavaScript code with
 the function `runjs`.
 
-``` {.r}
+``` {.r .numberLines}
 library(shiny)
 library(shinyjs)
 library(DT)

@@ -2,18 +2,15 @@
 author: Stéphane Laurent
 date: '2020-05-03'
 highlighter: 'pandoc-solarized'
-linenums: True
 output:
   html_document:
     highlight: kate
-    keep_md: False
+    keep_md: no
   md_document:
     preserve_yaml: True
     variant: markdown
-prettify: True
-prettifycss: minimal
-tags: 'R, graphics, rgl, geometry, maths'
 rbloggers: yes
+tags: 'R, graphics, rgl, geometry, maths'
 title: Focal quadrics and their lines of curvature
 ---
 
@@ -28,7 +25,7 @@ equation $$
 \frac{x^2}{a^2} + \frac{y^2}{b^2} + \frac{z^2}{c^2} = 1.
 $$
 
-``` {.r}
+``` {.r .numberLines}
 library(rgl)
 ellipsoidMesh <- function(a, b, c, smoothness = 5){
   stopifnot(a > 0, b > 0, c > 0)
@@ -53,7 +50,7 @@ meridians and the parallels; in this case, `du` is ignored, and `dv`,
 which must be positive and strictly smaller than $\frac{\pi}{2}$,
 control the size of the smallest parallel.
 
-``` {.r}
+``` {.r .numberLines}
 curvatureLinesE <- function(a, b, c, nu, nv, du, dv, npoints = 100){
   stopifnot(a > 0, b > 0, c > 0)
   if((a != b && b != c) && (a < b || b < c)){
@@ -128,7 +125,7 @@ curvatureLinesE <- function(a, b, c, nu, nv, du, dv, npoints = 100){
 
 Here is an example:
 
-``` {.r}
+``` {.r .numberLines}
 a = 7; b = 5; c = 3
 mesh <- ellipsoidMesh(a, b, c)
 clines <- curvatureLinesE(a, b, c, nu = 5, nv = 5, du = 0.4, dv = 1, 
@@ -157,7 +154,7 @@ made of quadrilaterals and their number is controlled by the arguments
 corresponding to the minus sign, and the argument `vmin` controls the
 truncation of the hyperboloid in this direction.
 
-``` {.r}
+``` {.r .numberLines}
 hyperboloidMesh <- function(a, b, c, signature, nu, nv, vmin){
   stopifnot(signature %in% c("++-", "+-+", "-++"))
   stopifnot(vmin < 1, a > 0, b > 0, c > 0)
@@ -246,7 +243,7 @@ the one-sheeted hyperboloid. There are two families of curvature lines
 and the desired numbers of lines in them are controlled by the arguments
 `nu` and `nv`.
 
-``` {.r}
+``` {.r .numberLines}
 curvatureLinesH1 <- function(a, b, c, signature = "++-", nu, nv, vmin,  
                              npoints = 100){
   stopifnot(signature %in% c("++-", "+-+", "-++"))
@@ -350,7 +347,7 @@ curvatureLinesH1 <- function(a, b, c, signature = "++-", nu, nv, vmin,
 
 Here is an example:
 
-``` {.r}
+``` {.r .numberLines}
 sgntr = "++-"
 a = 4; b = 6; c = 5
 mesh <- hyperboloidMesh(a, b, c, sgntr, nu = 100, nv = 100, vmin = -150)
@@ -379,7 +376,7 @@ made of quadrilaterals and their number is controlled by the arguments
 `nu` and `nv`. The two-sheeted hyperboloid is infinite and the argument
 `vmin` is here to control its truncation.
 
-``` {.r}
+``` {.r .numberLines}
 twoSheetsHyperboloidMesh <- function(a, b, c, signature, nu, nv, vmin){
   stopifnot(signature %in% c("+--", "--+", "-+-"))
   stopifnot(vmin < 1)
@@ -467,7 +464,7 @@ The `curvatureLinesH2` function below generates some curvature lines of
 the two-sheeted hyperboloid. The role of the arguments `du` and `dv` is
 similar to the role of the arguments `du` and `dv` in `curvatureLinesE`.
 
-``` {.r}
+``` {.r .numberLines}
 curvatureLinesH2 <- function(a, b, c, signature, nu, nv, vmin, du, dv, 
                              npoints = 100){
   stopifnot(signature %in% c("+--", "--+", "-+-"))
@@ -573,7 +570,7 @@ curvatureLinesH2 <- function(a, b, c, signature, nu, nv, vmin, du, dv,
 
 An example:
 
-``` {.r}
+``` {.r .numberLines}
 a = 6; b = 5; c = 3
 sgntr = "-+-"
 mesh <- twoSheetsHyperboloidMesh(a, b, c, sgntr, 100, 100, vmin = -500)
@@ -601,7 +598,7 @@ and $K \in \mathbb{R}$. Let's treat an example. We follow the strategy
 given at page 45 of Brannan & al's book *Geometry*
 ([pdf](http://math.haifa.ac.il/ROVENSKI/B2.pdf)).
 
-``` {.r}
+``` {.r .numberLines}
 A = matrix(c(
    5, -1, -1, 
   -1,  3,  1,
@@ -626,10 +623,13 @@ Now we write the equation in the form $$
 $$ where $\lambda_1$, $\lambda_2$, $\lambda_3$ are the eigenvalues of
 $A$, and $(x'',y'',z'')$ is a new coordinate system.
 
-``` {.r}
+``` {.r .numberLines}
 center <- c(t(J) %*% P) / evalues / 2
 ( rhs <- sum(evalues * center^2) - K )
 ## [1] 11.5
+```
+
+``` {.r .numberLines}
 ( sgntr <- paste0(ifelse(rhs*evalues > 0, "+", "-"), collapse = "") )
 ## [1] "++-"
 ```
@@ -641,7 +641,7 @@ The signature is $++-$, so the solution of the equation is a one-sheeted
 hyperboloid. By dividing both members of the previous equality by
 $\mathrm{rhs}$, we get its equation in standard form.
 
-``` {.r}
+``` {.r .numberLines}
 abc <- sqrt(abs(rhs/evalues))
 a <- abc[1]; b <- abc[2]; c <- abc[3]
 mesh0 <- hyperboloidMesh(a, b, c, sgntr, 100, 100, -5)
@@ -655,7 +655,7 @@ mesh <- rotate3d(
 We can check that the equation is fulfilled for some vertices of the
 final mesh:
 
-``` {.r}
+``` {.r .numberLines}
 apply(mesh$vb[-4, 1:5], 2L, function(x){
   c(t(x) %*% A %*% x + t(J) %*% x) + K
 })

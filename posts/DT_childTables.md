@@ -2,7 +2,6 @@
 author: Stéphane Laurent
 date: '2020-05-08'
 highlighter: 'pandoc-solarized'
-linenums: yes
 output:
   html_document:
     highlight: kate
@@ -10,10 +9,8 @@ output:
   md_document:
     preserve_yaml: True
     variant: markdown
-prettify: yes
-prettifycss: minimal
-tags: 'R, datatables, shiny, javascript'
 rbloggers: yes
+tags: 'R, datatables, shiny, javascript'
 title: 'Child tables with DT, editing, exporting'
 ---
 
@@ -25,7 +22,7 @@ dataframe of the main table; each cell of this column contains the child
 table of the corresponding row, given as a list. This is done by the
 `NestedData` function below.
 
-``` {.r}
+``` {.r .numberLines}
 NestedData <- function(dat, children){
   stopifnot(length(children) == nrow(dat))
   g <- function(d){
@@ -44,7 +41,7 @@ NestedData <- function(dat, children){
 
 The usage of `NestedData` is easy to understand with an example:
 
-``` {.r}
+``` {.r .numberLines}
 dat0   = iris[1:3,]        # main table, with three rows
 dat01  = airquality[1:4,]  # |- child of first row
 dat02  = cars[1:2,]        # |- child of second row, with two rows
@@ -72,7 +69,7 @@ Now we define the JavaScript callback which will be used. The code
 depends on whether one wants to display the row names of the main table,
 so the user has to enter this information before.
 
-``` {.r}
+``` {.r .numberLines}
 library(DT)
 
 ## whether to show row names
@@ -228,7 +225,7 @@ contains the child data, it has to be hidden. Finally we assign the
 class `details-control` to the first column, this is used by the
 callback.
 
-``` {.r}
+``` {.r .numberLines}
 datatable(
   Dat, 
   callback = callback, rownames = rowNames, escape = -colIdx-1,
@@ -300,7 +297,7 @@ CSS code in a file **dataTables.cellEdit.css**.
 
 Now modify the callback as follows:
 
-``` {.r}
+``` {.r .numberLines}
 callback <- JS(
   "function onUpdate(updatedCell, updatedRow, oldValue) {};",
   "table.MakeCellsEditable({",
@@ -341,7 +338,7 @@ callback <- JS(
 
 Use the same code as before to generate the table but store the output:
 
-``` {.r}
+``` {.r .numberLines}
 dtable <- datatable(
   Dat, 
   callback = callback, rownames = rowNames, escape = -colIdx-1,
@@ -369,7 +366,7 @@ dtable <- datatable(
 
 Now we add the dependencies to the `datatable`:
 
-``` {.r}
+``` {.r .numberLines}
 path <- "path/to/cellEdit" # folder containing the files 
                            # dataTables.cellEdit.js and 
                            # dataTables.cellEdit.css
@@ -412,7 +409,7 @@ output[["mytable"]] <- renderDT({
 The JavaScript code depends on whether the user desires a title in the
 Excel file, so this information has to be provided first.
 
-``` {.r}
+``` {.r .numberLines}
 excelTitle = NULL # enter title or set to NULL if you don't want a title
 js_customXLSX <- JS(
   "function(xlsx){",
@@ -509,7 +506,7 @@ js_customXLSX <- JS(
 
 Let's see an example.
 
-``` {.r}
+``` {.r .numberLines}
 dat0  = iris[1:3,]         # main table, with three rows
 dat01 = airquality[1:4,]   # |- child of first row
 dat02 = cars[1:2,]         # |- child of second row
@@ -523,7 +520,7 @@ Dat <- NestedData(
 Below is the code generating the table with a button for the exporting.
 Remember, if you use Shiny, do not set `elementId`.
 
-``` {.r}
+``` {.r .numberLines}
 dtable <- datatable(
   Dat, 
   callback = callback, rownames = rowNames, escape = -colIdx-1,

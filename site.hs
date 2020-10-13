@@ -110,7 +110,7 @@ main = do
                 loadAllSnapshots "posts/*" "content"
             rssTemplate <- unsafeCompiler $ readFile "templates/rss.xml"
             rssItemTemplate <- unsafeCompiler $ readFile "templates/rss-item.xml"
-            renderRssWithTemplates rssTemplate rssItemTemplate myFeedConfiguration feedCtx posts    
+            renderRssWithTemplates (readTemplate rssTemplate) (readTemplate rssItemTemplate) myFeedConfiguration feedCtx posts    
 
 --------------------------------------------------------------------------------
 postCtx :: Context String
@@ -134,8 +134,10 @@ postCtxWithTags tags = tagsField "tags" tags `mappend` postCtx
 pandocMathCompiler =
     let mathExtensions = [Ext_tex_math_dollars, Ext_tex_math_double_backslash,
                           Ext_latex_macros]
+        otherExtensions = [Ext_backtick_code_blocks, Ext_fenced_code_attributes]
+        extensions = mathExtensions ++ otherExtensions
         defaultExtensions = writerExtensions defaultHakyllWriterOptions
-        newExtensions = defaultExtensions <> (extensionsFromList mathExtensions) -- foldr S.insert defaultExtensions mathExtensions
+        newExtensions = defaultExtensions <> (extensionsFromList extensions) -- foldr S.insert defaultExtensions mathExtensions
         writerOptions = defaultHakyllWriterOptions {
                           writerExtensions = newExtensions,
                           writerHTMLMathMethod = MathJax ""

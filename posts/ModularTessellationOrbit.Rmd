@@ -11,9 +11,6 @@ output:
   html_document:
     highlight: kate
     keep_md: no
-prettify: yes
-linenums: yes
-prettifycss: minimal
 highlighter: pandoc-solarized
 ---
 
@@ -39,7 +36,7 @@ Then we can get all such quadruples $(a,b,c,d) \in \mathbb{Z}^4$ by
 inverting these modular transformations, swapping $a$ and $d$ and 
 changing their signs. 
 
-```r
+```{r, attr.source='.numberLines', eval=FALSE}
 library(PlaneGeometry)
 library(elliptic) # for the 'unimodular' function
 

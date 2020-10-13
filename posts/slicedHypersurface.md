@@ -2,18 +2,15 @@
 author: Stéphane Laurent
 date: '2020-05-01'
 highlighter: 'pandoc-solarized'
-linenums: True
 output:
   html_document:
     highlight: kate
-    keep_md: False
+    keep_md: no
   md_document:
     preserve_yaml: True
     variant: markdown
-prettify: True
-prettifycss: minimal
-tags: 'R, graphics, rgl, geometry, maths'
 rbloggers: yes
+tags: 'R, graphics, rgl, geometry, maths'
 title: Drawing slices of a hypersurface with R
 ---
 
@@ -25,7 +22,7 @@ draw the cross-section of $\mathcal{S}$ by a hyperplane with R.
 For the illustration, we consider the
 [*tiger*](http://hi.gher.space/wiki/Tiger):
 
-``` {.r}
+``` {.r .numberLines}
 R1 = 2; R2 = 2; r = 0.5
 s <- function(u, v, w){
   rbind(
@@ -43,7 +40,7 @@ $$ let $\vec{\mathbf{n}} = \frac{\mathbf{a}}{\Vert\mathbf{a}\Vert}$ be a
 unit normal vector of $\mathcal{P}$, and $\mathbf{x}_0$ be an arbitrary
 point in $\mathcal{P}$.
 
-``` {.r}
+``` {.r .numberLines}
 a = c(1, 1, 1, 1); b = 2        # plane x+y+z+w = 2
 x0 = c(b, b, b, b)/4            # a point in this plane
 nrml <- a/sqrt(c(crossprod(a))) # unit normal
@@ -53,7 +50,7 @@ Compute a mesh $\mathcal{M}_0$ of the isosurface $$
 \bigl(s(u,v,w) - \mathbf{x}_0\bigr) \cdot \vec{\mathbf{n}} = 0.
 $$
 
-``` {.r}
+``` {.r .numberLines}
 library(misc3d)
 f <- function(u, v, w){
   c(crossprod(s(u, v, w), nrml))
@@ -71,7 +68,7 @@ Denote by $\mathcal{V}\mathcal{S}_0 \subset I \times J \times K$ the set
 of vertices of $\mathcal{M}_0$, and set
 $\mathcal{V}\mathcal{S} = s(\mathcal{V}\mathcal{S}_0) \subset \mathbb{R}^4$.
 
-``` {.r}
+``` {.r .numberLines}
 VS0 <- mesh0$vb
 VS <- s(VS0[1L,], VS0[2L,], VS0[3L,]) 
 ```
@@ -86,7 +83,7 @@ matrix $$
 {(\vec{\mathbf{v}}_1+\vec{\mathbf{v}}_2)}' - I_4.
 $$
 
-``` {.r}
+``` {.r .numberLines}
 rotationMatrix4D <- function(v1, v2){
   v1 <- v1 / sqrt(c(crossprod(v1)))
   v2 <- v2 / sqrt(c(crossprod(v2)))
@@ -100,7 +97,7 @@ $\mathcal{V}\mathcal{S}' = R(\mathcal{V}\mathcal{S}) \subset \mathbb{R}^4$.
 Then all points in $\mathcal{V}\mathcal{S}'$ are equal on their fourth
 coordinate (up to numerical errors in R):
 
-``` {.r}
+``` {.r .numberLines}
 VSprime <- Rot %*% VS
 head(t(VSprime))
 ##           [,1]      [,2]      [,3]      [,4]
@@ -118,7 +115,7 @@ $\mathcal{V}\mathcal{S}'$, and define the mesh $\mathcal{M}$ whose set
 of vertices is $\mathcal{V}\mathcal{S}''$ and with the same edges as
 $\mathcal{M}_0$:
 
-``` {.r}
+``` {.r .numberLines}
 library(rgl)
 mesh <- tmesh3d(
   vertices = VSprime[-4L,],
@@ -135,7 +132,7 @@ $\mathcal{S}$ at a point $\mathbf{x} \in \mathbb{R}^4$ is given by the
 gradient of $\iota$ at $\mathbf{x}$. For the tiger, we know an implicit
 equation, and it is not difficult to get the gradient:
 
-``` {.r}
+``` {.r .numberLines}
 sNormal <- function(XYZT){
   x <- XYZT[1L,]; y <- XYZT[2L,]; z <- XYZT[3L,]; t <- XYZT[4L,]
   rbind(
@@ -165,7 +162,7 @@ $\mathcal{P}$ is given by $$
 \mathbf{a}.
 $$
 
-``` {.r}
+``` {.r .numberLines}
 # projection onto hyperplane <a,x> = b
 projection <- function(a, b, X){
   X - tcrossprod(a/c(crossprod(a)), colSums(a*X)-b)
@@ -202,7 +199,7 @@ v_{3x} & v_{3y} & v_{3z} & v_{3t}
 \end{matrix}\right\vert.
 $$
 
-``` {.r}
+``` {.r .numberLines}
 crossProd4D <- function(v1, v2, v3){
   M <- rbind(v1, v2, v3)
   c(det(M[,-1L]), -det(M[,-2L]), det(M[,-3L]), -det(M[,-4L]))
@@ -219,7 +216,7 @@ Normals <- apply(VS0, 2L, sNormal)
 
 Then you can calculate the normals in this way and proceed as before:
 
-``` {.r}
+``` {.r .numberLines}
 mesh <- tmesh3d(
   vertices = VSprime[-4L,], 
   indices = mesh0$ib, 
@@ -230,7 +227,7 @@ mesh <- tmesh3d(
 
 Here is how to do an animation:
 
-``` {.r}
+``` {.r .numberLines}
 b_ <- seq(-11.5, 11.5, length.out = 60L)
 open3d(windowRect = c(100, 100, 612, 612), zoom = 0.8)
 bg3d(rgb(54, 57, 64, maxColorValue = 255))

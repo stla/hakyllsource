@@ -11,9 +11,6 @@ output:
   html_document:
     highlight: kate
     keep_md: no
-prettify: yes
-linenums: yes
-prettifycss: minimal
 highlighter: pandoc-solarized
 ---
 
@@ -33,7 +30,7 @@ This function takes two arguments: `n`, the number of `div` elements to create
 `div` will have the identifier `{prefixID}-{i}`. We also set a class to 
 each `div`, namely `qtip-big`. 
 
-```{r}
+```{r, attr.source='.numberLines'}
 createDiv <- function(n, prefixID){
   sprintf(paste(
     "for(var i = 1; i <= %d; i++){",
@@ -65,7 +62,7 @@ statistics of this column, otherwise the information we provide in the `div`
 element is the number of levels of the contents of the column, an enumeration 
 of the levels (at most three), and the number of missing values.
 
-```{r}
+```{r, attr.source='.numberLines'}
 fillDiv <- function(dat, i, prefixID){
   x <- dat[[i]]
   if(is.numeric(x)){
@@ -136,7 +133,7 @@ Finally we write a function returning the JavaScript code of the `qTip`
 tooltips. Its arguments are `n`, the number of columns of the table, and 
 `prefixID` as before.
 
-```{r}
+```{r, attr.source='.numberLines'}
 tooltips <- function(n, prefixID){
   settings <- sprintf(paste(
     "{",
@@ -171,7 +168,7 @@ Put the files **jquery.qtip.min.css** and **jquery.qtip.min.js** in the **www**
 subfolder. We use the `shinyjs` package to run the JavaScript code with the 
 function `runjs`. 
 
-```{r, eval=FALSE}
+```{r, attr.source='.numberLines', eval=FALSE}
 library(shiny)
 library(shinyjs)
 library(DT)

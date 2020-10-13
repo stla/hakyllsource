@@ -2,8 +2,9 @@
   text-align: justify;
 }
 
-p a, .info a {
-  font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+p a,
+.info a {
+  font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 600;
   color: darkred; /* #404040 */
   text-decoration: none;
@@ -15,42 +16,42 @@ a {
 }
 
 h3 > a {
- color: darkslategray;
+  color: darkslategray;
 }
 
 a:hover {
- color: #447294;
- text-decoration: none;
+  color: #447294;
+  text-decoration: none;
 }
 
 p {
- line-height: 25px;
- margin-top: 20px;
- margin-bottom: 20px;
+  line-height: 25px;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .lead p {
- line-height: 30px;
+  line-height: 30px;
 }
 
 h1 {
-    font-size: 31px;
-    line-height: 31px;
+  font-size: 31px;
+  line-height: 31px;
 }
 
 h2 {
-    font-size: 28px;
-    line-height: 28px;
+  font-size: 28px;
+  line-height: 28px;
 }
 
 h3 {
-    font-size: 25px;
-    line-height: 25px;
+  font-size: 25px;
+  line-height: 25px;
 }
 
 h4 {
-    font-size: 22px;
-    line-height: 22px;
+  font-size: 22px;
+  line-height: 22px;
 }
 
 pre {
@@ -59,6 +60,98 @@ pre {
 
 p code {
   color: #e83e8c;
-  font-family: 'Source Code Pro', monospace;
+  font-family: "Source Code Pro", monospace;
   font-weight: bold;
+}
+
+code {
+  white-space: pre-wrap;
+}
+span.smallcaps {
+  font-variant: small-caps;
+}
+span.underline {
+  text-decoration: underline;
+}
+div.column {
+  display: inline-block;
+  vertical-align: top;
+  width: 50%;
+}
+code.sourceCode > span {
+  display: inline-block;
+  line-height: 1.25;
+}
+
+code.sourceCode > span {
+  color: darkred;
+  text-decoration: inherit;
+}
+
+code.sourceCode > span:empty {
+  height: 1.2em;
+}
+.sourceCode {
+  overflow: visible;
+}
+code.sourceCode {
+  white-space: pre;
+  position: relative;
+}
+div.sourceCode {
+  margin: 1em 0;
+}
+pre.sourceCode {
+  margin: 0;
+}
+@media screen {
+  div.sourceCode {
+    overflow: auto;
+  }
+}
+@media print {
+  code.sourceCode {
+    white-space: pre-wrap;
+  }
+  code.sourceCode > span {
+    text-indent: -5em;
+    padding-left: 5em;
+  }
+}
+pre.numberSource code {
+  counter-reset: source-line 0;
+}
+pre.numberSource code > span {
+  position: relative;
+  left: -4em;
+  counter-increment: source-line;
+}
+pre.numberSource code > span > a:first-child::before {
+  content: counter(source-line);
+  position: relative;
+  left: -1em;
+  text-align: right;
+  vertical-align: baseline;
+  border: none;
+  display: inline-block;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  padding: 0 4px;
+  width: 4em;
+  background-color: #fdf6e3;
+  color: #7a7c7d;
+}
+pre.numberSource {
+  margin-left: 3em;
+  border-left: 1px solid #7a7c7d;
+  padding-left: 4px;
+}
+@media screen {
+  code.sourceCode > span > a:first-child::before {
+    text-decoration: underline;
+  }
 }

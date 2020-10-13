@@ -2,18 +2,15 @@
 author: Stéphane Laurent
 date: '2020-02-19'
 highlighter: 'pandoc-solarized'
-linenums: True
 output:
   html_document:
     highlight: kate
-    keep_md: False
+    keep_md: no
   md_document:
     preserve_yaml: True
     variant: markdown
-prettify: True
-prettifycss: minimal
-tags: 'R, maths, geometry'
 rbloggers: yes
+tags: 'R, maths, geometry'
 title: An orbit of the modular tessellation
 ---
 
@@ -39,7 +36,7 @@ we can get all such quadruples $(a,b,c,d) \in \mathbb{Z}^4$ by inverting
 these modular transformations, swapping $a$ and $d$ and changing their
 signs.
 
-``` {.r}
+``` {.r .numberLines}
 library(PlaneGeometry)
 library(elliptic) # for the 'unimodular' function
 
