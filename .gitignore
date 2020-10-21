@@ -11,3 +11,4 @@ ztemp/
 stlahblog/
 posts/*.pdf
 posts/*_cache
+feedProcessing/
