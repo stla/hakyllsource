@@ -94,7 +94,7 @@ page.open("about:blank", function (status) {
       '<html><body><textarea id="editor">' +
       code +
       "</textarea></body></html>";
-    if (page.injectJs("xcodemirror.js")) {
+    if (page.injectJs("codemirror.js")) {
       if (page.injectJs("julia.js")) {
         if (page.injectJs("formatting.js")) {
           page.evaluate(function (tabSize) {
