@@ -14,6 +14,9 @@ tags: 'R, haskell, julia, Rcpp, C, special-functions, maths'
 title: Haskell is fast
 ---
 
+*Updated title:* **Haskell is fast, but Julia is faster** (see updates
+at the end).
+
 My R package 'HypergeoMat' provides a Rcpp implementation of Koev &
 Edelman's algorithm for the evaluation of the hypergeometric function of
 a matrix argument.
@@ -151,3 +154,16 @@ amazing:
 
 19 seconds for Julia 1.2.0 and 3 seconds for Julia 1.5.2! It beats
 Haskell.
+
+Update: even better
+===================
+
+Thanks to some advice I got on
+[discourse.julialang.org](https://discourse.julialang.org/), I improved
+my [Julia
+code](https://gist.github.com/stla/e85e2de1ad9aeeebc01583f1d0b8e1d0#file-hypergeompq10-jl),
+and it is faster now:
+
+    Unit: seconds
+      expr      min       lq     mean   median       uq      max neval
+     Julia 1.499753 1.549549 1.750907 1.658282 1.915167 2.428611    10
