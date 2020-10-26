@@ -5,12 +5,12 @@ highlighter: 'pandoc-solarized'
 output:
   html_document:
     highlight: zenburn
-    keep_md: True
+    keep_md: yes
   md_document:
-    toc: True
+    preserve_yaml: True
+    toc: yes
     variant: markdown
-prettify: True
-prettifycss: minimal
+rbloggers: yes
 tags: 'haskell, R'
 title: 'Calling a Haskell function in R - a float expansion example'
 ---
@@ -25,6 +25,8 @@ title: 'Calling a Haskell function in R - a float expansion example'
     -   [Call in R](#call-in-r)
 -   [Second dynamic linker: vector
     output](#second-dynamic-linker-vector-output)
+-   [2020 update: the 'foreign-library'
+    stanza](#update-the-foreign-library-stanza)
 
 In [the previous
 article](https://laustep.github.io/stlahblog/posts/DyadicExpansion.html),
@@ -97,7 +99,7 @@ module](https://hackage.haskell.org/package/base-4.9.0.0/docs/Foreign-C.html).
 
 We end up with this module:
 
-``` {.haskell}
+``` {.haskell .numberLines}
 -- FloatExpansion1.hs
 {-# LANGUAGE ForeignFunctionInterface #-}
 
@@ -107,14 +109,15 @@ import Foreign
 import Foreign.C
 import Numeric (floatToDigits)
 
-foreign export ccall floatExpansion :: Ptr CInt -> Ptr CDouble -> Ptr CString -> IO ()
+foreign export ccall floatExpansion :: Ptr CInt -> Ptr CDouble -> Ptr CString 
+                                    -> IO ()
 
 floatExpansion :: Ptr CInt -> Ptr CDouble -> Ptr CString -> IO ()
 floatExpansion base u result = do
   base <- peek base
   u <- peek u
   expansion <- newCString $ show $ floatExpansion' (toInteger base) u
-  poke result $ expansion
+  poke result expansion
 
 floatExpansion' :: RealFloat a => Integer -> a -> [Int]
 floatExpansion' base u = replicate (- snd expansion) 0 ++ fst expansion
@@ -183,7 +186,8 @@ library
 We firstly load the library with:
 
 ``` {.r}
-dyn.load("FloatExpansion1.dll")
+dll <- "Haskell/DLLs/FloatExpansion1.so"
+dyn.load(dll)
 .C("HsStart")
 ## list()
 ```
@@ -192,7 +196,7 @@ And we invoke the function with the help of the `.C` function, as
 follows:
 
 ``` {.r}
-.C("floatExpansion", base=2L, x=0.125, result="")$result
+.C("floatExpansion", base = 2L, x = 0.125, result = "")$result
 ## [1] "[0,0,1]"
 ```
 
@@ -200,7 +204,7 @@ It works. But it would be better to have a vector as output, rather than
 a string.
 
 ``` {.r}
-dyn.unload("FloatExpansion1.dll")
+dyn.unload(dll)
 ```
 
 Second dynamic linker: vector output
@@ -217,7 +221,7 @@ imported via the `Foreign` module.
 
 We end up with this module:
 
-``` {.haskell}
+``` {.haskell .numberLines}
 -- FloatExpansion2.hs
 {-# LANGUAGE ForeignFunctionInterface #-}
 {-# LANGUAGE DataKinds #-}
@@ -231,7 +235,8 @@ import qualified Foreign.R.Type as R
 import qualified Data.Vector.SEXP as DV
 import Numeric (floatToDigits)
 
-foreign export ccall floatExpansion :: Ptr CInt -> Ptr CDouble -> Ptr (SEXP s R.Int) -> IO ()
+foreign export ccall floatExpansion :: Ptr CInt -> Ptr CDouble 
+                                    -> Ptr (SEXP s R.Int) -> IO ()
 
 floatExpansion :: Ptr CInt -> Ptr CDouble -> Ptr (SEXP s R.Int) -> IO ()
 floatExpansion base u result = do
@@ -251,7 +256,8 @@ floatExpansion' base u = replicate (- snd expansion) 0 ++ fst expansion
 We compile the library as before. And we load it in R as before:
 
 ``` {.r}
-dyn.load("FloatExpansion2.dll")
+dll <- "Haskell/DLLs/FloatExpansion2.so"
+dyn.load(dll)
 .C("HsStart")
 ## list()
 ```
@@ -260,7 +266,7 @@ And we invoke the function with the help of the `.C` function, as
 follows:
 
 ``` {.r}
-.C("floatExpansion", base=2L, x=0.125, result=list(0L))$result
+.C("floatExpansion", base = 2L, x = 0.125, result = list(0L))$result
 ## [[1]]
 ## [1] 0 0 1
 ```
@@ -270,8 +276,11 @@ In fact, the output is a list with one element, the desired vector.
 Let's write a user-friendly function:
 
 ``` {.r}
-floatExpand <- function(x, base=2L){
-  .C("floatExpansion", base=as.integer(base), x=as.double(x), result=list(integer(1)))$result[[1]]  
+floatExpand <- function(x, base = 2L){
+  .C(
+    "floatExpansion", 
+    base = as.integer(base), x = as.double(x), result = list(0L)
+  )$result[[1L]]
 }
 ```
 
@@ -285,9 +294,9 @@ microbenchmark(
   times = 5000
 )
 ## Unit: microseconds
-##         expr    min      lq      mean  median      uq      max neval cld
-##  floatExpand 12.049 16.9580  43.44155  23.205  35.253 8006.062  5000  a 
-##   num2dyadic 43.286 98.8435 150.81104 128.964 167.788 3451.697  5000   b
+##         expr    min      lq     mean  median      uq       max neval cld
+##  floatExpand 20.982 25.5930 35.66431 27.9130 37.6595  3504.444  5000  a 
+##   num2dyadic 26.062 45.5035 67.28613 52.8915 69.0730 19308.745  5000   b
 ```
 
 It is faster. And I have checked that the two functions always return
@@ -297,12 +306,87 @@ Moreover the "RHaskell" function allows more than the binary expansion,
 for example the ternary expansion:
 
 ``` {.r}
-floatExpand(1/3+1/27, base=3)
+floatExpand(1/3+1/27, base = 3)
 ## [1] 1 0 1
 ```
 
 Quite nice, isn't it ?
 
 ``` {.r}
-dyn.unload("FloatExpansion2.dll")
+dyn.unload(dll)
 ```
+
+2020 update: the 'foreign-library' stanza
+-----------------------------------------
+
+Nowadays, there is a more convenient way to generate a Haskell DLL. I'm
+using *stack* now, and here is the contents of my *stack* project:
+
+    FloatExpansion1
+    ├── FloatExpansion1.cabal
+    ├── LICENSE
+    ├── README.md
+    ├── Setup.hs
+    ├── src
+    │   └── FloatExpansion.hs
+    ├── src-dll
+    │   └── FloatExpansionDLL.hs
+    ├── stack.yaml
+    └── StartEnd.c
+
+The file **FloatExpansion1.cabal** contains:
+
+``` {.cabal}
+library
+  hs-source-dirs:      src
+  exposed-modules:     FloatExpansion
+  build-depends:       base >= 4.7 && < 5
+  default-language:    Haskell2010
+  ghc-options:         -Wall
+
+foreign-library FloatExpansion1
+  buildable:           True
+  type:                native-shared
+  if os(Windows)
+    options: standalone
+  other-modules:       FloatExpansionDLL
+  build-depends:       base >=4.7 && < 5
+                     , FloatExpansion1
+  hs-source-dirs:      src-dll
+  c-sources:           StartEnd.c
+  default-language:    Haskell2010
+```
+
+The file **FloatExpansion.hs**:
+
+``` {.haskell}
+module FloatExpansion
+  where
+import Numeric (floatToDigits)
+
+floatExpansion' :: RealFloat a => Integer -> a -> [Int]
+floatExpansion' base u = replicate (- snd expansion) 0 ++ fst expansion
+  where
+    expansion = floatToDigits base u
+```
+
+The file **FloatExpansionDLL.hs**:
+
+``` {.haskell}
+module FloatExpansionDLL
+  where
+import FloatExpansion
+import Foreign
+import Foreign.C
+
+foreign export ccall floatExpansion :: Ptr CInt -> Ptr CDouble -> Ptr CString -> IO ()
+
+floatExpansion :: Ptr CInt -> Ptr CDouble -> Ptr CString -> IO ()
+floatExpansion base u result = do
+  base <- peek base
+  u <- peek u
+  expansion <- newCString $ show $ floatExpansion' (toInteger base) u
+  poke result expansion
+```
+
+Then, running `stack build` will generate the DLL.

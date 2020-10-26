@@ -4,12 +4,11 @@ date: '2017-06-02'
 highlighter: kate
 output:
   html_document:
-    keep_md: True
+    keep_md: yes
   md_document:
-    toc: True
+    preserve_yaml: True
+    toc: yes
     variant: markdown
-prettify: True
-prettifycss: 'twitter-bootstrap'
 tags: 'maths, R'
 title: Dyadic expansion with R
 ---
@@ -76,8 +75,8 @@ $0.2$ returns only the first $54$ digits of its dyadic representation:
 
 ``` {.r}
 ( d <- num2dyadic(0.2) )
-##  [1] 0 0 1 1 0 0 1 1 0 0 1 1 0 0 1 1 0 0 1 1 0 0 1 1 0 0 1 1 0 0 1 1 0 0 1
-## [36] 1 0 0 1 1 0 0 1 1 0 0 1 1 0 0 1 1 0 1
+##  [1] 0 0 1 1 0 0 1 1 0 0 1 1 0 0 1 1 0 0 1 1 0 0 1 1 0 0 1 1 0 0 1 1 0 0 1 1 0 0
+## [39] 1 1 0 0 1 1 0 0 1 1 0 0 1 1 0 1
 length(d)
 ## [1] 54
 ```

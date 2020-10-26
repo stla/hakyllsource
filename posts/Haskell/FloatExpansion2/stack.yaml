@@ -1,0 +1,7 @@
+resolver: lts-13.21
+
+packages:
+- .
+
+extra-deps:
+- inline-r-0.10.1@sha256:31d1291a0d40e080048ba2036841b27744fef8a2ca720427e6a1400cbd67b908

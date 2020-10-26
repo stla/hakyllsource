@@ -106,7 +106,7 @@ main = do
         route idRoute
         compile $ do
             let feedCtx = postCtx `mappend` bodyField "description"
-            posts <- fmap (take 10) . recentFirst =<<
+            posts <- fmap (take 72) . recentFirst =<<
                 loadAllSnapshots "posts/*" "content"
             rssTemplate <- unsafeCompiler $ readFile "templates/rss.xml"
             rssItemTemplate <- unsafeCompiler $ readFile "templates/rss-item.xml"

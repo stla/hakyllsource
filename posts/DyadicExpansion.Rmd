@@ -7,15 +7,15 @@ output:
   md_document:
     toc: yes
     variant: markdown
+    preserve_yaml: true
   html_document:
     keep_md: yes
-prettify: yes
-prettifycss: twitter-bootstrap
 highlighter: kate
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, collapse=TRUE, fig.path="./figures/dyadic-", fig.align="center")
+knitr::opts_chunk$set(echo = TRUE, collapse=TRUE, 
+                      fig.path="./figures/dyadic-", fig.align="center")
 fscale <- 1 # scale for figures
 ```
 
