@@ -2,15 +2,15 @@
 title: "Two-sided tolerance factor for linear regression"
 author: "Stéphane Laurent"
 date: '2017-07-23'
-tags: R, Rcpp, statistics
+tags: R, Rcpp, statistics, maths
+rbloggers: yes
 output:
   md_document:
     variant: markdown
+    preserve_yaml: true
   html_document:
     keep_md: no
-prettify: yes
-prettifycss: twitter-bootstrap
-highlighter: kate
+highlighter: pandoc-solarized
 ---
 
 ```{r setup, include=FALSE}

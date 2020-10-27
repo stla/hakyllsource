@@ -1,7 +1,7 @@
 ---
 author: Stéphane Laurent
 date: '2017-06-02'
-highlighter: kate
+highlighter: 'pandoc-solarized'
 output:
   html_document:
     keep_md: yes

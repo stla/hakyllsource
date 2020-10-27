@@ -3,23 +3,22 @@ author: Stéphane Laurent
 date: '2017-06-04'
 editor_options:
   chunk_output_type: console
-highlighter: kate
+highlighter: 'pandoc-solarized'
 output:
   html_document: default
   md_document:
     preserve_yaml: True
     toc: True
     variant: markdown
-prettify: True
-prettifycss: 'twitter-bootstrap'
-tags: 'R, special-functions'
+rbloggers: yes
+tags: 'R, special-functions, maths'
 title: |
     The binary splitting with the R `gmp` package - Application to the Gauss
     hypergeometric function
 ---
 
--   [Introductory example: Euler's approximation of
-    $\pi$](#introductory-example-eulers-approximation-of-pi)
+-   [Introductory example: Euler approximation of
+    $\pi$](#introductory-example-euler-approximation-of-pi)
 -   [Second example: exponential of a rational
     number](#second-example-exponential-of-a-rational-number)
 -   [The `gmp` package comes to our
@@ -42,8 +41,8 @@ splitting algorithm we will show how to implement it in R with the `gmp`
 package which allows *arithmetic without limitation*. Our main
 application is the evaluation of the Gauss hypergeometric function.
 
-Introductory example: Euler's approximation of $\pi$
-----------------------------------------------------
+Introductory example: Euler approximation of $\pi$
+--------------------------------------------------
 
 The following formula is due to Euler
 $$\frac{\pi}{2} = 1 + \frac{1}{3} + \frac{1\times 2}{3\times 5} + \frac{1\times 2 \times 3}{3\times 5 \times 7} + \cdots + \frac{n!}{3\times 5 \times 7 \times \cdots \times (2n+1)} + \cdots,$$
@@ -546,7 +545,7 @@ mpfr(halfpi_bigq, 128)
 ```
 
     ## 1 'mpfr' number of precision  128   bits 
-    ## [1] 1.5707963267948966192313216916397514421
+    ## [1] 1.570796326794896619231321691639751442098
 
 ``` {.r}
 library(rcdd)

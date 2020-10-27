@@ -2,16 +2,15 @@
 title: "The binary splitting with the R `gmp` package - Application to the Gauss hypergeometric function"
 author: "Stéphane Laurent"
 date: "2017-06-04"
-tags: R, special-functions
+tags: R, special-functions, maths
+rbloggers: yes
 output:
   md_document:
     variant: markdown
     toc: true
     preserve_yaml: true
   html_document: default
-highlighter: kate
-prettify: yes
-prettifycss: twitter-bootstrap
+highlighter: pandoc-solarized
 editor_options: 
   chunk_output_type: console
 ---
@@ -29,7 +28,7 @@ The *binary splitting algorithm* fastly calculates the partial sums of a rationa
 
 
 
-Introductory example: Euler's approximation of $\pi$
+Introductory example: Euler approximation of $\pi$
 ----------------------------------------
 
 The following formula is due to Euler
