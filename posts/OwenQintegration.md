@@ -141,7 +141,7 @@ library.
 
 Let us give it a first try.
 
-``` {.cpp}
+``` {.cpp .numberLines}
 // [[Rcpp::depends(RcppEigen)]]
 // [[Rcpp::depends(RcppNumerical)]]
 #include <RcppNumerical.h>
@@ -229,7 +229,7 @@ Different integration rules are available in `RcppNumerical`. They all
 are Gauss-Kronrod quadratures, but with different accuracies. Let us try
 the Gauss-Kronrod integration rule with the highest available accuracy:
 
-``` {.cpp}
+``` {.cpp .numberLines}
 // [[Rcpp::export]]
 Rcpp::NumericVector 
 OwenQ1numer201(double nu, double t, double delta, double R,
