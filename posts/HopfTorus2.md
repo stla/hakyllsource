@@ -2,16 +2,14 @@
 author: Stéphane Laurent
 date: '2020-04-12'
 highlighter: 'pandoc-solarized'
-linenums: True
 output:
   html_document:
     highlight: kate
-    keep_md: False
+    keep_md: no
   md_document:
     preserve_yaml: True
     variant: markdown
-prettify: True
-prettifycss: minimal
+rbloggers: yes
 tags: 'R, graphics, rgl, geometry, maths'
 title: Back to the parametric Hopf torus
 ---
@@ -56,7 +54,7 @@ given for a real constant $A$ and an integer constant $n$ by: $$
 \end{pmatrix}, \quad t \in (0,2\pi[.
 $$
 
-``` {.r}
+``` {.r .numberLines}
 A <- 0.44
 n <- 3
 Gamma <- function(t){
@@ -87,7 +85,7 @@ F <- function(t, phi){
 Now we're ready to plot the stereographic projection of the Hopf torus
 with `misc3d`:
 
-``` {.r}
+``` {.r .numberLines}
 fx <- Vectorize(function(u,v) F(u,v)[1])
 fy <- Vectorize(function(u,v) F(u,v)[2])
 fz <- Vectorize(function(u,v) F(u,v)[3])
@@ -103,7 +101,7 @@ A ring cyclide is a Hopf torus. It corresponds to the case when $\Gamma$
 describes a circle on the unit sphere $S^2$. Below is a R function to
 compute such a circle.
 
-``` {.r}
+``` {.r .numberLines}
 # helper function: plane passing by points p1, p2, p3 
 plane3pts <- function(p1,p2,p3){ 
     xcoef <- (p1[2]-p2[2])*(p2[3]-p3[3])-(p1[3]-p2[3])*(p2[2]-p3[2])
@@ -160,7 +158,7 @@ the spherical circle is then `center + radius*(cos(t)*i + sin(t)*j)` for
 Let's try. We enter three pairs of spherical coordinates and we apply
 the `circleOnUnitSphere` function:
 
-``` {.r}
+``` {.r .numberLines}
 thph1 = c(1.3, 1.5)
 thph2 = c(1.9, 2.8)
 thph3 = c(1, 2)
@@ -170,7 +168,7 @@ circ <- circleOnUnitSphere(thph1, thph2, thph3)
 Then we define the parametrization of the stereographically projected
 Hopf torus:
 
-``` {.r}
+``` {.r .numberLines}
 F <- function(t, phi){
   p <- with(circ, center + radius*(cos(t)*i + sin(t)*j))
   Stereo(HopfInverse(p, phi))
@@ -179,7 +177,7 @@ F <- function(t, phi){
 
 And we plot:
 
-``` {.r}
+``` {.r .numberLines}
 parametric3d(fx, fy, fz, umin = 0, umax = 2*pi, vmin = 0, vmax = 2*pi, 
              n = 250, smooth = TRUE, color = "#363940")
 rgl::view3d(90, 0, zoom = 0.65)
@@ -193,7 +191,7 @@ function to perform a rotation in spherical coordinates. See [this
 post](http://stla.github.io/stlapblog/posts/RotationSphericalCoordinates.html)
 on my former blog for some explanations.
 
-``` {.r}
+``` {.r .numberLines}
 # helper functions: basic rotations ####
 Rx <- function(alpha){
   rbind(c(cos(alpha/2), -1i*sin(alpha/2)),
@@ -252,7 +250,7 @@ rotation <- function(theta_phi, axis="x", alpha){
 
 Now, let's rotate our spherical circle and plot:
 
-``` {.r}
+``` {.r .numberLines}
 thph1 <- rotation(thph1, "z", 2*pi/3)
 thph2 <- rotation(thph2, "z", 2*pi/3)
 thph3 <- rotation(thph3, "z", 2*pi/3)

@@ -1,15 +1,14 @@
 ---
 author: Stéphane Laurent
 date: '2017-07-30'
-highlighter: kate
+highlighter: 'pandoc-solarized'
 output:
   html_document:
-    keep_md: False
+    keep_md: no
   md_document:
-    toc: True
+    preserve_yaml: True
+    toc: yes
     variant: markdown
-prettify: True
-prettifycss: 'twitter-bootstrap'
 tags: 'maths, R'
 title: Le théorème des trois distances
 ---
@@ -17,11 +16,11 @@ title: Le théorème des trois distances
 -   [Rappels sur les fractions
     continues](#rappels-sur-les-fractions-continues)
     -   [Développement fini - nombre
-        rationnel](#developpement-fini---nombre-rationnel)
+        rationnel](#développement-fini---nombre-rationnel)
     -   [Développement infini - nombre
-        irrationnel](#developpement-infini---nombre-irrationnel)
--   [Écriture $n = mq_k + q_{k-1} + r$](#ecriture-n-mq_k-q_k-1-r)
--   [Théorème des trois distances](#theoreme-des-trois-distances)
+        irrationnel](#développement-infini---nombre-irrationnel)
+-   [Écriture $n = mq_k + q_{k-1} + r$](#écriture-n-mq_k-q_k-1-r)
+-   [Théorème des trois distances](#théorème-des-trois-distances)
 -   [Application : $\epsilon$-filet](#application-epsilon-filet)
 
 Le théorème des trois distances, ou des trois longueurs, est à propos de
@@ -32,7 +31,7 @@ est un nombre irrationnel.
 Rappels sur les fractions continues
 -----------------------------------
 
-### Développement fini - nombre rationnel {#developpement-fini---nombre-rationnel}
+### Développement fini - nombre rationnel
 
 Soient $a_0\geq 0$, $a_1 \geq 1$, $\ldots$, $a_N \geq 1$ des nombres
 entiers. On définit le nombre rationnel $$
@@ -90,7 +89,7 @@ en nombre "double" dans R :
 
 ``` {.r}
 print(0.7, digits=20)
-## [1] 0.69999999999999996
+## [1] 0.69999999999999995559
 ```
 
 L'algorithme qui calcule les $a_n$ quand on donne un nombre rationnel
@@ -100,7 +99,7 @@ x_0=x, \, x_n = \frac{1}{\{x_{n-1}\}}
 $$ en s'arrêtant à l'indice $N$ lorsque $x_N$ est entier, puis calcule
 $a_n = [x_n]$.
 
-### Développement infini - nombre irrationnel {#developpement-infini---nombre-irrationnel}
+### Développement infini - nombre irrationnel
 
 Lorsque $x=\alpha>0$ est un nombre irrationnel, le même algorithme ne
 s'arrête jamais, et produit alors une suite ${(a_n)}_{n \geq 0}$ - le
@@ -111,7 +110,7 @@ définies de la même façon. On note de plus $$
 \eta_n = |q_n\alpha-p_n|.  
 $$ La majoration $\eta_n \leq \frac{1}{q_{n+1}}$ est bien connue.
 
-Écriture $n = mq_k + q_{k-1} + r$ {#ecriture-n-mq_k-q_k-1-r}
+Écriture $n = mq_k + q_{k-1} + r$
 ---------------------------------
 
 Soit $\alpha \in ]0,1[$ un nombre irrationnel. On note
@@ -160,7 +159,7 @@ f(c(2,3,2,4), 40)
 ## k=3, m=2, r=1
 ```
 
-Théorème des trois distances {#theoreme-des-trois-distances}
+Théorème des trois distances
 ----------------------------
 
 Soit $\alpha \in ]0,1[$ un nombre irrationnel et $n$ un nombre entier.

@@ -6,12 +6,11 @@ output:
   md_document:
     toc: yes
     variant: markdown
+    preserve_yaml: true
   html_document:
     keep_md: no
-prettify: yes
-prettifycss: twitter-bootstrap
+highlighter: pandoc-solarized
 tags: maths, R
-highlighter: kate
 ---
 
 ```{r setup, include=FALSE}
