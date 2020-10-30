@@ -1,17 +1,17 @@
 ---
+title: 'Owen Q-function by numerical integration'
 author: Stéphane Laurent
 date: '2017-07-31'
-highlighter: kate
 output:
-  html_document:
-    keep_md: False
   md_document:
-    toc: True
+    toc: yes
     variant: markdown
-prettify: True
-prettifycss: 'twitter-bootstrap'
+    preserve_yaml: true
+  html_document:
+    keep_md: no
+rbloggers: yes
 tags: 'maths, R, Rcpp, special-functions'
-title: 'Owen Q-function by numerical integration'
+highlighter: 'pandoc-solarized'
 ---
 
 -   [The first Owen $Q$-function](#the-first-owen-q-function)
@@ -27,7 +27,7 @@ The first Owen $Q$-function
 ---------------------------
 
 My package [OwenQ](https://github.com/stla/OwenQ) provides an
-implementation of the function I call the first Owen $Q$-function
+implementation of the function I call the first Owen $Q$-function,
 defined by $$
 Q_1(\nu, t, \delta, R) = \frac{1}{\Gamma\left(\frac{\nu}{2}\right)2^{\frac12(\nu-2)}}
 \int_0^R \Phi\left(\frac{tx}{\sqrt{\nu}}-\delta\right)

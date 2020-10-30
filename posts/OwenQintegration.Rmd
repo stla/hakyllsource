@@ -6,12 +6,11 @@ output:
   md_document:
     toc: yes
     variant: markdown
+    preserve_yaml: true
   html_document:
     keep_md: no
-prettify: yes
-prettifycss: twitter-bootstrap
 tags: maths, R, Rcpp, special-functions
-highlighter: kate
+highlighter: pandoc-solarized
 ---
 
 ```{r setup, include=FALSE}
@@ -21,7 +20,7 @@ library(OwenQRcpp)
 
 ## The first Owen $Q$-function
 
-My package [OwenQ](https://github.com/stla/OwenQ) provides an implementation of the function I call the first Owen $Q$-function defined by 
+My package [OwenQ](https://github.com/stla/OwenQ) provides an implementation of the function I call the first Owen $Q$-function, defined by 
 $$
 Q_1(\nu, t, \delta, R) = \frac{1}{\Gamma\left(\frac{\nu}{2}\right)2^{\frac12(\nu-2)}}
 \int_0^R \Phi\left(\frac{tx}{\sqrt{\nu}}-\delta\right)
@@ -39,7 +38,7 @@ Let us try to evaluate $Q_1$ with the R function `integrate`.
 
 ```{r}
 integrand <- function(x, nu, t, delta){
-  pnorm(t*x /sqrt(nu) - delta) *
+  pnorm(t*x/sqrt(nu) - delta) *
     exp((nu-1)*log(x) - x*x/2 - ((nu/2) - 1) * log(2) - lgamma(nu/2))
 }
 Q1 <- function(nu, t, delta, R, ...){
@@ -111,7 +110,7 @@ The [`RcppNumerical` package](https://github.com/yixuan/RcppNumerical) allows nu
 
 Let us give it a first try. 
 
-```cpp
+``` {.cpp .numberLines}
 // [[Rcpp::depends(RcppEigen)]]
 // [[Rcpp::depends(RcppNumerical)]]
 #include <RcppNumerical.h>
@@ -185,7 +184,7 @@ plot(R, integral, type="l")
 Different integration rules are available in `RcppNumerical`. They all are Gauss-Kronrod quadratures, but with different accuracies. 
 Let us try the Gauss-Kronrod integration rule with the highest available accuracy:
 
-```cpp
+``` {.cpp .numberLines}
 // [[Rcpp::export]]
 Rcpp::NumericVector 
 OwenQ1numer201(double nu, double t, double delta, double R,
