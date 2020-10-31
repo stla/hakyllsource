@@ -5,14 +5,11 @@ date: "2017-12-03"
 output:
   md_document:
     variant: markdown
+    preserve_yaml: true
   html_document:
     keep_md: no
-prettify: yes
-prettifycss: twitter-bootstrap
 tags: R, maths
-highlighter: kate
-editor_options: 
-  chunk_output_type: console
+highlighter: "pandoc-solarized"
 ---
 
 ```{r setup, include=FALSE}
@@ -32,7 +29,7 @@ one has $S={(\widetilde{C}'P)}'I_d^r \widetilde{C}'P$ where $I_d^r$ is the $d\ti
 
 The R function below calculates an extended Cholesky decomposition.
 
-```{r}
+```{r, attr.source='.numberLines'}
 extendedCholesky <- function(S){
   C <- suppressWarnings(chol(S, pivot=TRUE))
   d <- nrow(C)
@@ -47,7 +44,7 @@ extendedCholesky <- function(S){
 
 Let's check:
 
-```{r}
+```{r, attr.source='.numberLines'}
 d <- 3
 ##~~ check for a rank 1 matrix ~~##
 S <- tcrossprod(c(1:d))
@@ -95,4 +92,3 @@ all.equal(
     (t(Ctilde)%*%P), 
   S)
 ```
-

@@ -1,16 +1,13 @@
 ---
 author: Stéphane Laurent
 date: '2017-12-03'
-editor_options:
-  chunk_output_type: console
-highlighter: kate
+highlighter: 'pandoc-solarized'
 output:
   html_document:
-    keep_md: False
+    keep_md: no
   md_document:
+    preserve_yaml: True
     variant: markdown
-prettify: True
-prettifycss: 'twitter-bootstrap'
 tags: 'R, maths'
 title: Extended Cholesky decomposition in R
 ---
@@ -29,7 +26,7 @@ $\begin{pmatrix} I_r & 0 \\ 0 & 0 \end{pmatrix}$.
 
 The R function below calculates an extended Cholesky decomposition.
 
-``` {.r}
+``` {.r .numberLines}
 extendedCholesky <- function(S){
   C <- suppressWarnings(chol(S, pivot=TRUE))
   d <- nrow(C)
@@ -44,7 +41,7 @@ extendedCholesky <- function(S){
 
 Let's check:
 
-``` {.r}
+``` {.r .numberLines}
 d <- 3
 ##~~ check for a rank 1 matrix ~~##
 S <- tcrossprod(c(1:d))
@@ -54,6 +51,9 @@ EC <- extendedCholesky(S); P <- EC$P; L <- EC$L; M <- EC$M
 C <- cbind(rbind(L,M), matrix(0, d, d-ncol(L)))
 all.equal(P %*% S %*% t(P), C%*%t(C))
 ## [1] TRUE
+```
+
+``` {.r .numberLines}
 #~ C tilde matrix ~#
 Ctilde <- cbind(rbind(L,M), 
                 rbind(matrix(0, nrow(L), d-nrow(L)), diag(d-nrow(L))))
@@ -63,6 +63,9 @@ all.equal(
     (t(Ctilde)%*%P), 
   S)
 ## [1] TRUE
+```
+
+``` {.r .numberLines}
 ##~~ check for a rank 2 matrix ~~##
 S <- tcrossprod(c(1:d)) + tcrossprod(d:1)
 #~ extended Cholesky of S ~#
@@ -71,6 +74,9 @@ EC <- extendedCholesky(S); P <- EC$P; L <- EC$L; M <- EC$M
 C <- cbind(rbind(L,M), matrix(0, d, d-ncol(L)))
 all.equal(P %*% S %*% t(P), C%*%t(C))
 ## [1] TRUE
+```
+
+``` {.r .numberLines}
 #~ C tilde matrix ~#
 Ctilde <- cbind(rbind(L,M), 
                 rbind(matrix(0, nrow(L), d-nrow(L)), diag(d-nrow(L))))
@@ -80,6 +86,9 @@ all.equal(
     (t(Ctilde)%*%P), 
   S)
 ## [1] TRUE
+```
+
+``` {.r .numberLines}
 ##~~ check for a rank 3 matrix ~~##
 S <- toeplitz(d:1)
 #~ extended Cholesky of S ~#
@@ -88,6 +97,9 @@ EC <- extendedCholesky(S); P <- EC$P; L <- EC$L; M <- EC$M
 C <- cbind(rbind(L,M), matrix(0, d, d-ncol(L)))
 all.equal(P %*% S %*% t(P), C%*%t(C))
 ## [1] TRUE
+```
+
+``` {.r .numberLines}
 #~ C tilde matrix ~#
 Ctilde <- cbind(rbind(L,M), 
                 rbind(matrix(0, nrow(L), d-nrow(L)), diag(d-nrow(L))))

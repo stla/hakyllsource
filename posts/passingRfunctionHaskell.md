@@ -5,12 +5,12 @@ highlighter: 'pandoc-solarized'
 output:
   html_document:
     highlight: haddock
-    keep_md: False
+    keep_md: no
   md_document:
-    toc: False
+    preserve_yaml: True
+    toc: no
     variant: markdown
-prettify: True
-prettifycss: minimal
+rbloggers: yes
 tags: 'haskell, R'
 title: Passing a R function to Haskell
 ---
@@ -31,7 +31,7 @@ Let's give an example. In this example we pass a R vector of doubles to
 Haskell, we calculate the square of each component in Haskell and we
 send the result to R.
 
-``` {.haskell}
+``` {.haskell .numberLines}
 {-# LANGUAGE DataKinds                #-}
 {-# LANGUAGE ForeignFunctionInterface #-}
 module Lib where
@@ -62,7 +62,7 @@ Instead of using `VS.toList . VS.fromSEXP` to convert the R vector to a
 Haskell list, we could use the `real` function of the `Foreign.R` module
 (this is a port of the `C` function `REAL`):
 
-``` {.haskell}
+``` {.haskell .numberLines}
 ...
 import qualified Foreign.R as FR
 
@@ -127,7 +127,7 @@ I'm using the C language and not `inline-r` for two reasons:
     import them with the FFI), the Haskell code would be similar to the
     C code.
 
-``` {.c}
+``` {.c .numberLines}
 #include <R.h>
 #include <Rinternals.h>
 
@@ -149,7 +149,7 @@ double myeval(SEXP f, double x) {
 
 Now we need to import this function:
 
-``` {.haskell}
+``` {.haskell .numberLines}
 {-# LANGUAGE DataKinds                #-}
 {-# LANGUAGE ForeignFunctionInterface #-}
 module Lib where
@@ -193,7 +193,7 @@ chebyshevFit :: Int -> (Double -> Double) -> [Double]
 
 of the `polynomial` library.
 
-``` {.haskell}
+``` {.haskell .numberLines}
 ...
 import Math.Polynomial.Chebyshev
 

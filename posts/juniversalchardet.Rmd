@@ -5,14 +5,11 @@ date: "2017-10-24"
 output:
   md_document:
     variant: markdown
+    preserve_yaml: true
   html_document:
     keep_md: no
-prettify: yes
-prettifycss: twitter-bootstrap
 tags: R
-highlighter: kate
-editor_options: 
-  chunk_output_type: console
+highlighter: 'pandoc-solarized'
 ---
 
 ```{r setup, include=FALSE}
@@ -39,3 +36,7 @@ flength <- as.integer(file.size(f))
 .jcall(detector, "V", "reset")
 ```
 
+# Update 2020
+
+Nowadays one can achieve the same result with the R package `uchardet` (which
+does not use Java).

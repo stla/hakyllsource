@@ -6,12 +6,12 @@ output:
   md_document:
     toc: yes
     variant: markdown
+    preserve_yaml: true
   html_document:
     highlight: zenburn
     keep_md: yes
-prettify: yes
-prettifycss: minimal
 tags: haskell, R
+rbloggers: yes
 highlighter: pandoc-solarized
 ---
 
@@ -44,7 +44,7 @@ Thus, we want a R function that takes as input `list(c(1L,2L,5L),c(3L,4L))` and 
 
 Below is a first way to do so. To import the input list in Haskell, we use `peekArray`, which requires to enter the length of the input list. To export the output list, we use `pokeArray`.
 
-```haskell 
+``` {.haskell .numberLines} 
 {-# LANGUAGE ForeignFunctionInterface #-}
 {-# LANGUAGE DataKinds #-}
 module Lib where
@@ -84,7 +84,7 @@ This way has an inconvenient: in order to use the function in R, we need to give
 
 The second way we give below overcomes this inconvenient:
 
-```haskell
+``` {.haskell .numberLines}
 ...
 import Language.R.Literal (mkProtectedSEXPVector)
 import Data.Singletons (sing)
@@ -138,7 +138,7 @@ Thus, using the second way, we are able to get an arbitrary number of atomic vec
 Now, in order to show how to get an arbitrary number of lists, we will export the `standardYoungTableaux` functions, which returns the list of standard Young tableaux whose shape is a given partition.
 
 
-```haskell
+``` {.haskell .numberLines}
 ...
 import Math.Combinat.Partitions.Integer
 

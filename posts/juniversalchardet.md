@@ -1,16 +1,13 @@
 ---
 author: Stéphane Laurent
 date: '2017-10-24'
-editor_options:
-  chunk_output_type: console
-highlighter: kate
+highlighter: 'pandoc-solarized'
 output:
   html_document:
-    keep_md: False
+    keep_md: no
   md_document:
+    preserve_yaml: True
     variant: markdown
-prettify: True
-prettifycss: 'twitter-bootstrap'
 tags: R
 title: File encoding detection in R
 ---
@@ -37,3 +34,9 @@ flength <- as.integer(file.size(f))
 ## [1] "UTF-8"
 .jcall(detector, "V", "reset")
 ```
+
+Update 2020
+===========
+
+Nowadays one can achieve the same result with the R package `uchardet`
+(which does not use Java).

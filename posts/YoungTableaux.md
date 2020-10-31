@@ -5,12 +5,12 @@ highlighter: 'pandoc-solarized'
 output:
   html_document:
     highlight: zenburn
-    keep_md: True
+    keep_md: yes
   md_document:
-    toc: True
+    preserve_yaml: True
+    toc: yes
     variant: markdown
-prettify: True
-prettifycss: minimal
+rbloggers: yes
 tags: 'haskell, R'
 title: Young Tableaux from Haskell to R
 ---
@@ -48,7 +48,7 @@ Below is a first way to do so. To import the input list in Haskell, we
 use `peekArray`, which requires to enter the length of the input list.
 To export the output list, we use `pokeArray`.
 
-``` {.haskell}
+``` {.haskell .numberLines}
 {-# LANGUAGE ForeignFunctionInterface #-}
 {-# LANGUAGE DataKinds #-}
 module Lib where
@@ -91,7 +91,7 @@ vector (the first "row") of the input list.
 
 The second way we give below overcomes this inconvenient:
 
-``` {.haskell}
+``` {.haskell .numberLines}
 ...
 import Language.R.Literal (mkProtectedSEXPVector)
 import Data.Singletons (sing)
@@ -148,7 +148,7 @@ Now, in order to show how to get an arbitrary number of lists, we will
 export the `standardYoungTableaux` functions, which returns the list of
 standard Young tableaux whose shape is a given partition.
 
-``` {.haskell}
+``` {.haskell .numberLines}
 ...
 import Math.Combinat.Partitions.Integer
 

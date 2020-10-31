@@ -6,12 +6,12 @@ output:
   md_document:
     toc: no
     variant: markdown
+    preserve_yaml: true
   html_document:
     highlight: haddock
     keep_md: no
-prettify: yes
-prettifycss: minimal
 tags: haskell, R
+rbloggers: yes
 highlighter: pandoc-solarized
 ---
 
@@ -28,7 +28,7 @@ We can obviously pass an integer, a double or a character string in the `.C` fun
 
 Let's give an example. In this example we pass a R vector of doubles to Haskell, we calculate the square of each component in Haskell and we send the result to R. 
 
-```haskell
+``` {.haskell .numberLines}
 {-# LANGUAGE DataKinds                #-}
 {-# LANGUAGE ForeignFunctionInterface #-}
 module Lib where
@@ -56,7 +56,7 @@ To call in R with the `.C` function, the R objects must be encapsulated in `list
 
 Instead of using `VS.toList . VS.fromSEXP` to convert the R vector to a Haskell list,  we could use the `real` function of the `Foreign.R` module (this is a port of the `C` function `REAL`):
 
-```haskell
+``` {.haskell .numberLines}
 ...
 import qualified Foreign.R as FR
 
@@ -115,7 +115,7 @@ I'm using the C language and not `inline-r` for two reasons:
 
 - even if these two functions were available in Haskell (we could import them with the FFI), the Haskell code would be similar to the C code. 
 
-```c
+``` {.c .numberLines}
 #include <R.h>
 #include <Rinternals.h>
 
@@ -137,7 +137,7 @@ double myeval(SEXP f, double x) {
 
 Now we need to import this function:
 
-```haskell
+``` {.haskell .numberLines}
 {-# LANGUAGE DataKinds                #-}
 {-# LANGUAGE ForeignFunctionInterface #-}
 module Lib where
@@ -177,8 +177,7 @@ chebyshevFit :: Int -> (Double -> Double) -> [Double]
 
 of the `polynomial` library.
 
-
-```haskell
+``` {.haskell .numberLines}
 ...
 import Math.Polynomial.Chebyshev
 
@@ -198,4 +197,3 @@ We will apply it to the function $x \mapsto \cos(4\arccos(x))$, which is the Che
 > .C("chebyshevFitR", f=list(f), n=6L, result=list(0))$result[[1]]
 [1] -1.110223e-16  3.145632e-16 -1.480297e-16  4.255855e-16  1.000000e+00  2.775558e-16
 ```
-
