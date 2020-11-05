@@ -1,20 +1,18 @@
 ---
-title: "Simulation of the fractional noncentral Wishart distribution"
-author: "Stéphane Laurent"
-date: "2017-12-09"
+author: Stéphane Laurent
+date: '2017-12-09'
+editor_options:
+  chunk_output_type: console
+highlighter: 'pandoc-solarized'
 output:
-  md_document:
-    variant: markdown
-    preserve_yaml: true
   html_document:
     keep_md: no
-prettify: yes
-linenums: yes
-prettifycss: twitter-bootstrap
-tags: R, maths, statistics
-highlighter: kate
-editor_options: 
-  chunk_output_type: console
+  md_document:
+    preserve_yaml: True
+    variant: markdown
+rbloggers: yes
+tags: 'R, maths, statistics'
+title: Simulation of the fractional noncentral Wishart distribution
 ---
 
 It is well known how to simulate the noncentral Wishart distribution
@@ -22,7 +20,7 @@ when the number of degrees of freedom $\nu$ and the dimension $d$
 satisfy $\nu > 2d-1$, or when $\nu \geq d$ is an integer. In their paper
 [Exact and high-order discretization schemes for Wishart processes and
 their affine extensions](https://arxiv.org/abs/1006.2281), Ahdida &
-Alfonsi provide a method that enables to simulate the Wishart process of
+Alfonsi provide a method that allows to simulate the Wishart process of
 dimension $d$ for any number of degrees of freedom $\nu \geq d-1$ and
 without restrictions on the other parameters. This method allows to
 simulate the noncentral Wishart distribution, in the way we will expose
@@ -165,18 +163,18 @@ mean $\nu \Sigma + \Theta$:
 ``` {.r}
 round((nu*Sigma + Theta) - apply(W, 1:2, mean), 2)
 ##       [,1]  [,2]  [,3]  [,4]  [,5]  [,6]
-## [1,]  0.02  0.06  0.00 -0.05 -0.01 -0.04
-## [2,]  0.06  0.06 -0.02 -0.06 -0.04 -0.06
-## [3,]  0.00 -0.02 -0.10 -0.11 -0.07 -0.09
-## [4,] -0.05 -0.06 -0.11 -0.07 -0.04 -0.04
-## [5,] -0.01 -0.04 -0.07 -0.04 -0.01 -0.04
-## [6,] -0.04 -0.06 -0.09 -0.04 -0.04 -0.08
+## [1,] -0.05 -0.04  0.00  0.00  0.02  0.04
+## [2,] -0.04 -0.06 -0.03 -0.03  0.00  0.01
+## [3,]  0.00 -0.03 -0.04 -0.06 -0.05 -0.05
+## [4,]  0.00 -0.03 -0.06 -0.07 -0.04 -0.07
+## [5,]  0.02  0.00 -0.05 -0.04 -0.03 -0.05
+## [6,]  0.04  0.01 -0.05 -0.07 -0.05 -0.09
 ```
 
 Let's compare the theoretical characteristic function to its
 approximation obtained from the simulations:
 
-``` {.r}
+``` {.r .numberLines}
 z <- seq(0.001, 0.004, length.out = 20)
 Z <- sapply(z, function(z){
   z*diag(p) + matrix(z, p, p)

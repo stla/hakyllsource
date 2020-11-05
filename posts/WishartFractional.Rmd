@@ -8,11 +8,9 @@ output:
     preserve_yaml: true
   html_document:
     keep_md: no
-prettify: yes
-linenums: yes
-prettifycss: twitter-bootstrap
 tags: R, maths, statistics
-highlighter: kate
+rbloggers: yes
+highlighter: pandoc-solarized
 editor_options: 
   chunk_output_type: console
 ---
@@ -26,7 +24,7 @@ It is well known how to simulate the noncentral Wishart distribution when the nu
 of degrees of freedom $\nu$ and the dimension $d$ satisfy $\nu > 2d-1$, or when 
 $\nu \geq d$ is an integer. 
 In their paper [Exact and high-order discretization schemes for Wishart processes and their affine extensions](https://arxiv.org/abs/1006.2281), Ahdida & Alfonsi provide 
-a method that enables to simulate the Wishart process of dimension $d$ for any number 
+a method that allows to simulate the Wishart process of dimension $d$ for any number 
 of degrees of freedom $\nu \geq d-1$ and without restrictions on the other parameters. 
 This method allows to simulate the noncentral Wishart distribution, in the way we will 
 expose now.
@@ -173,7 +171,7 @@ round((nu*Sigma + Theta) - apply(W, 1:2, mean), 2)
 
 Let's compare the theoretical characteristic function to its approximation obtained from the simulations:
 
-```{r WishartCF, fig.width=8, fig.height=4, cache=TRUE}
+```{r WishartCF, fig.width=8, fig.height=4, cache=TRUE, attr.source='.numberLines'}
 z <- seq(0.001, 0.004, length.out = 20)
 Z <- sapply(z, function(z){
   z*diag(p) + matrix(z, p, p)

@@ -2,7 +2,6 @@
 author: Stéphane Laurent
 date: '2019-04-05'
 highlighter: 'pandoc-solarized'
-linenums: True
 output:
   html_document:
     highlight: kate
@@ -10,8 +9,7 @@ output:
   md_document:
     preserve_yaml: True
     variant: markdown
-prettify: True
-prettifycss: minimal
+rbloggers: yes
 tags: 'R, maths, geometry, graphics, rgl, asymptote, javascript, povray'
 title: Drawing hyperbolic polyhedra
 ---
@@ -51,7 +49,7 @@ $$ Later, we will resort to the (non-obvious) property $$
 (\star)\qquad -A \oplus (A \oplus B) = B.
 $$
 
-``` {.r}
+``` {.r .numberLines}
 # gyroaddition ####
 dotprod <- function(x, y=NULL){
   c(crossprod(x, y))
@@ -75,7 +73,7 @@ $$
 
 It is easy to see that $0 \otimes A = \mathbf{0}$ and $1 \otimes A = A$.
 
-``` {.r}
+``` {.r .numberLines}
 # scalar gyromultiplication ####
 gyroscalar <- function(r, A, s=1){
   Anorm <- sqrt(dotprod(A))
@@ -111,7 +109,7 @@ joining $A$ and $B$ corresponding to $t = \frac12$: $$
 A \oplus \left(\frac{1}{2} \otimes \overset{\oplus\longrightarrow}{AB}\right).
 $$
 
-``` {.r}
+``` {.r .numberLines}
 # gyrosegment ####
 gyroABt <- function(A, B, t, s=1){
   gyroadd(A, gyroscalar(t, gyroadd(-A, B, s), s), s)
@@ -128,7 +126,7 @@ gyrosegment <- function(A, B, s=1, n=50){
 
 Let's plot a two-dimensional gyrosegment.
 
-``` {.r}
+``` {.r .numberLines}
 A <- c(1,2); B <- c(1,1)
 plot(rbind(A,B), type = "p", pch = 19, xlab = NA, ylab = NA, 
      xlim = c(0,2), ylim = c(0,2))
@@ -154,7 +152,7 @@ Hyperbolic triangle
 Thanks to the gyrosegments, we can easily plot the edges of a hyperbolic
 triangle.
 
-``` {.r}
+``` {.r .numberLines}
 library(rgl)
 A <- c(1, 0, 0); B <- c(0, 1, 0); C <- c(0, 0, 1)
 s <- 0.3
@@ -170,7 +168,7 @@ lines3d(AB, lwd=3); lines3d(AC, lwd=3); lines3d(BC, lwd=3)
 We can draw a prettier picture with the help of the `cylinder3d`
 function of `rgl`:
 
-``` {.r}
+``` {.r .numberLines}
 view3d(30, 30, zoom = 0.75)
 # plot vertices
 spheres3d(rbind(A,B,C), radius = 0.03, color = "yellow")
@@ -188,7 +186,7 @@ shade3d(
 Now, how to fill the hyperbolic triangle with a color? We will do so by
 constructing a triangular mesh of the hyperbolic triangle.
 
-``` {.r}
+``` {.r .numberLines}
 # a subdivision step
 gyrosubdiv0 <- function(A1, A2, A3, s=1){
   M12 <- gyromidpoint(A1, A2, s)
@@ -223,7 +221,7 @@ gyrosubdiv <- function(A1, A2, A3, s=1, depth=5){
 
 Here is the mesh at the first iteration:
 
-``` {.r}
+``` {.r .numberLines}
 mesh <- gyrosubdiv(A, B, C, s, depth = 1)
 view3d(30, 30, zoom = 0.75)
 wire3d(mesh, lwd = 3, specular = "black")
@@ -233,7 +231,7 @@ wire3d(mesh, lwd = 3, specular = "black")
 
 At the second iteration:
 
-``` {.r}
+``` {.r .numberLines}
 mesh <- gyrosubdiv(A, B, C, s, depth = 2)
 view3d(30, 30, zoom = 0.75)
 wire3d(mesh, lwd = 3, specular = "black")
@@ -243,7 +241,7 @@ wire3d(mesh, lwd = 3, specular = "black")
 
 Now let's plot the shaded triangle:
 
-``` {.r}
+``` {.r .numberLines}
 mesh <- gyrosubdiv(A, B, C, s, depth = 6)
 view3d(30, 30, zoom = 0.75)
 shade3d(mesh, color = "navy", specular = "cyan")
@@ -257,7 +255,7 @@ Icosahedron
 An icosahedron is made of twenty triangular faces. So we have everything
 needed to plot an icosahedron.
 
-``` {.r}
+``` {.r .numberLines}
 icosahedron <- icosahedron3d()
 vertices <- t(icosahedron$vb[-4,])
 edges <- Rvcg::vcgGetEdge(icosahedron)
@@ -303,7 +301,7 @@ Since this is a convex polyhedron, we can use the `cxhull` package to
 get its edges and its faces. We use the option `triangulate = TRUE` to
 get a triangulation of the faces.
 
-``` {.r}
+``` {.r .numberLines}
 vertices <- rbind(
   c(1, -1/sqrt(3), sqrt(8/3)),
   c(1, -1/sqrt(3), -sqrt(8/3)),
@@ -329,7 +327,7 @@ edges <- hull$edges
 
 And now we can proceed as before:
 
-``` {.r}
+``` {.r .numberLines}
 s <- 0.5
 view3d(30, 30, zoom = 0.7)
 # plot vertices
@@ -362,7 +360,7 @@ Below is an Asymptote code which draws a hyperbolic dodecahedron. The
 gyromidpoint is calculated differently, in a way that does not resort to
 the scalar gyromultiplication.
 
-``` {.c}
+``` {.c .numberLines}
 settings.render = 4;
 settings.outformat = "pdf";
 
@@ -611,12 +609,13 @@ Here is a hyperbolic dodecahedron plotted with `three.js`:
 
 <iframe src="../frames/threejs_hyperbolicDodecahedron2.html" width="100%" height="500px" scrolling="no" frameborder="0">
 </iframe>
+
 POV-Ray hyperbolic dodecahedron
 -------------------------------
 
 And here is a hyperbolic dodecahedron plotted with `POV-Ray`:
 
-``` {.povray}
+``` {.povray .numberLines}
 // hyperbolic dodecahedron //
 #version 3.7;
 global_settings { assumed_gamma 1 } 
@@ -876,7 +875,7 @@ To remove the duplicated vertices, one can use the `vcgClean` function
 of the `Rvcg` package (which also adds the normals). Observe the
 difference:
 
-``` {.r}
+``` {.r .numberLines}
 idx <- faces[1,]
 A <- vertices[idx[1],]
 B <- vertices[idx[2],]
@@ -888,7 +887,7 @@ shade3d(mesh, color = "navy")
 
 ![](./figures/hyperbolicPolyhedra-triangle-dupVertices-1.png)
 
-``` {.r}
+``` {.r .numberLines}
 mesh <- Rvcg::vcgClean(mesh, sel = c(0,7), silent = TRUE)
 view3d(30, 30, zoom = 0.9)
 shade3d(mesh, color = "navy")
@@ -898,7 +897,7 @@ shade3d(mesh, color = "navy")
 
 So a better `gyrosubdiv` function is:
 
-``` {.r}
+``` {.r .numberLines}
 gyrosubdiv <- function(A1, A2, A3, s=1, depth=5){
   subd <- gyrosubdiv0(A1, A2, A3, s)
   for(i in seq_len(depth-1)){
