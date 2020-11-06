@@ -2,16 +2,14 @@
 author: Stéphane Laurent
 date: '2019-07-10'
 highlighter: 'pandoc-solarized'
-linenums: True
 output:
   html_document:
     highlight: kate
-    keep_md: False
+    keep_md: no
   md_document:
     preserve_yaml: True
     variant: markdown
-prettify: True
-prettifycss: minimal
+rbloggers: yes
 tags: 'R, shiny, datatables'
 title: Plotting the columns of a Datatable
 ---
@@ -22,7 +20,7 @@ title: Plotting the columns of a Datatable
 
 Here is the code of this app:
 
-``` {.r}
+``` {.r .numberLines}
 library(shiny)
 library(shinyBS)
 library(DT)

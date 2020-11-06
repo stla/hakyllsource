@@ -2,18 +2,16 @@
 author: Stéphane Laurent
 date: '2019-07-22'
 highlighter: 'pandoc-solarized'
-linenums: True
 output:
   html_document:
     highlight: kate
-    keep_md: False
-    toc: True
+    keep_md: no
+    toc: yes
   md_document:
     preserve_yaml: True
-    toc: True
+    toc: yes
     variant: markdown
-prettify: True
-prettifycss: minimal
+rbloggers: yes
 tags: 'maths, statistics, R, special-functions'
 title: 'The Beta distribution of the third kind (or generalised Beta prime)'
 ---
@@ -34,7 +32,7 @@ title: 'The Beta distribution of the third kind (or generalised Beta prime)'
     model](#application-to-the-bayesian-two-poisson-samples-model)
 
 We present the family of so-called *Beta distributions of the third
-kind*. In the context of Bayesian statistics, it is a conjuguate family
+kind*. In the context of Bayesian statistics, it is a conjugate family
 of prior distributions on the odds parameter of the binomial model. This
 distribution is known, but nobody provided a way to sample from it. We
 show how one can sample from this distribution in R.
@@ -59,7 +57,7 @@ $$ Usually the definition does not include the scale parameter $\lambda$
 It is easy to implement a sampler for this distribution, the density
 function and the cumulative density function:
 
-``` {.r}
+``` {.r .numberLines}
 rbetaprime <- function(n, c, d, lambda = 1){
   stopifnot(lambda > 0)
   u <- rbeta(n, c, d)
@@ -97,7 +95,7 @@ is not a scale parameter.
 
 Let's write a R function computing this density:
 
-``` {.r}
+``` {.r .numberLines}
 library(gsl)
 Gauss2F1 <- function(a,b,c,x){ 
   if(x>=0 && x<1){ # hyperg_2F1 works fine in this situation
@@ -133,7 +131,7 @@ Update 2019-09-05: generalised Beta distribution
 ================================================
 
 I've just discovered that the $GB4$ distribution appears in the paper
-*On Kummer’s distributions of type two and generalized Beta
+*On Kummer's distributions of type two and generalized Beta
 distributions* written by Hamza & Vallois. It is named *generalised Beta
 distribution* in this paper, it is denoted by $\beta_\delta(a,b,c)$ and
 its density function at $u \in [0,1]$ is given by $$
@@ -164,7 +162,7 @@ $$
 $$ Here is a R implementation. I found that it works well with the
 option `userflag = 0` of the `appellf1` function.
 
-``` {.r}
+``` {.r .numberLines}
 pB3 <- function(q, c, d, kappa, tau, userflag = 0){
   stopifnot(c > 0, d > 0, tau > 0)
   if(kappa == 0){
@@ -214,7 +212,7 @@ So we can sample $\mathcal{B}_3(c,d,\kappa,\tau)$ if we are able to
 sample these discrete distributions. To do so, we use the `Runuran`
 package.
 
-``` {.r}
+``` {.r .numberLines}
 library(Runuran)
 pmf_unnormalized <- function(k, c, d, kappa, tau){
   out <- numeric(length(k))
@@ -264,7 +262,7 @@ rB3 <- function(n, c, d, kappa, tau){
 
 Let's check. The density:
 
-``` {.r}
+``` {.r .numberLines}
 c <- 2; d <- 3; kappa <- 4; tau <- 5
 nsims <- 1000000
 sims <- rB3(nsims, c, d, kappa, tau)
@@ -277,7 +275,7 @@ curve(dB3(x, c, d, kappa, tau), add = TRUE, col = "red",
 
 The cumulative distribution function:
 
-``` {.r}
+``` {.r .numberLines}
 q <- seq(0.1, 4, length.out = 10)[-6]
 cdfValues <- sapply(q, function(x) pB3(x, c, d, kappa, tau))
 empirical_cdf <- ecdf(sims)
@@ -290,7 +288,7 @@ points(q, cdfValues, pch=19)
 I've removed the sixth value of the vector `q` because there is a crash
 of `appellf1` for this value:
 
-``` {.r}
+``` {.r .numberLines}
 q <- seq(0.1, 4, length.out = 10)
 pB3(q[6], c, d, kappa, tau)
 ## Error in appell::appellf1(c, kappa, c + d - kappa, c + 1, -q, -q/tau, : f1conv: Computation not possible
@@ -298,14 +296,14 @@ pB3(q[6], c, d, kappa, tau)
 
 It works with the option `userflag = 1`:
 
-``` {.r}
+``` {.r .numberLines}
 pB3(q[6], c, d, kappa, tau, userflag = 1)
 ## [1] 0.849321
 ```
 
 Finally perhaps the option `userflag = 1` is a better default value:
 
-``` {.r}
+``` {.r .numberLines}
 cdfValues <- sapply(q, function(x){
   pB3(x, c, d, kappa, tau, userflag = 1)
 })
@@ -363,5 +361,5 @@ we recognize the scaled $\mathcal{B}_3$ distribution $$
 $$ In particular, if $\tau = \frac{1}{\rho} = \frac{T+b}{S}$, then we
 find $$
 (\phi \mid x,y) \sim \mathcal{B}_2(c+x, a+d+y, \tau),
-$$ and this is the situation of the semi-conjuguate family studied by
+$$ and this is the situation of the semi-conjugate family studied by
 Laurent & Legrand.

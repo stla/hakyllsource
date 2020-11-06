@@ -3,6 +3,7 @@ title: "Plotting the columns of a Datatable"
 author: "Stéphane Laurent"
 date: '2019-07-10'
 tags: R, shiny, datatables
+rbloggers: yes
 output:
   md_document:
     variant: markdown
@@ -10,9 +11,6 @@ output:
   html_document:
     highlight: kate
     keep_md: no
-prettify: yes
-linenums: yes
-prettifycss: minimal
 highlighter: pandoc-solarized
 ---
 
@@ -22,7 +20,7 @@ highlighter: pandoc-solarized
 
 Here is the code of this app:
 
-```r
+``` {.r .numberLines}
 library(shiny)
 library(shinyBS)
 library(DT)

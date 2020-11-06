@@ -3,6 +3,7 @@ title: "The Beta distribution of the third kind (or generalised Beta prime)"
 author: "Stéphane Laurent"
 date: '2019-07-22'
 tags: maths, statistics, R, special-functions
+rbloggers: yes
 output:
   md_document:
     variant: markdown
@@ -12,19 +13,17 @@ output:
     highlight: kate
     keep_md: no
     toc: yes
-prettify: yes
-linenums: yes
-prettifycss: minimal
 highlighter: pandoc-solarized
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, 
-                      fig.path = "figures/Beta3-")
+                      fig.path = "figures/Beta3-",
+                      attr.source = ".numberLines")
 ```
 
 We present the family of so-called *Beta distributions of the third kind*. 
-In the context of Bayesian statistics, it is a conjuguate family of prior 
+In the context of Bayesian statistics, it is a conjugate family of prior 
 distributions on the odds parameter of the binomial model. 
 This distribution is known, but nobody provided a way to sample from it. 
 We show how one can sample from this distribution in R.
@@ -375,5 +374,5 @@ In particular, if $\tau = \frac{1}{\rho} = \frac{T+b}{S}$, then we find
 $$
 (\phi \mid x,y) \sim \mathcal{B}_2(c+x, a+d+y, \tau),
 $$
-and this is the situation of the semi-conjuguate family studied by 
+and this is the situation of the semi-conjugate family studied by 
 Laurent & Legrand.
