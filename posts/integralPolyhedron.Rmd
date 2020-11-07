@@ -3,6 +3,7 @@ title: "Multiple integral over a polyhedron"
 author: "Stéphane Laurent"
 date: '2019-02-27'
 tags: R, maths, geometry
+rbloggers: yes
 output:
   md_document:
     variant: markdown
@@ -10,15 +11,13 @@ output:
   html_document:
     highlight: kate
     keep_md: no
-prettify: yes
-linenums: yes
-prettifycss: minimal
 highlighter: pandoc-solarized
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, 
-                      fig.path="./figures/integralPolyhedron-")
+                      fig.path="./figures/integralPolyhedron-",
+                      attr.source = ".numberLines")
 #rgl::setupKnitr()
 hook_rgl <- function(before, options, envir) 
 {
@@ -60,8 +59,8 @@ integrate(Vectorize(function(x) {
   integrate(Vectorize(function(y) { 
     integrate(function(z) { 
       f(x,y,z) 
-    }, -10, 6-x-y)$value
-   }), -5, 3-x)$value 
+    }, -10, 6 - x - y)$value
+   }), -5, 3 - x)$value 
 }), -5, 4) 
 ```
 

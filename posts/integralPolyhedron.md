@@ -2,16 +2,14 @@
 author: Stéphane Laurent
 date: '2019-02-27'
 highlighter: 'pandoc-solarized'
-linenums: True
 output:
   html_document:
     highlight: kate
-    keep_md: False
+    keep_md: no
   md_document:
     preserve_yaml: True
     variant: markdown
-prettify: True
-prettifycss: minimal
+rbloggers: yes
 tags: 'R, maths, geometry'
 title: Multiple integral over a polyhedron
 ---
@@ -23,14 +21,14 @@ $$ for a certain function $f$. How?
 
 A possibility is to nest the `integrate` function:
 
-``` {.r}
+``` {.r .numberLines}
 f <- function(x,y,z) x + y*z
 integrate(Vectorize(function(x) { 
   integrate(Vectorize(function(y) { 
     integrate(function(z) { 
       f(x,y,z) 
-    }, -10, 6-x-y)$value
-   }), -5, 3-x)$value 
+    }, -10, 6 - x - y)$value
+   }), -5, 3 - x)$value 
 }), -5, 4) 
 ## -5358.3 with absolute error < 9.5e-11
 ```
@@ -63,7 +61,7 @@ x+y+z & \leq & 6
 $$ This set of inequalities defines a convex polyhedron. We can get the
 vertices of this polyhedron with the `rcdd` package:
 
-``` {.r}
+``` {.r .numberLines}
 A <- rbind(
   c(-1, 0, 0), # -x
   c( 1, 0, 0), # x
@@ -89,7 +87,7 @@ scdd(makeH(A,b))$output[,-(1:2)]
 Alternatively, we can also get the vertices with the `vertexenum`
 package:
 
-``` {.r}
+``` {.r .numberLines}
 library(vertexenum)
 enumerate.vertices(A,b)
 ##      [,1] [,2] [,3]
@@ -113,7 +111,7 @@ Then, to evaluate the integral, we proceed as follows:
 
 Let's go. We split the polyhedron:
 
-``` {.r}
+``` {.r .numberLines}
 vertices <- enumerate.vertices(A,b)
 library(geometry)
 ix <- delaunayn(vertices)
@@ -121,7 +119,7 @@ ix <- delaunayn(vertices)
 
 Here is the polyhedron splitted into simplices:
 
-``` {.r}
+``` {.r .numberLines}
 library(rgl)
 triangles <- do.call(
   cbind,
@@ -137,7 +135,7 @@ wire3d(mesh)
 
 We store the union of the obtained simplices in an array `S`:
 
-``` {.r}
+``` {.r .numberLines}
 S <- array(NA_real_, dim=c(3,4,nrow(ix)))
 for(i in 1:nrow(ix)){
   S[,,i] <- t(vertices[ix[i,],])
@@ -147,7 +145,7 @@ for(i in 1:nrow(ix)){
 Now we are ready to use the `SimplicialCubature` package. Let's define
 the function $f$ before, for example:
 
-``` {.r}
+``` {.r .numberLines}
 f <- function(xyz){
   xyz[1] + xyz[2]*xyz[3] # f(x,y,z) = x + y*z
 }
@@ -155,7 +153,7 @@ f <- function(xyz){
 
 Finally:
 
-``` {.r}
+``` {.r .numberLines}
 library(SimplicialCubature)
 adaptIntegrateSimplex(f, S)
 ## $integral
@@ -191,13 +189,13 @@ $$ with $c_1 = 1$, $c_2=1$, $(\alpha_1,\beta_1,\gamma_1)=(1,0,0)$,
 $(\alpha_2,\beta_2,\gamma_2)=(0,1,1)$. Then the polynomial is defined in
 this way:
 
-``` {.r}
+``` {.r .numberLines}
 P <- definePoly(c(1,1), rbind(c(1,0,0), c(0,1,1)))
 ```
 
 And its integral is obtained in this way:
 
-``` {.r}
+``` {.r .numberLines}
 integrateSimplexPolynomial(P, S)
 ## $integral
 ## [1] -5358.3

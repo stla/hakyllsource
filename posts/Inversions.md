@@ -4,16 +4,14 @@ date: '2019-03-13'
 editor_options:
   chunk_output_type: console
 highlighter: 'pandoc-solarized'
-linenums: True
 output:
   html_document:
     highlight: kate
-    keep_md: False
+    keep_md: no
   md_document:
     preserve_yaml: True
     variant: markdown
-prettify: True
-prettifycss: minimal
+rbloggers: yes
 tags: 'R, maths, geometry'
 title: Generalized circles and inversions
 ---
@@ -152,7 +150,7 @@ R code
 We firstly write a function `iotaCircle` which calculates the image of a
 circle.
 
-``` {.r}
+``` {.r .numberLines}
 # squared modulus
 Mod2 <- function(z){
   Re(z)^2 + Im(z)^2
@@ -185,7 +183,7 @@ Let's check the function `iotaCircle`. To do so, we use the
 `circumcircle` function below, which returns the center and the radius
 of the circle passing by `z1`, `z2`, `z3`.
 
-``` {.r}
+``` {.r .numberLines}
 circumcircle <- function(z1,z2,z3){
   x1 <- Re(z1); y1 <- Im(z1); p1 <- c(x1,y1)
   x2 <- Re(z2); y2 <- Im(z2); p2 <- c(x2,y2)
@@ -206,7 +204,7 @@ circumcircle <- function(z1,z2,z3){
 
 Now let's check `iotaCircle`.
 
-``` {.r}
+``` {.r .numberLines}
 # define iota
 c <- 1 + 2i; r <- 3
 iota <- function(z){
@@ -223,17 +221,26 @@ iotaCircle(c, r, circle = list(center = z0, radius = R0))
 ## 
 ## attr(,"type")
 ## [1] "circle"
+```
+
+``` {.r .numberLines}
 circumcircle(iota(z0+R0), iota(z0-R0), iota(z0+1i*R0))
 ## $center
 ## [1] -3.5-2.5i
 ## 
 ## $radius
 ## [1] 9
+```
+
+``` {.r .numberLines}
 # now, a case when iota(C0) is a line ####
 R0 <- sqrt(2)
 w1 <- iota(z0+R0); w2 <- iota(z0-R0); w3 <- iota(z0+1i*R0)
 (w2-w1)/(w3-w1) # aligned <=> Im = 0
 ## [1] 3.414214+0i
+```
+
+``` {.r .numberLines}
 (L <- iotaCircle(c, r, circle = list(center = z0, radius = R0)))
 ## $theta
 ## [1] 0.7853982
@@ -243,17 +250,26 @@ w1 <- iota(z0+R0); w2 <- iota(z0-R0); w3 <- iota(z0+1i*R0)
 ## 
 ## attr(,"type")
 ## [1] "line"
+```
+
+``` {.r .numberLines}
 cos(L$theta)*Re(w1) + sin(L$theta)*Im(w1) # = L$offset
 ## [1] 5.303301
+```
+
+``` {.r .numberLines}
 cos(L$theta)*Re(w2) + sin(L$theta)*Im(w2) # = L$offset
 ## [1] 5.303301
+```
+
+``` {.r .numberLines}
 cos(L$theta)*Re(w3) + sin(L$theta)*Im(w3) # = L$offset
 ## [1] 5.303301
 ```
 
 Now we write a function `iotaLine` which calculates the image of a line.
 
-``` {.r}
+``` {.r .numberLines}
 iotaLine <- function(c, r, line, tol = sqrt(.Machine$double.eps)){
   theta0 <- line$theta; d0 <- line$offset
   w0 <- ifelse(sin(theta0) == 0, d0/cos(theta0), 1i*d0/sin(theta0))
@@ -278,7 +294,7 @@ iotaLine <- function(c, r, line, tol = sqrt(.Machine$double.eps)){
 
 Let's check `iotaLine`. Firstly, a case when the image is a circle.
 
-``` {.r}
+``` {.r .numberLines}
 # define L0
 theta0 <- 1; d0 <- 2
 theta0 <- pi/4; d0 <- 0
@@ -295,6 +311,9 @@ circumcircle(w1,w2,w3)
 ## 
 ## $radius
 ## [1] 2.12132
+```
+
+``` {.r .numberLines}
 iotaLine(c, r, list(theta = theta0, offset = d0))
 ## $center
 ## [1] -0.5+0.5i
@@ -308,7 +327,7 @@ iotaLine(c, r, list(theta = theta0, offset = d0))
 
 Now a case when the image is a line.
 
-``` {.r}
+``` {.r .numberLines}
 # define iota
 c <- 1-1i 
 iota <- function(z){
@@ -325,6 +344,9 @@ w3 <- iota(x[3] + 1i*y[3])
 # check
 (w2-w1)/(w3-w1) # aligned <=> Im = 0
 ## [1] 1.5+0i
+```
+
+``` {.r .numberLines}
 ( L <- iotaLine(c, r, list(theta = theta0, offset = d0)) )
 ## $theta
 ## [1] 0.7853982
@@ -334,17 +356,26 @@ w3 <- iota(x[3] + 1i*y[3])
 ## 
 ## attr(,"type")
 ## [1] "line"
+```
+
+``` {.r .numberLines}
 cos(L$theta)*Re(w1) + sin(L$theta)*Im(w1) # = L$offset
 ## [1] -4.440892e-16
+```
+
+``` {.r .numberLines}
 cos(L$theta)*Re(w2) + sin(L$theta)*Im(w2) # = L$offset
 ## [1] -4.440892e-16
+```
+
+``` {.r .numberLines}
 cos(L$theta)*Re(w3) + sin(L$theta)*Im(w3) # = L$offset
 ## [1] -4.440892e-16
 ```
 
 Finally, let's put things together in a single function.
 
-``` {.r}
+``` {.r .numberLines}
 iotaGcircle <- function(c, r, gcircle){
   if(attr(gcircle, "type") == "circle"){
     iotaCircle(c, r, gcircle)
@@ -364,7 +395,7 @@ gallery](http://xahlee.info/SpecialPlaneCurves_dir/InversionGallery_dir/inversio
 Firstly, let's write a function which draws a generalized circle. We use
 the `draw.circle` function of the `plotrix` package.
 
-``` {.r}
+``` {.r .numberLines}
 library(plotrix)
 drawLine <- function(line, ...){
   theta <- line$theta; offset <- line$offset
@@ -388,7 +419,7 @@ drawGcircle <- function(gcircle, color = "black", ...){
 
 We start with five circles.
 
-``` {.r}
+``` {.r .numberLines}
 # generation 0
 gen0 <- sapply(c(0, pi/2, pi, 3*pi/2), function(beta){
   out <- list(center = cos(beta)+1i*sin(beta), radius = 1, gen = 0)
@@ -409,7 +440,7 @@ invisible(lapply(gen0, drawGcircle, color = "yellow", lwd = 2))
 Now, we invert each of these five circles with respect to the other
 ones:
 
-``` {.r}
+``` {.r .numberLines}
 # generation 1
 n0 <- length(gen0)
 n1 <- n0*(n0-1)
@@ -433,7 +464,7 @@ while(k < n1){
 We continue so on: we invert the obtained generalized circles with
 respect to the starting circles.
 
-``` {.r}
+``` {.r .numberLines}
 # generation 2
 n2 <- n0*n1-n1
 gen2 <- vector("list", n2)
@@ -471,7 +502,7 @@ while(k < n3){
 
 Let's put all the obtained generalized circles together:
 
-``` {.r}
+``` {.r .numberLines}
 gcircles <- c(gen0, gen1, gen2, gen3)
 length(gcircles)
 ## [1] 425
@@ -484,7 +515,7 @@ function `f` of two arguments, two elements of `v`, and which returns
 `TRUE` or `FALSE`, according to whether the two elements are considered
 as duplicates.
 
-``` {.r}
+``` {.r .numberLines}
 uniqueWith <- function(v, f){
   size <- length(v)
   for(i in seq_len(size-1L)){
@@ -504,8 +535,14 @@ uniqueWith <- function(v, f){
 v <- c(1,1,2,1,3,4,3,5,5)
 uniqueWith(v, `==`)
 ## [1] 1 2 3 4 5
+```
+
+``` {.r .numberLines}
 uniqueWith(v, function(x,y) (x-y) %% 3 == 0)
 ## [1] 1 2 3
+```
+
+``` {.r .numberLines}
 v <- list(a="you", b="are", c="great")
 uniqueWith(v, function(x,y) nchar(x) == nchar(y))
 ## $a
@@ -518,7 +555,7 @@ uniqueWith(v, function(x,y) nchar(x) == nchar(y))
 So let's define the function `f` which identifies two equal generalized
 circles.
 
-``` {.r}
+``` {.r .numberLines}
 f <- function(gcircle1, gcircle2){
   if(attr(gcircle1, "type") == attr(gcircle2, "type")){
     if(attr(gcircle1, "type") == "circle"){
@@ -537,7 +574,7 @@ f <- function(gcircle1, gcircle2){
 
 And now, let's remove the duplicates:
 
-``` {.r}
+``` {.r .numberLines}
 gcircles <- uniqueWith(gcircles, f)
 length(gcircles)
 ## [1] 161
@@ -546,7 +583,7 @@ length(gcircles)
 Now we plot the generalized circles, with a color indicating the
 generation.
 
-``` {.r}
+``` {.r .numberLines}
 draw <- function(gcircle, colors=rainbow(4), ...){
   drawGcircle(gcircle, color = colors[1+gcircle$gen], ...)
 }

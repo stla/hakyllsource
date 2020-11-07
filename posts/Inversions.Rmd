@@ -3,6 +3,7 @@ title: "Generalized circles and inversions"
 author: "Stéphane Laurent"
 date: '2019-03-13'
 tags: R, maths, geometry
+rbloggers: yes
 output:
   md_document:
     variant: markdown
@@ -10,16 +11,17 @@ output:
   html_document:
     highlight: kate
     keep_md: no
-prettify: yes
-linenums: yes
-prettifycss: minimal
 highlighter: pandoc-solarized
 editor_options: 
   chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(collapse = TRUE, fig.path="./figures/Inversions-")
+knitr::opts_chunk$set(
+  collapse = TRUE, 
+  fig.path="./figures/Inversions-",
+  attr.source = ".numberLines"
+)
 ```
 
 Let $\iota_0$ be the inversion with respect to the unit circle:
