@@ -1,17 +1,24 @@
 ---
 title: "Why I like generalized fiducial inference"
 author: "Stéphane Laurent"
-date: "08/11/2020"
-output: 
-  html_document: 
-    highlight: haddock
+date: '2020-11-08'
+tags: R, maths, statistics
+rbloggers: yes
+output:
+  md_document:
+    variant: markdown
+    preserve_yaml: true
+  html_document:
+    highlight: kate
+    keep_md: no
+highlighter: pandoc-solarized
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
   echo = TRUE, collapse = TRUE,
   attr.source = ".numberLines",
-  fig.width = 6, fig.height = 5,
+  fig.width = 6, fig.height = 5, fig.path = "./figures/gfi_rstanarm-",
   warning = FALSE, message = FALSE
 )
 ```
@@ -92,7 +99,7 @@ for(i in 1L:nsims){
 ```
 
 ```{r loadRDS, echo=FALSE}
-Results <- readRDS("~/Work/R/gfilmm/inst/stan/AOV1R_highRatio_simulations.rds")
+Results <- readRDS("./RDS/AOV1R_highRatio_simulations.rds")
 stanIntervals <- Results$stanIntervals
 stanIntervals2 <- Results$stanIntervals2
 freqIntervals <- Results$freqIntervals
@@ -301,7 +308,7 @@ algorithm (due to J. Cisewski and J. Hannig) in C++ and it takes less than
 
 Let's increase the between standard deviation now.
 
-```{r gfiRatio1000}
+```{r gfiRatio1000, cache=TRUE}
 ratio <- 1000
 sigmaBetween <- ratio * sigmaWithin
 set.seed(31415926L)
@@ -332,8 +339,24 @@ gfiSummary(gf)
 
 Now the fiducial intervals match the frequentist ones.
 
-___
+## Epilogue
 
+As you have seen, using the generalized fiducial inference is easy, easier than 
+the Bayesian inference. The difficulty I mentioned regarding the Bayesian 
+inference is not severe, but this is because the one-way ANOVA model with a 
+random factor is the simplest Gaussian linear mixed model. Namely, it has only 
+one between standard deviation. Things get more complicated for a mixed model 
+with multiple random effects. With `rstanarm::stan_lmer`, one has to assign a 
+Gamma prior distribution on the total between standard deviation, and then to 
+specify a dispersion parameter of the between standard deviations.
 
-difficulty more random effects
+## Note 
 
+My package 'gfilmm' is already on CRAN (version `0.1.0`) but this version is not 
+safe and there's a mistake in the algorithm. If you want to use this package
+now, install the development version:
+
+```r
+remotes::install_github("stla/AOV1R", build_vignettes = TRUE) # soon on CRAN
+remotes::install_github("stla/gfilmm", build_vignettes = TRUE)
+```
