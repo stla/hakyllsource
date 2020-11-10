@@ -2,16 +2,14 @@
 author: Stéphane Laurent
 date: '2019-07-13'
 highlighter: 'pandoc-solarized'
-linenums: True
 output:
   html_document:
     highlight: kate
-    keep_md: False
+    keep_md: no
   md_document:
     preserve_yaml: True
     variant: markdown
-prettify: True
-prettifycss: minimal
+rbloggers: yes
 tags: 'asymptote, geometry, javascript, povray, R, rgl'
 title: Drawing nested Steiner chains
 ---
@@ -31,7 +29,7 @@ We will include the cyclides in the plot. We firstly write a function
 returning a mesh of a cyclide. It is obtained by applying an inversion
 to the mesh of a torus.
 
-``` {.r}
+``` {.r .numberLines}
 library(rgl)
 
 torusMesh <- function(R, r, S, s, arc, ...){
@@ -106,7 +104,7 @@ cyclideMesh <- function(mu, a, c, S=128, s=64, arc=2*pi, ...){
 
 Now here is the code which plots the nested Steiner chains:
 
-``` {.r}
+``` {.r .numberLines}
 # make a smooth unit sphere
 unitSphere <- subdivision3d(icosahedron3d(), depth=4)
 unitSphere$vb[4,] <- 
@@ -190,7 +188,7 @@ steiner(n = c(3,3,4), phi = 0.3, color = "#B12A90FF", shift = 0.25)
 
 Here is how to make a gif animation the nested Steiner chains:
 
-``` {.r}
+``` {.r .numberLines}
 # "bounding box"
 bBox <- function(){
   r <- 2
@@ -225,7 +223,7 @@ file.remove(pngs)
 With POV-Ray
 ============
 
-``` {.povray}
+``` {.povray .numberLines}
 #version 3.7;
 global_settings { assumed_gamma 1 }
 #include "colors.inc"
@@ -392,7 +390,7 @@ Pause_when_Done = off
 
 We get a nice result when we map a picture to the spheres:
 
-``` {.povray}
+``` {.povray .numberLines}
 #if(Depth=1)
   sphere {
     center, r-epsilon
@@ -414,7 +412,7 @@ With Asymptote
 
 This Asymptote program produces the frames of the animation:
 
-``` {.cpp}
+``` {.cpp .numberLines}
 settings.render = 4;
 settings.outformat = "eps";
 
