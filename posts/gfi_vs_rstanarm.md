@@ -285,17 +285,6 @@ ANOVA model with a random factor is the simplest Gaussian linear mixed
 model. Namely, it has only one between standard deviation. Things get
 more complicated for a mixed model with multiple random effects. With
 `rstanarm::stan_lmer`, one has to assign a Gamma prior distribution on
-the total between standard deviation, and then to specify a dispersion
-parameter of the between standard deviations.
-
-Note
-----
-
-My package 'gfilmm' is already on CRAN (version `0.1.0`) but this
-version is not safe and there's a mistake in the algorithm. If you want
-to use this package now, install the development version:
-
-``` {.r}
-remotes::install_github("stla/AOV1R", build_vignettes = TRUE) # soon on CRAN
-remotes::install_github("stla/gfilmm", build_vignettes = TRUE)
-```
+each between standard deviation. I cheated for the above example: I did
+multiple attempts to select the parameters of the Gamma prior, until I
+found results close to the frequentist ones!

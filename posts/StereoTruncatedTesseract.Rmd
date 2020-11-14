@@ -3,6 +3,7 @@ title: "Stereographic truncated tesseract"
 author: "Stéphane Laurent"
 date: '2019-12-16'
 tags: R, asymptote, povray, rgl, graphics, geometry
+rbloggers: yes
 output:
   md_document:
     variant: markdown
@@ -12,9 +13,6 @@ output:
     highlight: kate
     keep_md: no
     toc: yes
-prettify: yes
-linenums: yes
-prettifycss: minimal
 highlighter: pandoc-solarized
 ---
 
@@ -33,7 +31,7 @@ applying the stereographic projection.
 
 # Drawing with rgl (R)
 
-```r
+``` {.r .numberLines}
 library(rgl)
 library(cxhull)
 library(abind)
@@ -224,7 +222,7 @@ for(i in 1L:nrow(triangles)){
 
 # Drawing with Asymptote
 
-```cpp
+``` {.cpp .numberLines}
 settings.render = 4;
 settings.outformat = "eps";
 import tube;
@@ -675,7 +673,7 @@ for(int f = 0; f < 180; ++f){
 
 # Drawing with POV-Ray
 
-```povray
+``` {.povray .numberLines}
 #version 3.7;
 global_settings { assumed_gamma 1 }
 #include "colors.inc"

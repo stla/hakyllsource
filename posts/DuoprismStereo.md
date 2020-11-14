@@ -2,16 +2,14 @@
 author: Stéphane Laurent
 date: '2020-02-11'
 highlighter: 'pandoc-solarized'
-linenums: True
 output:
   html_document:
     highlight: kate
-    keep_md: False
+    keep_md: no
   md_document:
     preserve_yaml: True
     variant: markdown
-prettify: True
-prettifycss: minimal
+rbloggers: yes
 tags: 'R, maths, geometry, graphics, rgl, asymptote, povray'
 title: Drawing a stereographic duoprism
 ---
@@ -22,7 +20,7 @@ In this post, I'll show how to draw a stereographic
 With R
 ======
 
-``` {.r}
+``` {.r .numberLines}
 library(rgl)
 
 A <- 8L # number of sides of the first polygon
@@ -122,7 +120,7 @@ for(i in 1L:A){
 With Asymptote
 ==============
 
-``` {.cpp}
+``` {.cpp .numberLines}
 settings.render = 4;
 settings.outformat = "eps";
 import tube;
@@ -329,7 +327,7 @@ gifski --fps 12 zpic*.png -o DuoprismStereo.gif
 With POV-Ray
 ============
 
-``` {.povray}
+``` {.povray .numberLines}
 #version 3.7;
 global_settings { assumed_gamma 1 }
 #include "colors.inc"
