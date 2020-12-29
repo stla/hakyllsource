@@ -3,6 +3,7 @@ title: "Five-parameters logistic regression"
 author: "Stéphane Laurent"
 date: '2019-11-20'
 tags: maths, statistics, R
+rbloggers: yes
 output:
   md_document:
     variant: markdown
@@ -10,15 +11,13 @@ output:
   html_document:
     highlight: kate
     keep_md: no
-prettify: yes
-linenums: yes
-prettifycss: minimal
 highlighter: pandoc-solarized
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, fig.path = "./figures/5pl-", 
-                      fig.width = 3.5, fig.align = "center")
+                      fig.width = 3.5, fig.align = "center",
+                      attr.source = ".numberLines")
 ```
 
 The five-parameters logistic curve is commonly defined by
@@ -221,4 +220,11 @@ fit <- fit5pl(x, y0 + epsilon[i0,])
 summary(fit)
 ```
 
-
+Note that `nlsLM` provides a test of the nullity of $S$. 
+This is not interesting, whereas the equality $S = 1$ is of interest. So it is 
+better to parametrize the logistic function with $L = \log(S)$ instead of $S$:
+$$
+h(x) = 
+A + \frac{D-A}{{\biggl(1+\exp\Bigl(\log\bigl(2^{\exp(-L)}-1\bigr) + B(x_{\text{mid}}-x)\Bigr)\biggr)}^{\exp(L)}}.
+$$
+In this way we can get a test of $L = 0$, that is $S = 1$.

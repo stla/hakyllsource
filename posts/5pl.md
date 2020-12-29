@@ -2,16 +2,14 @@
 author: Stéphane Laurent
 date: '2019-11-20'
 highlighter: 'pandoc-solarized'
-linenums: True
 output:
   html_document:
     highlight: kate
-    keep_md: False
+    keep_md: no
   md_document:
     preserve_yaml: True
     variant: markdown
-prettify: True
-prettifycss: minimal
+rbloggers: yes
 tags: 'maths, statistics, R'
 title: 'Five-parameters logistic regression'
 ---
@@ -43,7 +41,7 @@ x_{\text{mid}} = C - \frac{\log\Bigl(2^{\frac{1}{S}}-1\Bigr)}{B}.
 $$ It is obtained by solving
 $\Bigl(1+\exp\bigl(B(C-x)\bigr)\Bigr)^S = 2$.
 
-``` {.r}
+``` {.r .numberLines}
 n <- 100
 x <- seq(49, 60, length.out = n)
 A <- 30; D <- 100; B <- 1; C <- 50; S <- 10
@@ -54,6 +52,9 @@ plot(x, y0, type = "l", cex.axis = 0.5, ylab = "f(x)")
 abline(v = C, col = "green", lty = "dashed")
 ( xmid <- C - log(2^(1/S) - 1)/B )
 ## [1] 52.63424
+```
+
+``` {.r .numberLines}
 abline(v = xmid, col = "red", lwd = 2) 
 abline(h = (A+D)/2, col = "red", lwd = 2)
 ```
@@ -63,7 +64,7 @@ abline(h = (A+D)/2, col = "red", lwd = 2)
 Note that the inflection point of the curve is *not* the point
 correspoding to $x_{\text{mid}}$:
 
-``` {.r}
+``` {.r .numberLines}
 library(numDeriv)
 df <- grad(f, x)
 par(mar = c(4, 4, 0.5, 1))
@@ -85,7 +86,7 @@ Another advantage of this parameterization is that there is a way to get
 a good starting value of $x_{\text{mid}}$ when one wants to fit the
 five-parameters logistic regression model:
 
-``` {.r}
+``` {.r .numberLines}
 getInitial1 <- function(x, y){
   s <- getInitial(y ~ SSfpl(x, A, D, xmid, inverseB),
              data = data.frame(x = x, y = y))
@@ -103,7 +104,7 @@ $1$.
 Sometimes, `SSfpl` can fail. Here is another function which returns some
 starting values:
 
-``` {.r}
+``` {.r .numberLines}
 getInitial2 <- function(x, y){
   NAs <- union(which(is.na(x)), which(is.na(y)))
   if(length(NAs)){
@@ -132,7 +133,7 @@ getInitial2 <- function(x, y){
 
 Now we wrap these two functions into a single one:
 
-``` {.r}
+``` {.r .numberLines}
 getInitial5PL <- function(x, y){
   tryCatch({
     getInitial1(x, y)
@@ -144,7 +145,7 @@ getInitial5PL <- function(x, y){
 
 And finally we can write a function for the fitting:
 
-``` {.r}
+``` {.r .numberLines}
 library(minpack.lm)
 fit5pl <- function(x, y){
   startingValues <- getInitial5PL(x, y)
@@ -170,7 +171,7 @@ fit5pl <- function(x, y){
 
 Let's try it on a couple of simulated samples:
 
-``` {.r}
+``` {.r .numberLines}
 set.seed(666)
 nsims <- 25
 epsilon <- matrix(rnorm(nsims*n, 0, 5), nrow = nsims, ncol = n)
@@ -206,11 +207,14 @@ The estimate of $x_{\text{mid}}$ is excellent. As you can see, the
 estimate of $S$ is sometimes much larger than the true value. Let's have
 a look at the worst case:
 
-``` {.r}
+``` {.r .numberLines}
 i0 <- match(max(estimates[, "S"]), estimates[, "S"])
 estimates[i0, ]
 ##            A            B         xmid            D            S 
 ##   29.9159582    0.8917679   52.5992848  100.0519760 7261.6944532
+```
+
+``` {.r .numberLines}
 # sample
 par(mar = c(4, 4, 0.5, 1))
 plot(x, y0 + epsilon[i0, ], col = "yellow", cex.axis = 0.6)
@@ -230,7 +234,7 @@ Thus, while the estimate of $S$ is very far from the true value of $S$,
 the fitted curve correctly estimates the true curve. And in such cases,
 the standard error of the estimate of $S$ is big:
 
-``` {.r}
+``` {.r .numberLines}
 fit <- fit5pl(x, y0 + epsilon[i0,])
 summary(fit)
 ```
@@ -252,3 +256,11 @@ summary(fit)
     ## 
     ## Number of iterations to convergence: 27 
     ## Achieved convergence tolerance: 1.49e-08
+
+Note that `nlsLM` provides a test of the nullity of $S$. This is not
+interesting, whereas the equality $S = 1$ is of interest. So it is
+better to parametrize the logistic function with $L = \log(S)$ instead
+of $S$: $$
+h(x) = 
+A + \frac{D-A}{{\biggl(1+\exp\Bigl(\log\bigl(2^{\exp(-L)}-1\bigr) + B(x_{\text{mid}}-x)\Bigr)\biggr)}^{\exp(L)}}.
+$$ In this way we can get a test of $L = 0$, that is $S = 1$.
