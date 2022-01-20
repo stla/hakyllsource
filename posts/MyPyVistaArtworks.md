@@ -9,7 +9,7 @@ output:
   md_document:
     preserve_yaml: True
     variant: markdown
-tags: 'graphics, python, pyvista'
+tags: 'graphics, python, pyvista, geometry'
 title: My PyVista artworks
 ---
 
@@ -107,6 +107,28 @@ a circle passing through three points, and with **PyVista** you can
 easily make it tubular.
 
 ![](https://github.com/stla/PyTorusThreePoints/raw/main/examples/VillarceauCircles.gif)
+
+------------------------------------------------------------------------
+
+[PyHyperbolic3D](https://github.com/stla/PyHyperbolic3D) is a package
+allowing to draw hyperbolic triangles and tubular hyperbolic segments,
+with the help of Ungar's theory presented in [this
+post](https://laustep.github.io/stlahblog/posts/hyperbolicPolyhedra.html).
+
+![](https://github.com/stla/PyHyperbolic3D/raw/main/examples/icosahedron_colored.gif)
+
+There's also
+[PyMobiusHyperbolic](https://github.com/stla/PyMobiusHyperbolic) which
+provides functions to draw hyperbolic stuff, also based on Ungar's
+theory, but it deals with the Poincaré model, whereas **PyHyperbolic3D**
+deals with the hyperboloid model. In fact these two packages are not
+restricted to 3D graphics, 2D pictures are possible too, but do not
+involve **PyVista**:
+
+![](https://github.com/stla/PyMobiusHyperbolic/raw/main/examples/tesselation_3-7.png)
+
+**PyPlaneGeometry** (see above) has been used to draw this hyperbolic
+tessellation.
 
 Gists
 =====
