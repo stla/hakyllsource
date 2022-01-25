@@ -2,7 +2,7 @@
 title: "Clipping an isosurface to a ball, and more"
 author: "Stéphane Laurent"
 date: '2022-01-14'
-tags: geometry, R, rgl, graphics, python
+tags: geometry, R, rgl, misc3d, graphics, python, pyvista
 rbloggers: yes
 output:
   md_document:

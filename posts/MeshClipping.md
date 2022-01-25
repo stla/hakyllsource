@@ -10,7 +10,7 @@ output:
     preserve_yaml: True
     variant: markdown
 rbloggers: yes
-tags: 'geometry, R, rgl, graphics, python'
+tags: 'geometry, R, rgl, misc3d, graphics, python, pyvista'
 title: 'Clipping an isosurface to a ball, and more'
 ---
 
