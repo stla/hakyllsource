@@ -9,8 +9,6 @@ output:
   md_document:
     preserve_yaml: yes
     variant: markdown
-  pdf_document: default
-rbloggers: yes
 tags: 'geometry, plotly, graphics, python, pyvista'
 title: Draw an isosurface with Python Plotly with the help of Pyvista
 ---

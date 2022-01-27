@@ -9,8 +9,6 @@ output:
   html_document:
     highlight: kate
     keep_md: no
-  pdf_document: default
-rbloggers: yes
 tags: geometry, plotly, graphics, python, pyvista
 highlighter: pandoc-solarized
 ---
