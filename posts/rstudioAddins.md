@@ -38,13 +38,13 @@ Originally, I made
 [pasteAsComment](https://github.com/stla/pasteAsComment) to paste the
 content of the clipboard as a comment:
 
-![](https://raw.githubusercontent.com/stla/pasteAsComment/main/inst/screenshots/pasteAsComment.gif)
+![](https://raw.githubusercontent.com/stla/pasteAsComment/main/inst/screenshots/pasteAsComment.gif){width="75%"}
 
 I updated this package today. Now it also allows to paste the content of
 the clipboard as **roxygen** lines. This is particularly useful to write
 some code in the `@examples` field:
 
-![](https://raw.githubusercontent.com/stla/pasteAsComment/main/inst/screenshots/pasteAsRoxygen.gif)
+![](https://raw.githubusercontent.com/stla/pasteAsComment/main/inst/screenshots/pasteAsRoxygen.gif){width="75%"}
 
 'JSconsole'
 -----------
