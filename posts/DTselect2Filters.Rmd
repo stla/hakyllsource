@@ -17,7 +17,7 @@ highlighter: pandoc-solarized
 I am not a big fan of the built-in filters of **DT**. I prefer the ones below, 
 made with the help of the JavaScript library **select2**. 
 
-![](figures/DTselect2Filters.gif)
+![](figures/DTselect2Filters.gif){width=75%}
 
 First, [download](https://cdnjs.com/libraries/select2) the files 
 **select2.min.js** and **select2.min.css**. Now, here is the code:
