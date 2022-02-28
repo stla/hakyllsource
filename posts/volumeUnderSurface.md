@@ -83,7 +83,7 @@ Using 'RCGAL'
 -------------
 
 If you ran the above code, you noticed that the `deldir` function as
-well as the `triang.list` functions are a bit slow. My package
+well as the `triang.list` function are a bit slow. My package
 [RCGAL](https://laustep.github.io/stlahblog/posts/SurfaceReconstruction.html)
 (not on CRAN) can construct an elevated Delaunay tessellation, and it is
 faster.
