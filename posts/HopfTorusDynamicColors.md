@@ -81,7 +81,7 @@ mesh <- parametricMesh3d(
 
 We will assign a color to each point on the surface, according to the
 distance from the point to the origin. We calculate these distances
-below, and we linearly map them to the interval \$\[0, 2\pi\].
+below, and we linearly map them to the interval $[0, 2\pi]$.
 
 ``` {.r}
 d <- sqrt(apply(mesh$vb[-4L, ], 2L, crossprod))
