@@ -115,6 +115,19 @@ wire3d(mesh)
 
 ![](figures/rgl_elevated_delaunay.png)
 
+Update 2022-03-02: using 'tessellation'
+---------------------------------------
+
+The elevated Delaunay tessellation is now available in my package
+[tessellation](https://github.com/stla/tessellation). The command to get
+it is the same as the 'RCGAL' command and the output is similar.
+
+``` {.r}
+del <- tessellation::delaunay(points, elevation = TRUE)
+del[["volume"]]
+## [1] 3.141593
+```
+
 Interactive plot with 'deldir'
 ------------------------------
 
