@@ -128,6 +128,18 @@ del[["volume"]]
 ## [1] 3.141593
 ```
 
+Update 2022-03-10: using 'RCDT'
+-------------------------------
+
+The elevated Delaunay triangulation is now available in my package
+[RCDT](https://github.com/stla/RCDT).
+
+``` {.r}
+del <- RCDT::delaunay(points, elevation = TRUE)
+del[["volume"]]
+## [1] 3.141593
+```
+
 Interactive plot with 'deldir'
 ------------------------------
 
