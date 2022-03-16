@@ -1,17 +1,17 @@
 ---
-author: Stéphane Laurent
+title: "The E8 root polytope"
+author: "Stéphane Laurent"
 date: '2022-03-14'
-highlighter: 'pandoc-solarized'
+tags: R, maths, geometry, graphics, python, julia
+rbloggers: yes
 output:
+  md_document:
+    variant: markdown
+    preserve_yaml: true
   html_document:
     highlight: kate
     keep_md: no
-  md_document:
-    preserve_yaml: True
-    variant: markdown
-rbloggers: yes
-tags: 'R, maths, geometry, graphics, python, julia'
-title: The E8 root polytope
+highlighter: pandoc-solarized
 ---
 
 The E8 root polytope, its vertices and its edges
@@ -353,3 +353,96 @@ what I mean: I did a GIF.
 
 If you want to know how I did this GIF, visit [my
 gist](https://gist.github.com/stla/19529d44a20bab4420bdd1a213ebcdbc).
+
+In this gist, you will also find another basis for Coxeter plane. This
+one does not resort to eigenvectors. I found it in [this
+paper](https://vixra.org/pdf/1411.0130v1.pdf).
+
+Consider the matrix $$
+H4_{\text{fold}} = 
+\begin{pmatrix}
+\varphi^2 & 0 & 0 & 0 & 1/\varphi & 0 & 0 & 0 \\
+0 & 1 & \varphi & 0 & 0 & -1 & \varphi & 0 \\
+0 & \varphi & 0 & 1 & 0 & \varphi & 0 & -1 \\
+0 & 0 & 1 & \varphi & 0 & 0 & -1 & \varphi \\
+1/\varphi & 0 & 0 & 0 & \varphi^2 & 0 & 0 & 0 \\
+0 & -1 & \varphi & 0 & 0 & 1 & \varphi & 0 \\
+0 & \varphi & 0 & -1 & 0 & \varphi & 0 & 1 \\
+0 & 0 & -1 & \varphi & 0 & 0 & 1 & \varphi 
+\end{pmatrix}
+$$ where $\varphi$ is the golden number, and consider the two vectors $$
+x = \bigl(0, 2 \varphi \sin(\pi/30), 0, 1, 0, 0, 0, 0\bigr)
+$$ and $$
+y = \bigl(2 \varphi \sin(\pi/15), 0, 2 \sin(2\pi/15), 0, 0, 0, 0, 0\bigr)
+$$
+
+Then the other basis of the Coxeter plane is given by the normalized
+columns of $H4_{\text{fold}}^{-1}\begin{pmatrix}x & y \end{pmatrix}$.
+
+``` {.r}
+phi <- (1 + sqrt(5)) / 2
+H4fold <- rbind(
+  c(phi^2, 0, 0, 0, 1/phi, 0, 0, 0),
+  c(0, 1, phi, 0, 0, -1, phi, 0),
+  c(0, phi, 0, 1, 0, phi, 0, -1),
+  c(0, 0, 1, phi, 0, 0, -1, phi),
+  c(1/phi, 0, 0, 0, phi^2, 0, 0, 0),
+  c(0, -1, phi, 0, 0, 1, phi, 0),
+  c(0, phi, 0, -1, 0, phi, 0, 1),
+  c(0, 0, -1, phi, 0, 0, 1, phi)
+)
+x <- c(0, 2*phi*sin(pi/30), 0, 1, 0, 0, 0, 0)
+y <- c(2*phi*sin(pi/15), 0, 2*sin(2*pi/15), 0, 0, 0, 0, 0)
+XY <- solve(H4fold) %*% cbind(x, y)
+X <- XY[, 1L]; Y <- XY[, 2L]
+X <- X / sqrt(c(crossprod(X)))
+Y <- Y / sqrt(c(crossprod(Y)))
+# projections on the plane
+proj <- function(v){
+  c(c(crossprod(v, X)), c(crossprod(v, Y)))
+}
+points <- t(apply(vertices/2, 1L, proj))
+```
+
+Below I show how to do a plot with colors, by assigning to each edge a
+color depending on the lengths of the two vertices of this edge.
+
+``` {.r}
+# make colors ####
+norms2 <- unique(round(apply(points, 1L, crossprod), 2L))
+grd <- as.matrix(expand.grid(norms2, norms2))
+grd <- grd[grd[, 1L] <= grd[, 2L], ]
+pairs <- apply(grd, 1L, paste0, collapse = "-")
+colors <- viridisLite::cividis(length(pairs))
+colors <- colorspace::darken(colors, amount = 0.25)
+names(colors) <- pairs
+# save plot as SVG with colors
+svg(filename = "E8_Coxeter_other_basis.svg", onefile = TRUE)
+opar <- par(mar = c(0, 0, 0, 0))
+plot(
+  points[!duplicated(points), ], pch = 19, cex = 0.3, asp = 1, 
+  axes = FALSE, xlab = NA, ylab = NA
+)
+for(i in 1L:nrow(edges)){
+  twopoints <- points[edges[i, ], ]
+  pair <- paste0(round(
+    sort(apply(twopoints, 1L, crossprod)), 2L
+  ), collapse = "-")
+  lines(twopoints, lwd = 0.1, col = colors[pair])
+}
+par(opar)
+dev.off()
+# convert to PNG
+rsvg::rsvg_png(
+  "E8_Coxeter_other_basis.svg", file = "E8_Coxeter_other_basis.png"
+)
+```
+
+![](figures/E8_Coxeter_other_basis.png)
+
+If this post pleased you, you might also be interested in [this
+gist](https://gist.github.com/stla/2ed8d9f107ce3ae311ed365e83d66dbd),
+which deals with the projection to a Coxeter plane of the so-called
+\*600-cell° polytope. I even provide a hyperbolic version:
+
+![](figures/H4_600-cell_hyperbolic.png)
