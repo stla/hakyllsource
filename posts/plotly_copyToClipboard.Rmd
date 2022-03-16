@@ -118,4 +118,4 @@ plot_ly(
   config(modeBarButtonsToAdd = list(CopyToClipboard))
 ```
 
-![](figures/plotly_copyToClipboard.gif)
+![](figures/plotly_copyToClipboard.gif){width=75%}
