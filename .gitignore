@@ -12,3 +12,5 @@ stlahblog/
 posts/*.pdf
 posts/*_cache
 feedProcessing/
+dist/
+dist-newstyle/

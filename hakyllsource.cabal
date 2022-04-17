@@ -1,0 +1,26 @@
+cabal-version:      3.0
+name:               hakyllsource
+version:            0.1.0.0
+synopsis:
+
+-- A longer description of the package.
+-- description:
+homepage:           https://github.com/stla/hakyllsource
+
+bug-reports:        https://github.com/stla/hakyllsource/issues
+license:            GPL-3.0-only
+license-file:       LICENSE
+author:             Stéphane Laurent
+maintainer:         laurent_step@outlook.fr
+
+-- A copyright notice.
+-- copyright:
+category:           Web
+
+executable mysite
+    main-is:          site.hs
+    build-depends:    base >= 4.7 && < 5
+                    , hakyll 
+                    , pandoc
+                    , containers
+    default-language: Haskell2010
