@@ -1,0 +1,7 @@
+cabal
++-- bin
++-- config
++-- config.backup
++-- logs
++-- packages
+\-- store
