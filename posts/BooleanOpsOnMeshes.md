@@ -1,5 +1,5 @@
 ---
-title: "Surface reconstruction with R(CGAL)"
+title: "Boolean operations on meshes with R(CGAL)"
 author: "Stéphane Laurent"
 date: '2022-05-14'
 tags: geometry, R, rgl, graphics, C++
