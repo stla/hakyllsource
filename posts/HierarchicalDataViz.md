@@ -33,7 +33,7 @@ library(dir2json)
 shinyDirTree(dir = "inst", depth = 3)
 ```
 
-![](./figures/shinyDirTree.gif)
+![](./figures/shinyDirTree.gif){width="95%"}
 
 As you can see, it also allows to search a file in the tree. And it is
 possible to zoom and to drag.
@@ -59,4 +59,4 @@ dat <- tibble::tribble(
 shinyDataTree(dat, root = FALSE)
 ```
 
-![](./figures/shinyDataTree.gif)
+![](./figures/shinyDataTree.gif){width="95%"}
