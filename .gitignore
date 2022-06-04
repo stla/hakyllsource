@@ -14,3 +14,4 @@ posts/*_cache
 feedProcessing/
 dist/
 dist-newstyle/
+*.exe
