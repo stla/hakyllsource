@@ -67,7 +67,7 @@ server <- function(input, output) {
 shinyApp(ui = ui, server = server)
 ```
 
-![](./figures/shiny_sidebar_scrollbar1.gif)
+![](./figures/shiny_sidebar_scrollbar1.gif){width=70%}
 
 But, as you can see, there is an issue with the `shinyWidgets::dropdown`: when 
 one opens it, the part outside the sidebar is hidden. 
@@ -98,7 +98,7 @@ ui <- fluidPage(
       ......
 ```
 
-![](./figures/shiny_sidebar_scrollbar2.gif)
+![](./figures/shiny_sidebar_scrollbar2.gif){width=70%}
 
 I find the native HTML scrollbars a bit ugly. It is possible to customize them: 
 [Styling scrollbars in CSS](https://css-tricks.com/the-current-state-of-styling-scrollbars-in-css/).
