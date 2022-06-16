@@ -1,0 +1,73 @@
+---
+title: "SVG to PNG"
+author: "Stéphane Laurent"
+date: '2022-06-17'
+tags: R, graphics
+rbloggers: yes
+output:
+  md_document:
+    variant: markdown
+    preserve_yaml: true
+  html_document:
+    highlight: kate
+    keep_md: no
+highlighter: pandoc-solarized
+---
+
+Here is a way to get a high-quality PNG image with R: save it as SVG
+first, then convert the SVG file to a PNG file, with the **rsvg**
+package.
+
+Let's see. I construct a hyperbolic Delaunay triangulation with the
+**gyro** package:
+
+``` r
+library(gyro)
+
+phi <- (1 + sqrt(5)) / 2
+theta <- head(seq(0, pi/2, length.out = 11), -1L)
+a <- phi^((2*theta/pi)^0.8 - 1)
+u <- a * cos(theta)
+v <- a * sin(theta)
+x <- c(0, u, -v, -u, v)
+y <- c(0, v, u, -v, -u)
+pts <- cbind(x, y) / 1.07
+
+hdel <- hdelaunay(pts, model = "U")
+
+fcolor <- function(t){
+  RGB <- colorRamp(hcl.colors(20L, "Berlin"))(t)
+  rgb(RGB[, 1L], RGB[, 2L], RGB[, 3L], maxColorValue = 255)
+}
+```
+
+Now let's save the plot as a PNG, directly:
+
+``` r
+png("hdelaunayU.png", width = 512, height = 512)
+plotHdelaunay(
+  hdel, vertices = FALSE, color = fcolor
+)
+dev.off()
+```
+
+And now let's save it as SVG then convert it to PNG:
+
+``` r
+svg("hdelaunayU.svg")
+plotHdelaunay(
+  hdel, vertices = FALSE, color = fcolor
+)
+dev.off()
+
+rsvg::rsvg_png(
+  "hdelaunayU.svg", "hdelaunayU_from_svg.png",
+  width = 512, height = 512
+)
+```
+
+Observe the difference:
+
+![](./figures/hdelaunayU.png){width="95%"}
+
+![](./figures/hdelaunayU_from_svg.png){width="95%"}
