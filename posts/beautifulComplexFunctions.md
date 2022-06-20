@@ -82,7 +82,7 @@ rasterImage(image, -100, -100, 100, 100)
 par(opar)
 ```
 
-![](./figures/Eisenstein4.png){width="70%"}
+![](./figures/Eisenstein4.png){width="55%"}
 
 It makes me think to a beetle.
 
@@ -97,4 +97,4 @@ f <- Vectorize(function(x, y){
 })
 ```
 
-![](./figures/Eisenstein6.png){width="70%"}
+![](./figures/Eisenstein6.png){width="55%"}
