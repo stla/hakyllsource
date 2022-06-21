@@ -131,7 +131,7 @@ colormap <- function(z){
 library(jacobi)
 f <- Vectorize(function(x, y){
   q <- x + 1i*y
-  if(Mod(q) > 0.995 || (Im(q) == 0 && Re(q) <= 0)){
+  if(Mod(q) > 0.9999 || (Im(q) == 0 && Re(q) <= 0)){
     return(bkgcol)
   }
   tau <- -1i * log(q) / pi
@@ -157,7 +157,7 @@ Here is how to apply the Möbius transformation for one value of the
 power $t$:
 
 ``` {.r .numberLines}
-Mobius <- M_power_t(gamma = 0.9 + 0.3i, t = ...)
+Mobius <- M_power_t(gamma = 0.7 - 0.3i, t = ...)
 a <- Mobius["a"]
 b <- Mobius["b"]
 c <- Mobius["c"]
@@ -165,7 +165,7 @@ d <- Mobius["d"];
 f <- Vectorize(function(x, y){
   q0 <- x + 1i*y
   q <- (a*q0 + b) / (c*q0 + d)
-  if(Mod(q) > 0.995 || (Im(q) == 0 && Re(q) <= 0)){
+  if(Mod(q) > 0.9999 || (Im(q) == 0 && Re(q) <= 0)){
     return(bkgcol)
   }
   tau <- -1i * log(q) / pi
@@ -184,23 +184,13 @@ result:
 
 ![](./figures/Dedekind.gif){width="55%"}
 
-Unfortunately, the diameter of the circle is not constant. That is
-probably because I use the disk $\{|z| \leqslant 0.995\}$ instead of the
-unit disk. It is possible to trim the images with the help of
-**ImageMagick**:
-
-    magick convert -density 300 in.png -bordercolor #15191e -border 10x10 \
-     -colorspace RGB -trim -quality 100 -resize 512x512! out.png
-
-![](./figures/Dedekind_trimmed.gif){width="55%"}
-
 My **Rcpp** code is available in the [Github
 version](https://github.com/stla/jacobi) of the **jacobi** package. The
 R code which generates an image for one value of $t$ is:
 
 ``` {.r .numberLines}
 x <- seq(-1, 1, len = 2000L)
-gamma <- 0.9 + 0.3i
+gamma <- 0.7 - 0.3i
 t <- ...
 image <- jacobi:::Image_eta(x, gamma, t)
 opar <- par(mar = c(0,0,0,0), bg = bkgcol)
