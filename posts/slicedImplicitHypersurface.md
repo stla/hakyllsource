@@ -22,8 +22,8 @@ the case when an implicit equation of the hypersurface is available. For
 the illustration, we again consider the
 [*tiger*](http://hi.gher.space/wiki/Tiger). It is given by the implicit
 equation $$
-{\bigl(x^2 + y^2 - R_1\bigr)}^2 + 
-{\bigl(z^2 + w^2 - R_2\bigr)}^2 = r^2.
+{\bigl(\sqrt{x^2 + y^2} - R_1\bigr)}^2 + 
+{\bigl(\sqrt{z^2 + w^2} - R_2\bigr)}^2 = r^2.
 $$ We will fix a value of the fourth coordinate $w$, say $w_0$. That is
 to say we deal with the cross-section with the hyperplane $\{w = w_0\}$.
 And we will rotate the hypersurface in the 4D space. We use a
@@ -97,7 +97,7 @@ bg3d(
 shade3d(mesh, color = "maroon")
 ```
 
-![](./figures/tiger01(implicit).png){width="55%"}
+![](./figures/tiger01(implicit).png){width="50%"}
 
 Now let's make an animation by varying the angle of rotation $\xi$ from
 $0$ to $\pi$.
@@ -143,4 +143,8 @@ command <- paste0(
 system(command)
 ```
 
-![](./figures/tiger01(implicit).gif){width="55%"}
+![](./figures/tiger01(implicit).gif){width="50%"}
+
+A similar animation with a more complex surface can be found on [my
+youtube
+channel](https://www.youtube.com/channel/UCQ2hC8ETS9FFm2pzzyZCVUw/videos).
