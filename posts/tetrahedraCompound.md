@@ -19,7 +19,7 @@ post](https://laustep.github.io/stlahblog/posts/BooleanOpsOnMeshes.html)
 I was wrong when I said I didn't have a tool to compute the intersection
 of the compound of five tetrahedra:
 
-![](./figures/tetrahedraCompoundIntersection.gif){width="60%"}
+![](./figures/tetrahedraCompoundIntersection.gif){width="50%"}
 
 This can be achieved with the help of the **rcdd** package in R.
 
@@ -189,20 +189,20 @@ library(cxhull)
 icosahedron <- cxhull(vertices, triangulate = TRUE)
 ```
 
-There's a convenient function in **cxhull** to plot a convec hull with
+There's a convenient function in **cxhull** to plot a convex hull with
 **rgl**, namely `plotConvexHull3d`:
 
 ``` r
 library(rgl)
 open3d(windowRect = c(50, 50, 562, 562))
-view3d(10, 80, zoom = 0.7)
+view3d(30, 80, zoom = 0.7)
 plotConvexHull3d(
   icosahedron, palette = hcl.colors(256, "BuPu"), bias = 0.25, 
-  edgesColor = "yellow", tubesRadius = 0.06, spheresRadius = 0.08
+  edgesColor = "yellow", tubesRadius = 0.015, spheresRadius = 0.02
 )
 ```
 
-![](./figures/icosahedron2.png){width="60%"}
+![](./figures/icosahedron2.png){width="50%"}
 
 ## The Python way
 

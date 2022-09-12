@@ -1,0 +1,106 @@
+---
+title: "Kantorovich distance with the 'ompr' package"
+author: "Stéphane Laurent"
+date: '2022-09-12'
+tags: R, maths
+rbloggers: yes
+output:
+  md_document:
+    variant: markdown
+    preserve_yaml: true
+  html_document:
+    highlight: kate
+    keep_md: no
+highlighter: pandoc-solarized
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message = FALSE)
+```
+
+Do you know 
+[my former blog](http://stla.github.io/stlapblog/index.html)? 
+It contains four posts about the computation of the Kantorovich distance:
+
+- [Using Julia to compute the Kantorovich distance](https://stla.github.io/stlapblog/posts/KantorovichWithJulia.html)
+
+- [Using R to compute the Kantorovich distance](http://stla.github.io/stlapblog/posts/KantorovichWithR.html)
+
+- [Using Scala to compute the Kantorovich distance](http://stla.github.io/stlapblog/posts/KantorovichWithScala.html)
+
+- [The 'kantorovich' package for R](http://stla.github.io/stlapblog/posts/kantorovich-package.html)
+
+The Julia way using the **JumP** library has the most convenient syntax:
+
+```julia
+using JuMP 
+mu = [1/7, 2/7, 4/7]
+nu = [1/4, 1/4, 1/2]
+n = length(mu)
+m = Model()
+@defVar(m, p[1:n, 1:n] >= 0)
+@setObjective(m, Min, sum{p[i, j], i in 1:n, j in 1:n; i != j})
+for k in 1:n
+  @addConstraint(m, sum(p[k, :]) == mu[k])
+  @addConstraint(m, sum(p[:, k]) == nu[k])
+end
+solve(m)
+```
+
+This allows to get the Kantorovich distance between the two probabilities 
+`mu` and `nu` corresponding to the 0-1 distance (assuming `mu` and `nu` have 
+the same support). This is totally useless because one can straightforwardly 
+get this distance: it is one minus the total weight of the infimum measure 
+of the two probability measures (`1 - sum(pmin(mu, nu))` in R). But this is 
+just for a simple illustration purpose. This problem is not trivial for another 
+distance on the support of `mu` and `nu`. Encoding this distance as a 
+matrix `D`, the linear programming model allowing to get the corresponding 
+Kantorovich distance is obtained by replacing
+
+```julia
+sum{p[i, j], i in 1:n, j in 1:n; i != j}
+```
+
+with
+
+```julia
+sum{p[i, j] * D[i, j], i in 1:n, j in 1:n; i != j}
+```
+
+Now I want to show again how to compute the Kantorovich distance with R, but 
+using another package I discovered yesterday: the **ompr** package. 
+It allows to write the model with a convenient syntax, close to the 
+mathematical language, similar to the one above with **JumP**. 
+Here is the model:
+
+
+```{r model}
+library(ompr)
+library(ompr.roi)
+library(ROI.plugin.glpk)
+
+mu <- c(1/7, 2/7, 4/7)
+nu <- c(1/4, 1/4, 1/2)
+n <- length(mu)
+
+model <- MIPModel() |>
+  add_variable(p[i, j], i = 1:n, j = 1:n, type = "continuous") |>
+  add_constraint(p[i, j] >= 0, i = 1:n, j = 1:n) |>
+  add_constraint(sum_over(p[i, j], j = 1:n) == mu[i], i = 1:n) |>
+  add_constraint(sum_over(p[i, j], i = 1:n) == nu[j], j = 1:n) |>
+  set_objective(sum_over(p[i, j], i = 1:n, j = 1:n, i != j), "min") 
+```
+
+This is nicely readable. Now we solve the problem:
+
+```{r optimization}
+optimization <- model |>
+  solve_model(with_ROI(solver = "glpk"))
+```
+
+And we get the Kantorovich distance:
+
+```{r objectiveValue, collapse=TRUE}
+objective_value(optimization)
+```
+
