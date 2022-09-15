@@ -97,7 +97,7 @@ forM_ tmatrices $ \tmatrix ->
 
 ## R
 
-
+![](./figures/Reorient_R.gif){width="50%"}
 
 [full code](https://gist.github.com/stla/9c036c2ae9c678745b784ed8d895a518)
 
