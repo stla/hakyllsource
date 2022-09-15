@@ -14,28 +14,28 @@ output:
 highlighter: pandoc-solarized
 ---
 
-If you follow 
-[my youtube channel](https://www.youtube.com/channel/UCQ2hC8ETS9FFm2pzzyZCVUw/videos) 
-then you have certainly seen the "ball" of twenty Hopf tori. Sometimes I call 
-it the "Hopf flower". How is it done?
+If you follow [my youtube
+channel](https://www.youtube.com/channel/UCQ2hC8ETS9FFm2pzzyZCVUw/videos)
+then you have certainly seen the "ball" of twenty Hopf tori. Sometimes I
+call it the "Hopf flower". How is it done?
 
-Well, firstly, I take twenty points on a ball: the twenty vertices of the 
-[compound of five tetrahedra](https://laustep.github.io/stlahblog/posts/tetrahedraCompound.html). 
-Then, I construct one Hopf torus, and for each of the twenty points I reorient 
-it towards this point and I translate it to this point. This post is about the 
-transformation used to reorient.
-
+Well, firstly, I take twenty points on a ball: the twenty vertices of
+the [compound of five
+tetrahedra](https://laustep.github.io/stlahblog/posts/tetrahedraCompound.html).
+Then, I construct one Hopf torus, and for each of the twenty points I
+reorient it towards this point and I translate it to this point. This
+post is about the transformation used to reorient.
 
 ## POV-Ray
 
 ![](./figures/Reorient_povray.gif){width="50%"}
 
-I discovered this transformation in the file **transforms.inc** of the POV-Ray 
-distribution. You can find it 
-[here](https://github.com/POV-Ray/povray/blob/master/distribution/include/transforms.inc). 
+I discovered this transformation in the file **transforms.inc** of the
+POV-Ray distribution. You can find it
+[here](https://github.com/POV-Ray/povray/blob/master/distribution/include/transforms.inc).
 Below is the POV-Ray macro which runs the transformation.
 
-```povray
+``` povray
 #macro Reorient_Trans(Axis1, Axis2)
    #local vX1 = vnormalize(Axis1);
    #local vX2 = vnormalize(Axis2);
@@ -65,21 +65,20 @@ Below is the POV-Ray macro which runs the transformation.
 #end
 ```
 
-`Axis1` is the vector to be rotated and `Axis2` is the vector to be rotated 
-towards. Usually, `Axis1` is the $x$, $y$, or $z$ direction, that 
-depends on the software used. 
-
+`Axis1` is the vector to be rotated and `Axis2` is the vector to be
+rotated towards. Usually, `Axis1` is the $x$, $y$, or $z$ direction,
+that depends on the software used.
 
 ## Haskell
 
 ![](./figures/Reorient_haskell.gif){width="50%"}
 
-I also did the ball of twenty Hopf tori in Haskell, with the **OpenGL** 
-library. The full code is available in 
-[this Github repository](https://github.com/stla/opengl-HopfTorus). Below 
-are the relevant parts of the code.
+I also did the ball of twenty Hopf tori in Haskell, with the **OpenGL**
+library. The full code is available in [this Github
+repository](https://github.com/stla/opengl-HopfTorus). Below are the
+relevant parts of the code.
 
-```haskell
+``` haskell
 import Data.Foldable (toList)
 import Linear
 
@@ -100,7 +99,7 @@ translateAndReorient axis vector =
     m = transpose $ m1 !*! m2
 ```
 
-```haskell
+``` haskell
 import Graphics.Rendering.OpenGL.GL
 
 ......
@@ -119,16 +118,16 @@ forM_ tmatrices $ \tmatrix ->
 ......
 ```
 
-
 ## R
 
 ![](./figures/Reorient_R.gif){width="50%"}
 
-Of course I also did it in R, with the **rgl** package. The code is available 
-in [this gist](https://gist.github.com/stla/9c036c2ae9c678745b784ed8d895a518), 
+Of course I also did it in R, with the **rgl** package. The code is
+available in [this
+gist](https://gist.github.com/stla/9c036c2ae9c678745b784ed8d895a518),
 and below are the relevant parts of the code.
 
-```r
+``` r
 Reorient_Trans <- function(Axis1, Axis2){
   vX1 <- Axis1 / sqrt(c(crossprod(Axis1)))
   vX2 <- Axis2 / sqrt(c(crossprod(Axis2)))
@@ -158,15 +157,15 @@ for(i in 1:20){
 }
 ```
 
-
 ## Python
 
 ![](./figures/Reorient_python.gif){width="50%"}
 
-I dit it in Python as well, with the **PyVista** library. You can find the code 
-in [this Github repository](https://github.com/stla/PyVistaMiscellanous).
+I dit it in Python as well, with the **PyVista** library. You can find
+the code in [this Github
+repository](https://github.com/stla/PyVistaMiscellanous).
 
-```python
+``` python
 def Reorient_Trans(Axis1, Axis2):
   vX1 = Axis1 #/ must be normalized
   vX2 = Axis2 #/ must be normalized
@@ -195,15 +194,14 @@ m.translate((v[0], v[1], v[2]), inplace=True)
 ......
 ```
 
-
 ## Asymptote
 
 ![](./figures/Reorient_asymptote.gif){width="50%"}
 
-And I did it in Asymptote too. The full code is available in 
-[this gist](https://gist.github.com/stla/6892a261bc2c45509cd1482fbeff2f93).
+And I did it in Asymptote too. The full code is available in [this
+gist](https://gist.github.com/stla/6892a261bc2c45509cd1482fbeff2f93).
 
-```cpp
+``` cpp
 // transformation which reorients and translates -----
 transform3 transReorient(triple axis, triple vector){
   triple vX1 = unit(vector);
@@ -237,17 +235,21 @@ transform3 transReorient(triple axis, triple vector){
 }
 ```
 
-
 ## three.js
 
-<iframe src="../frames/threejs_TwentyHopfTori2.html" width="100%" height="500px" scrolling="no" frameborder="0"></iframe>
-
-And finally in JavaScript, with **three.js**. Go 
-[here](https://github.com/laustep/stlahblog/blob/gh-pages/frames/threejs_TwentyHopfTori2.html) for the code. And click 
-[here](https://laustep.github.io/stlahblog/frames/threejs_TwentyHopfTori2.html) 
+```{=html}
+<iframe src="../frames/threejs_TwentyHopfTori2.html" width="100%" height="500px" scrolling="no" frameborder="0">
+```
+```{=html}
+</iframe>
+```
+And finally in JavaScript, with **three.js**. Go
+[here](https://github.com/laustep/stlahblog/blob/gh-pages/frames/threejs_TwentyHopfTori2.html)
+for the code. And click
+[here](https://laustep.github.io/stlahblog/frames/threejs_TwentyHopfTori2.html)
 to play with it in full screen.
 
-```js
+``` js
 function reorient(axis1, axis2) {
   var vX1 = axis1.normalize();
   var vX2 = axis2.normalize();
