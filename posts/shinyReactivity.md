@@ -1,0 +1,100 @@
+---
+title: "A note on Shiny reactivity"
+author: "Stéphane Laurent"
+date: '2022-09-24'
+tags: R, shiny
+rbloggers: yes
+output:
+  md_document:
+    variant: markdown
+    preserve_yaml: true
+  html_document:
+    highlight: kate
+    keep_md: no
+highlighter: pandoc-solarized
+---
+
+In the 'shiny' package, the `reactiveConsole` function allows to enable
+reactivity at the console, for the purposes of experimentation and
+learning (that doesn't work in a R Markdown document).
+
+``` r
+library(shiny)
+reactiveConsole(TRUE)
+```
+
+So let's play with the Shiny reactivity, without a Shiny app.
+
+The code below creates an observer which observes a *reactive value*:
+
+``` r
+x <- reactiveVal(NULL)
+observeEvent(x(), {
+  print("An event has occured.")
+})
+```
+
+Recall that `x` is a function; when calling it with an argument, this
+sets the value, and when calling it without argument, this read the
+value.
+
+Let's try it:
+
+``` r
+> x(2)  # observer triggered
+[1] "An event has occured."
+[1] "The value of x is 2"
+> x(2)  # observer not triggered, because same value
+> x(-2) # observer triggered
+[1] "An event has occured."
+[1] "The value of x is -2"
+```
+
+Nothing surprising. Everybody knows that.
+
+Now, let's define a `reactive conductor` which calculates the square of
+our reactive value, and let's observe its value:
+
+``` r
+x <- reactiveVal(NULL)
+xsquared <- reactive({
+  x()^2
+})
+observeEvent(xsquared(), {
+  print("An event has occured.")
+  print(paste("The value of x² is", xsquared()))
+})
+```
+
+What happens if we execute the same code as before? The same output as
+before? The answer is *no*:
+
+``` r
+> x(2)  # observer triggered
+[1] "An event has occured."
+[1] "The value of x² is 4"
+> x(2)  # observer not triggered, because nothing has changed
+> x(-2) # observer triggered, while x² has not changed!
+[1] "An event has occured."
+[1] "The value of x² is 4"
+```
+
+This is an important difference between a reactive value and a reactive
+conductor. The reactive conductor is also an observer, and here it
+observes the reactive value `x()`. Then it reacts when `x()` changes and
+even though its output does not change, it triggers an event.
+
+Note that an observer observing `x()^2` is also triggered when `x()`
+takes the value `2` then `-2`:
+
+``` r
+x <- reactiveVal(NULL)
+observeEvent(x()^2, {
+  print("An event has occured.")
+}, ignoreInit = TRUE)
+
+> x(2)
+[1] "An event has occured."
+> x(-2)
+[1] "An event has occured."
+```
