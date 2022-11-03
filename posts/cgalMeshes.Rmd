@@ -65,7 +65,7 @@ view3d(-30, 0, zoom = 0.7)
 shade3d(rglDragon, color = "darkgreen")
 ```
 
-![](./figures/StanfordDragon.png){width=75%}
+![](./figures/StanfordDragon.png){width=50%}
 
 We can check whether the mesh is triangle and closed:
 
@@ -138,6 +138,6 @@ view3d(-30, 0, zoom = 0.7)
 shade3d(rglDragon)
 ```
 
-![](./figures/StanfordDragon_colors.png){width=75%}
+![](./figures/StanfordDragon_colors.png){width=50%}
 
 More images on [the Github repo](https://github.com/stla/cgalMeshes).
