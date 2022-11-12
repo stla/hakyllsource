@@ -1,26 +1,26 @@
 ---
-author: Stéphane Laurent
-date: '2018-02-22'
-highlighter: kate
+title: "Drawing spherical wedges with rgl"
+author: "Stéphane Laurent"
+date: "2018-02-22"
+tags: R, graphics, rgl
+rbloggers: yes
 output:
-  html_document:
-    keep_md: False
   md_document:
-    preserve_yaml: True
     variant: markdown
-prettify: True
-prettifycss: 'twitter-bootstrap'
-tags: 'R, graphics'
-title: Drawing spherical wedges with rgl
+    preserve_yaml: true
+  html_document:
+    highlight: kate
+    keep_md: no
+highlighter: pandoc-solarized
 ---
 
-This post provides some code to draw a sphere wedge with the R library
-`rgl`.
+This post provides some code to draw a spherical wedge with the R
+library `rgl`.
 
-As an helper function, I use `spherical2cartesian` to convert from
+As a helper function, I use `spherical2cartesian` to convert from
 spherical coordinates to Cartesian coordinates:
 
-``` {.r}
+``` r
 spherical2cartesian <- function(rthetaphi){
   r <- rthetaphi[1]
   theta <- rthetaphi[2]
@@ -31,7 +31,7 @@ spherical2cartesian <- function(rthetaphi){
 
 Now, here is the main function:
 
-``` {.r}
+``` r
 sphereWedge <- function(theta1, theta2, radius=1, nm=30, np=30, col="blue"){
   thetas <- seq(theta1, theta2, length.out=nm)
   phis <- pi * 1:(np-1)/np
@@ -55,7 +55,7 @@ sphereWedge <- function(theta1, theta2, radius=1, nm=30, np=30, col="blue"){
 
 A simple example:
 
-``` {.r}
+``` r
 sphereWedge(0, pi/3, col="purple")
 ```
 
@@ -63,7 +63,7 @@ sphereWedge(0, pi/3, col="purple")
 
 Now let's draw a tricolor sphere:
 
-``` {.r}
+``` r
 sphereWedge(0, 2*pi/3, col="red")
 sphereWedge(2*pi/3, 4*pi/3, col="green")
 sphereWedge(4*pi/3, 2*pi, col="blue")
@@ -75,7 +75,7 @@ As you can see, I use `2*pi` and not `0` for the blue wedge. That should
 be equivalent. However, and I don't know why, using `0` instead of
 `2*pi` colors the interior of the two other wedges:
 
-``` {.r}
+``` r
 sphereWedge(0, 2*pi/3, col="red")
 sphereWedge(2*pi/3, 4*pi/3, col="green")
 sphereWedge(4*pi/3, 0, col="blue")
@@ -83,8 +83,7 @@ sphereWedge(4*pi/3, 0, col="blue")
 
 ![](figures/wedge3.png)
 
-Spherical triangles with rgl
-----------------------------
+## Spherical triangles with rgl
 
 I also did a code which draws spherical triangles for rgl. I won't
 reproduce it here. If you are interested, it is available in [this
