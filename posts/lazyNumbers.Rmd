@@ -39,6 +39,8 @@ x <- lazynb(1) - lazynb(7) * lazynb(0.1)
 as.double(x) == 0.3
 ```
 
+***Correction:*** *this is* [*wrong*](https://laustep.github.io/stlahblog/posts/lazyNumbers2.html)*!*
+
 In fact, when a binary operation involves a lazy number, the other number is 
 automatically converted to a lazy number, so you can shortly enter this 
 operation as follows:

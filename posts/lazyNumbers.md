@@ -38,6 +38,9 @@ as.double(x) == 0.3
 ## [1] TRUE
 ```
 
+***Correction:*** *this is*
+[*wrong*](https://laustep.github.io/stlahblog/posts/lazyNumbers2.html)*!*
+
 In fact, when a binary operation involves a lazy number, the other
 number is automatically converted to a lazy number, so you can shortly
 enter this operation as follows:
@@ -118,8 +121,8 @@ microbenchmark(
 )
 ## Unit: milliseconds
 ##  expr   min    lq  mean median    uq   max neval cld
-##  lazy 39.74 40.30 40.82  40.77 41.31 42.75    20  a 
-##  mpfr 58.89 60.78 61.69  61.25 62.67 64.95    20   b
+##  lazy 38.42 39.57 40.30  40.04 40.68 43.47    20  a 
+##  mpfr 59.22 60.09 61.01  60.60 61.94 64.89    20   b
 ```
 
 Vectors of lazy numbers and matrices of lazy numbers are available in
