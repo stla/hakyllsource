@@ -57,10 +57,10 @@ tutorial](https://docs.microsoft.com/en-us/power-bi/developer/visuals/environmen
 
 4.  install the npm package `powerbi-visuals-api`.
 
-**Node.js** is available in the GSK software center. You can
-alternatively download a portable version on the
-[nodejs.org](https://nodejs.org/en/download/) website: choose the 64-bit
-zip, unzip it in a folder and set this folder in your Windows path.
+For Windows, you can alternatively download a portable version of
+**Node.js** on the [nodejs.org](https://nodejs.org/en/download/)
+website: choose the 64-bit zip, unzip it in a folder and set this folder
+in your Windows path.
 
 Follow the tutorial for steps 2 and 3. Note that you have to perform
 step 3 only once, there's no need to generate a new certificate for each
@@ -166,7 +166,7 @@ fill_pbiviz <- function(path){
   pbiviz[["visual"]][["description"]] <- "Description"
   pbiviz[["visual"]][["supportUrl"]] <- "https://wwww.example.com"
   pbiviz[["author"]][["name"]] <- "John Doe"
-  pbiviz[["author"]][["email"]] <- "john.doe@gsk.com"
+  pbiviz[["author"]][["email"]] <- "john.doe@gmail.com"
   pbiviz <- toJSON(pbiviz, auto_unbox = TRUE, null = "null", pretty = 2)
   writeLines(pbiviz, "pbiviz.json")
 }
@@ -273,9 +273,9 @@ p <- ggplotly(gg)
 Now we can choose the columns we want for the x-axis and for the y-axis,
 and we can optionally choose the `Species` color factor:
 
-![](./figures/pbiviz03.png)
+![](./figures/pbiviz03.png){width="50%"}
 
-![](./figures/pbiviz04.png)
+![](./figures/pbiviz04.png){width="50%"}
 
 # Arbitrary HTML
 
@@ -430,7 +430,7 @@ from a file'* and select the **pbiviz** file located in the
 Drag and drop the column names of the two datasets to put them in
 **Data1** and **Data2**. Here is the result:
 
-![](./figures/pbiviz05.png)
+![](./figures/pbiviz05.png){width="50%"}
 
 ## Helper function
 
@@ -539,7 +539,7 @@ internalSaveWidget(widget, 'out.html')
 ####################################################
 ```
 
-![](./figures/pbiviz06.png)
+![](./figures/pbiviz06.png){width="50%"}
 
 # Prevent removal of duplicated rows
 
@@ -556,7 +556,7 @@ Here we explain how to achieve the result shown on the image below. With
 this visual, the user is able to add a title to the chart and to select
 a theme for the chart.
 
-![](./figures/pbiviz07.gif)
+![](./figures/pbiviz07.gif){width="50%"}
 
 This is achieved by modifying two files: the file
 ***capabilities.json*** and the file ***src/settings.ts*** in the folder
