@@ -57,10 +57,9 @@ tutorial](https://docs.microsoft.com/en-us/power-bi/developer/visuals/environmen
 
 4.  install the npm package `powerbi-visuals-api`.
 
-For Windows, you can alternatively download a portable version of
-**Node.js** on the [nodejs.org](https://nodejs.org/en/download/)
-website: choose the 64-bit zip, unzip it in a folder and set this folder
-in your Windows path.
+For Windows, you can download a portable version of **Node.js** on the
+[nodejs.org](https://nodejs.org/en/download/) website: choose the 64-bit
+zip, unzip it in a folder and set this folder in your Windows path.
 
 Follow the tutorial for steps 2 and 3. Note that you have to perform
 step 3 only once, there's no need to generate a new certificate for each
