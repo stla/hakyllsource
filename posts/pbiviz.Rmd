@@ -89,7 +89,7 @@ libraryRequireInstall("plotly")
 ####################################################
 
 ################### Actual code ####################
-gg <- ggplot(iris, aes(x=Petal.Length, y=Sepal.Length, color = Species)) + 
+gg <- ggplot(Values, aes(x=Petal.Length, y=Sepal.Length, color = Species)) + 
   geom_point()
 p <- ggplotly(gg)
 ####################################################
