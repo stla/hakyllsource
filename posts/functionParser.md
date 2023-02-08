@@ -46,6 +46,9 @@ your package, put the files **fparser.cc**, **fparser.hh**,
 you're ready to use **Function Parser**. Here is simple example:
 
 ``` cpp
+#include <Rcpp.h>
+#include "fparser.hh"
+
 // [[Rcpp::export]]
 void helloWorld() {
   FunctionParser fp;

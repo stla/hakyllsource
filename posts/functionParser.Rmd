@@ -5,12 +5,12 @@ date: '2023-02-06'
 tags: R, Rcpp, C++
 rbloggers: yes
 output:
-  md_document:
-    variant: markdown
-    preserve_yaml: true
   html_document:
     highlight: kate
     keep_md: no
+  md_document:
+    variant: markdown
+    preserve_yaml: true
 highlighter: pandoc-solarized
 ---
 
@@ -44,6 +44,9 @@ put the files **fparser.cc**, **fparser.hh**, **fpconfig.hh**,
 **Function Parser**. Here is simple example:
 
 ```cpp
+#include <Rcpp.h>
+#include "fparser.hh"
+
 // [[Rcpp::export]]
 void helloWorld() {
   FunctionParser fp;
