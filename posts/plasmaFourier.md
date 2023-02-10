@@ -67,7 +67,7 @@ plot(
 rasterImage(img, 0, 0, 1, 1)
 ```
 
-`<img src="figures/plasmaFourier_fig1-1.png" style="display: block; margin: auto;" />`{=html}
+`<img src="figures/plasmaFourier_fig1-1.png" width="50%" style="display: block; margin: auto;" />`{=html}
 
 ``` r
 par(opar)
@@ -75,7 +75,7 @@ par(opar)
 
 And more images:
 
-`<img src="figures/plasmaFourier_fourfigs-1.png" style="display: block; margin: auto;" />`{=html}
+`<img src="figures/plasmaFourier_fourfigs-1.png" width="50%" style="display: block; margin: auto;" />`{=html}
 
 You can play with the parameters to obtain something different.
 
@@ -96,7 +96,7 @@ img      <- alterColor(img)
 dim(img) <- c(400L, 400L)
 ```
 
-`<img src="figures/plasmaFourier_camouflage-1.png" style="display: block; margin: auto;" />`{=html}
+`<img src="figures/plasmaFourier_camouflage-1.png" width="50%" style="display: block; margin: auto;" />`{=html}
 
 Looks like a camouflage.
 
