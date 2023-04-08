@@ -1,0 +1,138 @@
+---
+title: "Heatmap formatting of a table with 'DT'"
+author: "Stéphane Laurent"
+date: '2023-04-08'
+tags: R, datatables
+rbloggers: yes
+output:
+  md_document:
+    variant: markdown
+    preserve_yaml: true
+  html_document:
+    highlight: kate
+    keep_md: no
+highlighter: pandoc-solarized
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+```
+
+
+Googling "heatmap format excel" returns a lot of results. Here we will see 
+how to do a heatmap formatting with a **DT** table in R.
+
+The dataset we use provides the average monthly temperatures over a year for 
+some cities in USA. It is available in a 
+[CSV file here](https://github.com/FanWangEcon/Stat4Econ/blob/master/data/TempCitiesUSA.csv).
+
+The table is in long format. Below we turn it into a table in wide format. 
+We also convert the temperatures to Celsius degrees and we rename the months 
+which are given as numbers in the original data.
+
+```{r}
+# read the CSV data
+dat0 <- read.csv("TempCitiesUSA.csv")
+# it is in long format:
+head(dat0)
+# I prefer Celsius degrees
+dat0[["temp.f"]] <- round((dat0[["temp.f"]] - 32) / 1.8, digits = 1L) 
+# convert to wide format
+library(tidyr)
+dat <- dat0 %>% 
+  pivot_wider(
+    names_from  = month,
+    values_from = temp.f
+)
+# replace the month numbers in the column names
+colnames(dat)[3:14] <- month.abb
+# have a look
+pillar::glimpse(dat, width = 65)
+```
+
+We will use the lowest temperature and the highest temperature later.
+
+```{r}
+# get the lowest and highest temperatures
+lowest  <- min(dat0[["temp.f"]])
+highest <- max(dat0[["temp.f"]])
+```
+
+Now let's detail our manipulation for one column.
+We map the temperatures to the interval $(0,1)$, in such a way that $0$ is 
+sent to $0.5$.
+
+```{r}
+# let's detail for one column, January
+x <- dat[["Jan"]]
+# function to map from (lowest, highest) to (0, 1), mapping 0 to 0.5
+interpfun <- splinefun(
+  c(lowest, 0, highest),
+  c(0, 0.5, 1)
+)
+# map the January data
+y <- interpfun(x)
+```
+
+Now we map each value of `y` to a color, such that $0.5$ is sent to white.
+
+```{r}
+# function mapping (0, 1) to a color; 0.5 is sent to white 
+colfunc <- colorRamp(c("blue", "white", "red"))
+# get the colors for January
+cols <- colfunc(y)
+# these are rgb codes, we convert them to hex codes
+clrs <- rgb(cols[, 1L], cols[, 2L], cols[, 3L], maxColorValue = 255)
+```
+
+In this way the negative temperatures will be colored in blue and the positive 
+temperatures in red.
+
+Now we apply this manipulation for each month. 
+
+```{r}
+# now we perform this stuff for each month
+Colors <- lapply(dat[, month.abb], function(x) {
+  y <- interpfun(x)
+  cols <- colfunc(y)
+  rgb(cols[, 1L], cols[, 2L], cols[, 3L], maxColorValue = 255)
+})
+# have a look
+str(Colors)
+```
+
+Now let's do the **DT** table. I use the **RowGroup** extension to group the 
+data by state (the 0-th column in JavaScript).
+
+```{r}
+library(DT)
+dtable <- datatable(
+  dat, rownames = FALSE, extensions = "RowGroup", 
+  options = list(
+    rowGroup = list(dataSrc = list(0)),
+    columnDefs = list( # hide the grouping column
+      list(targets = 0, visible = FALSE)
+    )
+  )
+)
+```
+
+And now we format this table.
+
+```{r}
+for(month in month.abb) {
+  dtable <- dtable %>%
+    formatStyle(
+      month, 
+      backgroundColor = styleEqual(dat[[month]], Colors[[month]])
+    )
+}
+```
+
+That's done.
+
+```r
+dtable
+```
+
+![](./figures/TempCitiesUSA.png){width=60%}
