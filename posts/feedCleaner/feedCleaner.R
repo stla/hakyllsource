@@ -1,5 +1,5 @@
 library(xml2)
-setwd("~/Documents/SaturnElephant/hakyllsource/_site")
+setwd("C:/SL/SaturnElephant/hakyllsource/_site")
 
 file.copy("feed.xml", "feed.bak.xml", overwrite = TRUE)
 

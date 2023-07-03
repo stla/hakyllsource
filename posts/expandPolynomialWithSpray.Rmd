@@ -1,0 +1,143 @@
+---
+title: "Fast expansion of a polynomial with R"
+author: "Stéphane Laurent"
+date: '2023-04-29'
+tags: R, maths
+rbloggers: yes
+output:
+  md_document:
+    variant: markdown
+    preserve_yaml: true
+  html_document:
+    highlight: kate
+    keep_md: no
+highlighter: pandoc-solarized
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, message = FALSE)
+```
+
+
+In [this previous post](https://laustep.github.io/stlahblog/posts/caracas01.html), 
+[this previous post](https://laustep.github.io/stlahblog/posts/caracas02.html), 
+and [this previous post](https://laustep.github.io/stlahblog/posts/juliaPolynomialExpansion.html), 
+I showed how to expand a polynomial with symbolic parameters. 
+In the first two posts, I used the R package **caracas**, a wrapper of 
+**SymPy**, and in the third post I used Julia.
+
+Now I've found a pure R solution, with the help of the **spray** package, and 
+it is very fast. That's what I'm going to demonstrate here, with the same 
+example I treated with Julia.
+
+We will lost something as compared to Julia: the **spray** package does not 
+handle rational numbers, so we will replace them by their double approximation. 
+We could use the **qspray** package instead, to deal with the rational numbers.
+
+Here is the starting polynomial expression:
+
+```{r}
+# define the polynomial expression as a function
+f <- function(x, y, z, w, sqrt3) {
+  ((x^2+y^2+z^2+w^2+145/3)^2-4*(9*z^2+16*w^2))^2 * 
+    ((x^2+y^2+z^2+w^2+145/3)^2+296*(x^2+y^2)-4*(9*z^2+16*w^2)) - 
+    16*(x^2+y^2)*(x^2+y^2+z^2+w^2+145/3)^2 * 
+    (37*(x^2+y^2+z^2+w^2+145/3)^2-1369*(x^2+y^2)-7*(225*z^2+448*w^2)) - 
+    sqrt3*16/9*(x^3-3*x*y^2) * 
+    (110*(x^2+y^2+z^2+w^2+145/3)^3-148*(x^2+y^2+z^2+w^2+145/3) * 
+       (110*x^2+110*y^2-297*z^2+480*w^2)) - 
+    64*(x^2+y^2)*(3*(729*z^4+4096*w^4)+168*(x^2+y^2)*(15*z^2-22*w^2)) + 
+    64*(12100/27*(x^3-3*x*y^2)^2-7056*(3*x^2*y-y^3)^2)-592240896*z^2*w^2
+}
+```
+
+We transform it to the polynomial of interest:
+
+```{r}
+# there are 3 variables (x,y,z) and 6 parameters (w0,a,b,c,d,sqrt3)
+library(spray)
+x     <- lone(1, 9)
+y     <- lone(2, 9)
+z     <- lone(3, 9)
+w0    <- lone(4, 9)
+a     <- lone(5, 9)
+b     <- lone(6, 9)
+c     <- lone(7, 9)
+d     <- lone(8, 9)
+sqrt3 <- lone(9, 9)
+
+# define the substitutions
+X <- a*x  - b*y  - c*z  - d*w0
+Y <- a*y  + b*x  + c*w0 - d*z
+Z <- a*z  - b*w0 + c*x  + d*y
+W <- a*w0 + b*z  - c*y  + d*x
+
+# here is the polynomial of interest
+P <- f(X, Y, Z, W, sqrt3)
+```
+
+Now we take the "xyz" part of each term:
+
+```{r}
+# the exponents of x, y, z
+xyz_powers <- P[["index"]][, c(1L, 2L, 3L)]
+
+# the "keys" xyz(i,j,k) for POV-Ray
+xyz_povray <- apply(xyz_powers, 1L, function(comp) {
+  sprintf("xyz(%s): ", toString(comp))
+})
+```
+
+Now we take the remaining part of each term:
+
+```{r}
+# the other exponents, those of w0, a, b, c, d, sqrt3
+other_powers <- P[["index"]][, c(4L, 5L, 6L, 7L, 8L, 9L)]
+
+# the polynomials in w0, a, b, c, d, sqrt3
+nterms <- length(P)
+coeffs <- P[["value"]]
+polynomials <- lapply(1L:nterms, function(i) {
+  spray(other_powers[i, ], coeffs[i])
+})
+```
+
+And we group these polynomials, putting together those which share the 
+same "xyz" part:
+
+```{r}
+# group the polynomials which have the same x,y,z exponents
+polynomials_groups <- sapply(split(polynomials, xyz_povray), function(polys) {
+  polysum <- polys[[1]]
+  for(poly in polys[-1]) {
+    polysum <- spray_add(
+      polysum$index, polysum$value, poly$index, poly$value
+    )
+  }
+  as.spray(polysum)
+}, simplify = FALSE)
+# remove the empty polynomials, if there are some
+polynomials_groups <- Filter(Negate(is.empty), polynomials_groups)
+```
+
+We want these polynomials as character strings:
+
+```{r}
+# there's no as.character function for sprays (polynomials), so we make one
+asCharacter <- function(poly) {
+  op <- options(sprayvars = c("w0", "a", "b", "c", "d", "sqrt3"))
+  x <- capture.output(print_spray_polyform(poly))
+  options(op)
+  paste0(x, collapse = " ")
+}
+
+polynomials_strings <- 
+  sapply(polynomials_groups, asCharacter, simplify = FALSE)
+```
+
+And that's it. We have everything needed to construct the POV-Ray code:
+
+```{r}
+head(polynomials_strings, 2L)
+```
+
