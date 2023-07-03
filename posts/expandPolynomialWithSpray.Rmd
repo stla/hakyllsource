@@ -1,7 +1,7 @@
 ---
 title: "Fast expansion of a polynomial with R"
 author: "Stéphane Laurent"
-date: '2023-04-29'
+date: '2023-07-04'
 tags: R, maths
 rbloggers: yes
 output:
