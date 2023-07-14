@@ -86,7 +86,7 @@ defined by a discretized curve, such as our matrix of points `gamma0`.
 Again, I use an exported function from **cgalMeshes**, namely 
 `meshTopology`, which returns the incidences between the vertices of the mesh.
 
-```
+```r
 # Hopf torus mesh from a discrete curve `gamma` ####
 hMesh <- function(gamma, m) {
   nu <- nrow(gamma)
@@ -164,7 +164,7 @@ for(i in seq_along(h_)) {
 library(gifski)
 pngFiles <- Sys.glob("zzpic*.png")
 gifski(
-  png_files = pngFiles,
+  png_files = c(pngFiles, rev(pngFiles)),
   gif_file = "HopfTorusCubicalConeToTorus.gif",
   width  = 512,
   height = 512,

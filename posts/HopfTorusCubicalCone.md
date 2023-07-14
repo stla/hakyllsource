@@ -88,42 +88,44 @@ Again, I use an exported function from **cgalMeshes**, namely
 `meshTopology`, which returns the incidences between the vertices of the
 mesh.
 
-    # Hopf torus mesh from a discrete curve `gamma` ####
-    hMesh <- function(gamma, m) {
-      nu <- nrow(gamma)
-      uperiodic <- TRUE
-      u_ <- 1L:nu
-      vperiodic <- TRUE
-      nv <- as.integer(m) 
-      v_ <- 1L:nv
-      R <- array(NA_real_, dim = c(3L, nv, nu))
-      for(k in 1L:nv) {
-        K <- k - 1L
-        cosphi <- cospi(2*K/m)
-        sinphi <- sinpi(2*K/m)
-        for(j in 1L:nu) {
-          p1 <- gamma[j, 1L]
-          p2 <- gamma[j, 2L]
-          p3 <- gamma[j, 3L]
-          yden <- sqrt(2 * (1 + p1))
-          y1 <- (1 + p1) / yden
-          y2 <- p2 / yden
-          y3 <- p3 / yden
-          x1 <- cosphi * y3 + sinphi * y2
-          x2 <- cosphi * y2 - sinphi * y3
-          x3 <- sinphi * y1
-          x4 <- cosphi * y1
-          R[, k, j] <- c(x1, x2, x3)/(1 - x4)
-        }
-      }
-      vs <- matrix(R, nrow = 3L, ncol = nu*nv)
-      tris <- cgalMeshes:::meshTopology(nu, nv, uperiodic, vperiodic)
-      tmesh3d(
-        vertices    = vs,
-        indices     = tris,
-        homogeneous = FALSE
-      )
+``` r
+# Hopf torus mesh from a discrete curve `gamma` ####
+hMesh <- function(gamma, m) {
+  nu <- nrow(gamma)
+  uperiodic <- TRUE
+  u_ <- 1L:nu
+  vperiodic <- TRUE
+  nv <- as.integer(m) 
+  v_ <- 1L:nv
+  R <- array(NA_real_, dim = c(3L, nv, nu))
+  for(k in 1L:nv) {
+    K <- k - 1L
+    cosphi <- cospi(2*K/m)
+    sinphi <- sinpi(2*K/m)
+    for(j in 1L:nu) {
+      p1 <- gamma[j, 1L]
+      p2 <- gamma[j, 2L]
+      p3 <- gamma[j, 3L]
+      yden <- sqrt(2 * (1 + p1))
+      y1 <- (1 + p1) / yden
+      y2 <- p2 / yden
+      y3 <- p3 / yden
+      x1 <- cosphi * y3 + sinphi * y2
+      x2 <- cosphi * y2 - sinphi * y3
+      x3 <- sinphi * y1
+      x4 <- cosphi * y1
+      R[, k, j] <- c(x1, x2, x3)/(1 - x4)
     }
+  }
+  vs <- matrix(R, nrow = 3L, ncol = nu*nv)
+  tris <- cgalMeshes:::meshTopology(nu, nv, uperiodic, vperiodic)
+  tmesh3d(
+    vertices    = vs,
+    indices     = tris,
+    homogeneous = FALSE
+  )
+}
+```
 
 If you run `hMesh(gamma0, m)` with `m` large enough, here is the mesh
 you will obtain (actually you have to close `gamma0`, that is to say you
@@ -164,7 +166,7 @@ for(i in seq_along(h_)) {
 library(gifski)
 pngFiles <- Sys.glob("zzpic*.png")
 gifski(
-  png_files = pngFiles,
+  png_files = c(pngFiles, rev(pngFiles)),
   gif_file = "HopfTorusCubicalConeToTorus.gif",
   width  = 512,
   height = 512,
