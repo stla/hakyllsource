@@ -1,7 +1,7 @@
 ---
 title: "A dull and shadowed 'rgl' mesh"
 author: "Stéphane Laurent"
-date: '2023-08-10'
+date: '2023-09-08'
 tags: R, rgl, graphics
 rbloggers: yes
 output:
