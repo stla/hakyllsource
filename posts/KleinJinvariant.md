@@ -157,7 +157,7 @@ xmsinx <- function(x) x - sin(x)
 curve(xmsinx, from = -2*pi, to = 2*pi, lwd = 2)
 ```
 
-`<img src="figures/kleinj-xminsinx-1.png" style="display: block; margin: auto;" />`{=html}
+`<img src="figures/kleinj-xminsinx-1.png" width="512" style="display: block; margin: auto;" />`{=html}
 
 I firstly tried to use this function but this is not enough: the
 transitions are still too fast. We can iterate this function to get more
@@ -167,7 +167,7 @@ slowness:
 curve(xmsinx(xmsinx(x)), from = -2*pi, to = 2*pi, lwd = 2)
 ```
 
-`<img src="figures/kleinj-xminsinxitr-1.png" style="display: block; margin: auto;" />`{=html}
+`<img src="figures/kleinj-xminsinxitr-1.png" width="512" style="display: block; margin: auto;" />`{=html}
 
 This one is good. We need to modify it in order that the "stairs" fit
 the "jumps". We will range $t$ from $-2\pi$ to $\pi$ and we will apply

@@ -152,7 +152,7 @@ too fast. So, since we want to make the pictures with $t$ running from $0$ to
 $3$, we need to slow down the transition when there's such a jump. We will use 
 a "smooth staircase function" for that. A nice one is $x - \sin(x)$:
 
-```{r xminsinx, fig.width=5, fig.height=5, fig.align='center'}
+```{r xminsinx, fig.width=5, fig.height=5, fig.align='center', out.width=512}
 xmsinx <- function(x) x - sin(x)
 curve(xmsinx, from = -2*pi, to = 2*pi, lwd = 2)
 ```
@@ -160,7 +160,7 @@ curve(xmsinx, from = -2*pi, to = 2*pi, lwd = 2)
 I firstly tried to use this function but this is not enough: the transitions 
 are still too fast. We can iterate this function to get more slowness:
 
-```{r xminsinxitr, fig.width=5, fig.height=5, fig.align='center'}
+```{r xminsinxitr, fig.width=5, fig.height=5, fig.align='center', out.width=512}
 curve(xmsinx(xmsinx(x)), from = -2*pi, to = 2*pi, lwd = 2)
 ```
 
