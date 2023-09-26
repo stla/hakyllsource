@@ -57,8 +57,8 @@ colors <- c(colors, rev(colors))
 for(i in 1:length(u_)){
   u <- u_[i]
   x <-  cos(pi/2 - (pi/2-0.44)*cos(nlobes*u))
-  z <-  sin(pi/2 - (pi/2-0.44)*cos(nlobes*u)) * cos(u+0.44*sin(2*nlobes))
-  y <- -sin(pi/2 - (pi/2-0.44)*cos(nlobes*u)) * sin(u+0.44*sin(2*nlobes))
+  z <-  sin(pi/2 - (pi/2-0.44)*cos(nlobes*u)) * cos(u+0.44*sin(2*nlobes*u))
+  y <- -sin(pi/2 - (pi/2-0.44)*cos(nlobes*u)) * sin(u+0.44*sin(2*nlobes*u))
   circle4d <- vapply(t_, function(t){
     HopfFiber(c(x, y, z), t)  
   }, numeric(4L))
