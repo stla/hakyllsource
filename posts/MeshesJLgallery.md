@@ -2,7 +2,7 @@
 title: "My 'Meshes.jl' gallery"
 author: "Stéphane Laurent"
 date: "2023-10-12"
-tags: julia, graphics
+tags: julia, graphics, geometry
 output:
   md_document:
     variant: markdown
@@ -58,6 +58,14 @@ Now we switch to the 4D world. Here are three linked cyclides.
 ![](./figures/jl_LinkedCyclides.png)
 
 [Code](https://gist.github.com/stla/a8f307695118cd9fbea08a8cca7ba49a)
+
+### Tesseract
+
+Also known as the hypercube.
+
+![](./figures/jl_tesseract.gif)
+
+[Code](https://gist.github.com/stla/32426518a9e0b089ec51f4d81b3f2738)
 
 ### Duoprism 3,30
 
