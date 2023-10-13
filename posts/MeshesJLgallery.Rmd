@@ -62,6 +62,10 @@ It is constructed with the help of the
 
 ![](./figures/jl_gyroIcosahedron.png)
 
+One can change the hyperbolic curvature:
+
+![](./figures/jl_gyroIcosahedron.gif)
+
 [Code](https://gist.github.com/stla/5a854243fa64290ec8dc0780db29ef34)
 
 

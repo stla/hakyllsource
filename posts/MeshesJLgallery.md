@@ -58,6 +58,10 @@ theory](https://laustep.github.io/stlahblog/posts/hyperbolicPolyhedra.html).
 
 ![](./figures/jl_gyroIcosahedron.png)
 
+One can change the hyperbolic curvature:
+
+![](./figures/jl_gyroIcosahedron.gif)
+
 [Code](https://gist.github.com/stla/5a854243fa64290ec8dc0780db29ef34)
 
 ### Linked cyclides
