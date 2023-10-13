@@ -51,6 +51,15 @@ One of my favorite isosurfaces. It is done with the help of the
 
 [Code](https://gist.github.com/stla/706af2eaae5419f66765343e3fde06e8)
 
+### Hyperbolic icosahedron
+
+It is constructed with the help of the [gyrovector space
+theory](https://laustep.github.io/stlahblog/posts/hyperbolicPolyhedra.html).
+
+![](./figures/jl_gyroIcosahedron.png)
+
+[Code](https://gist.github.com/stla/5a854243fa64290ec8dc0780db29ef34)
+
 ### Linked cyclides
 
 Now we switch to the 4D world. Here are three linked cyclides.
