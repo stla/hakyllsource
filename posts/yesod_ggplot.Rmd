@@ -14,9 +14,9 @@ output:
 highlighter: pandoc-solarized
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+Yesod is a web framework for Haskell. In this post I show how to do a Yesod 
+application allowing to upload some data from a CSV or a XLSX file and to 
+display a R graphic representing two selected columns of the data.
 
 Here is the directory content of the application:
 
@@ -73,4 +73,78 @@ Here is the directory content of the application:
     \---SheetJS
             xlsx.core.min.js
             xlsx.core.min.map
+```
+
+I'm using **bootstrap** for the style, **DataTables** to display a nice table 
+of the data, **PapaParse** to parse the uploaded CSV file to a JSON object, and
+**SheetJS** to convert the uploaded XLSX file to CSV data, which can then be 
+parsed to a JSON object with **PapaParse**.
+
+[Hamlet](https://www.yesodweb.com/book/shakespearean-templates) is a HTML 
+templating language developed for Yesod applications. Here is the Hamlet code 
+of the application:
+
+```html
+<body>
+  $# Bootstrap modal -----------------------------------------------------------
+  <div #myModal .modal .fade aria-hidden aria-labelledby=myModalLabel tabindex=-1>
+    <div .modal-dialog .modal-dialog-centered>
+      <div .modal-content>
+        <div .modal-header>
+            <h1 .modal-title .fs-5>
+        <div .modal-body>
+            <span #message>
+        <div .modal-footer>
+            <button type=button .btn .btn-secondary data-bs-dismiss=modal>Close
+  $# Haskell logo --------------------------------------------------------------
+  <img src=./static/images/haskell.png style=float:right;margin:5px;width:50px;>
+  $# ---------------------------------------------------------------------------
+  <div .container-fluid>
+    $# TABS --------------------------------------------------------
+    <ul .nav .nav-tabs role=tablist>
+      <li .nav-item role=presentation>
+        <button #data-tab .nav-link .active data-bs-toggle=tab data-bs-target=#data-tab-pane type=button role=tab aria-controls=data-tab-pane aria-selected=true>Data
+      <li .nav-item role=presentation>
+        <button #plot-tab .nav-link data-bs-toggle=tab data-bs-target=#plot-tab-pane type=button role=tab aria-controls=plot-tab-pane aria-selected=false>Plot
+    $# TABS CONTENTS -----------------------------------------------------------
+    <div #tabContent .tab-content>
+      $# DATA TAB --------------------------------------------------------------
+      <div #data-tab-pane .tab-pane .fade .show .active role=tabpanel aria-labelledby=data-tab tabindex=0>
+        <div .row>
+          $# SIDEBAR -----------------------------------------------------------
+          <div .col-4>
+            <div .card .text-bg-dark tabindex=-1 aria-labelledby=sidebarDataTitle>
+              <div .card-body>
+                <h5 #sidebarDataTitle .card-title>Upload data
+                <h6 .card-text>Upload a CSV file or a XLSX file.
+                <p .card-text style=font-style:italic;>If you upload a XLSX file, the data from the first sheet will be extracted.
+                <input #file type=file .form-control .btn .btn-info>
+          $# TABLE -------------------------------------------------------------
+          <div .col-8>
+            <table #table .table-striped .table-bordered .table-hover>
+              <thead>
+                <tr role=row>
+              <tbody>
+      $# PLOT TAB --------------------------------------------------------------
+      <div #plot-tab-pane .tab-pane .fade role=tabpanel aria-labelledby=plot-tab tabindex=0>
+        <div .row>
+          $# SIDEBAR -----------------------------------------------------------
+          <div .col-4>
+            <div .sidebar .card .text-bg-dark tabindex=-1 aria-labelledby=sidebarPlotTitle>
+              <div .card-body>
+                <div .sidebar-header>
+                  <h5 #sidebarPlotTitle .card-title>Plot
+                <div .sidebar-body>
+                  <fieldset #selectXY style=display:none;>
+                    <label for=selX>Select the <em>x</em> column
+                    <select .form-control #selX style=overflow-y:auto;>
+                    <br>
+                    <label for=selY>Select the <em>y</em> column
+                    <select .form-control #selY style=overflow-y:auto;>
+            $# SPINNER ---------------------------------------------------------
+            <div #spinner .spinner-border .m-5 role=status style=display:none>
+                <span .visually-hidden>Loading...
+          $# PLOT --------------------------------------------------------------
+          <div .col-8>
+            <img #plot width=100% height=400px>
 ```
