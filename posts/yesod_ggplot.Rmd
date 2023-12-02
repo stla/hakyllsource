@@ -81,12 +81,12 @@ of the data, **PapaParse** to parse the uploaded CSV file to a JSON object, and
 parsed to a JSON object with **PapaParse**.
 
 [Hamlet](https://www.yesodweb.com/book/shakespearean-templates) is a HTML 
-templating language developed for Yesod applications. Here is the Hamlet code 
-of the application:
+templating language developed for Yesod applications. Below is the Hamlet code 
+of the application. I use a Bootstrap modal to display errors if there are.
 
 ```html
 <body>
-  $# Bootstrap modal -----------------------------------------------------------
+  $# BOOTSTRAP MODAL -----------------------------------------------------------
   <div #myModal .modal .fade aria-hidden aria-labelledby=myModalLabel tabindex=-1>
     <div .modal-dialog .modal-dialog-centered>
       <div .modal-content>
@@ -96,7 +96,7 @@ of the application:
             <span #message>
         <div .modal-footer>
             <button type=button .btn .btn-secondary data-bs-dismiss=modal>Close
-  $# Haskell logo --------------------------------------------------------------
+  $# HASKELL LOGO --------------------------------------------------------------
   <img src=./static/images/haskell.png style=float:right;margin:5px;width:50px;>
   $# ---------------------------------------------------------------------------
   <div .container-fluid>
@@ -147,4 +147,96 @@ of the application:
           $# PLOT --------------------------------------------------------------
           <div .col-8>
             <img #plot width=100% height=400px>
+```
+
+The interface has two tabs: one to upload and display the data, and the other 
+one to select two columns and display the graphic.
+
+The JavaScript function below will be called when the user uploads a file. 
+The file can be either a CSV file or a XLSX file. If this is a XLSX file, 
+then its content will be converted to CSV data before calling this function.
+This function firstly converts the CSV data to a JSON object, then it fills the 
+table with the data and the `x` and `y` dropdown lists with the column names, 
+and then it defines the behavior of the application.
+
+``` {.js .numberLines}
+function papaParse(csv) {
+  Papa.parse(csv, {
+    header: true,
+    skipEmptyLines: true,
+    dynamicTyping: true,
+    complete: function(results) {
+      if(results.errors.length != 0) {
+        alert("Something is wrong with this CSV file.");
+        console.log("Errors:", results.errors);
+        throw new Error("Something is wrong with this CSV file.");
+      }
+      let dataframe = results.data;
+      let colNames = results.meta.fields;
+      // Fill the table --------------------------------------------------------
+      let headers = "";
+      for(let colname of colNames) {
+        headers += "<th>" + colname + "</th>";
+      }
+      $("#table thead tr").append(headers);
+      let columns = [];
+      for(let colname of colNames) {
+        columns.push({ data: colname });
+      }
+      $("#table").DataTable({
+        data: results.data,
+        columns: columns
+      });
+      // the dataframe is an array of objects like:
+      //   [{A: a1, B: b1, ...}, {A: a2, B: b2, ...}, ...]
+      // we transform it to this object:
+      //   {A: [a1, a2, ...], B: [b1, b2, ...], ...}
+      let dfx = {}; // for x, we convert every entry to a string
+      let dfy = {}; // for y, we don't convert anything
+      for(let colname of colNames) {
+        let columnx = [];
+        let columny = [];
+        for(let j = 0; j < dataframe.length; j++) {
+          let entry = dataframe[j][colname];
+          columnx.push(entry.toString());
+          columny.push(entry);
+        }
+        dfx[colname] = columnx;
+        dfy[colname] = columny;
+      }
+      // Fill the x & y dropdowns ----------------------------------------------
+      let $selsXY = $("#selX, #selY");
+      let ncolumns = colNames.length;
+      let size = ncolumns < 5 ? ncolumns : 5;
+      $selsXY.attr("size", size);
+      $(colNames).each(function(idx, item) {
+        if(item != "") {
+          $selsXY.append($("<option>").attr("value", idx).text(item));
+        }
+      });
+      // Set x to the first column and y to the second one ---------------------
+      let selX = document.querySelector("#selX");
+      let selY = document.querySelector("#selY");
+      selX.value = "0";
+      selY.value = "1";
+      $("#selectXY").show();
+      // Initial plot ----------------------------------------------------------
+      let myModalEl = document.getElementById("myModal");
+      let myModal = new bootstrap.Modal(myModalEl);
+      let messageEl = myModalEl.querySelector("#message");
+      let titleEl = myModalEl.querySelector(".modal-title");
+      let $selX = $("#selX");
+      let $selY = $("#selY");
+      plot($selX, $selY, dfx, dfy, colNames, titleEl, messageEl, myModal);
+      // Plot on change x or y -------------------------------------------------
+      $selsXY.on("change", function() {
+        plot($selX, $selY, dfx, dfy, colNames, titleEl, messageEl, myModal);
+      });
+      // Plot on resize --------------------------------------------------------
+      $(window).on("resize", function() {
+        plot($selX, $selY, dfx, dfy, colNames, titleEl, messageEl, myModal);
+      });
+    }
+  });
+}
 ```
