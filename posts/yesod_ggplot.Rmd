@@ -1,0 +1,76 @@
+---
+title: "A R graphic in a Yesod app"
+author: "Stéphane Laurent"
+date: '2023-12-02'
+tags: R, haskell
+rbloggers: yes
+output:
+  md_document:
+    variant: markdown
+    preserve_yaml: true
+  html_document:
+    highlight: kate
+    keep_md: no
+highlighter: pandoc-solarized
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Here is the directory content of the application:
+
+```
+|   .dir-locals.el
+|   client_session_key.aes
+|   package.yaml
+|   README.md
+|   routes.yesodroutes
+|   stack.yaml
+|   
++---app
+|       Main.hs
+|       
++---src
+|       Application.hs
+|       Foundation.hs
+|       GGplot.hs
+|       Home.hs
+|       
+\---static
+    +---bootstrap-5.3.2
+    |   +---css
+    |   |       bootstrap.min.css
+    |   |       bootstrap.min.css.map
+    |   |       
+    |   \---js
+    |           bootstrap.bundle.min.js
+    |           bootstrap.bundle.min.js.map
+    |           
+    +---DataTables-1.13.8
+    |   |   datatables.min.css
+    |   |   datatables.min.js
+    |   |   
+    |   \---images
+    |           sort_asc.png
+    |           sort_asc_disabled.png
+    |           sort_both.png
+    |           sort_desc.png
+    |           sort_desc_disabled.png
+    |           
+    +---images
+    |       haskell.png
+    |       
+    +---jQuery
+    |       jquery-3.7.1.min.js
+    |       
+    +---PapaParse
+    |       papaparse.min.js
+    |       
+    +---R
+    |       ggplotXY.R
+    |       
+    \---SheetJS
+            xlsx.core.min.js
+            xlsx.core.min.map
+```
