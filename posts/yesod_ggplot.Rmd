@@ -240,3 +240,57 @@ function papaParse(csv) {
   });
 }
 ```
+
+Below is the `plot` function. It firstly collects the data of the two selected 
+columns and the dimensions of the plot container, and then with an Ajax PUT
+request, it sends all these data to Haskell. The Haskell function 
+`putGgplotR` will receive these data, it will send them to R and it will get 
+the result from R. This result is either a base64 string coding the graphic 
+or an error message. We use a separator `"*::*::*::*::*"` to put the error 
+message at the left of it and the base64 string at the right of it. If there's 
+no error then the left part is the empty string. The Ajax request receives 
+this result. If there is an error message then it includes it in the Bootstrap 
+modal and displays this modal. If there is no error message then it sends the 
+base64 string to the `img` element of the interface.
+
+``` {.js .numberLines}
+function plot($selX, $selY, dfx, dfy, colNames, titleEl, messageEl, myModal) {
+  $("#spinner").show();
+  let xidx = $selX.val();
+  let yidx = $selY.val();
+  let x = dfx[colNames[xidx]];
+  let y = dfy[colNames[yidx]];
+  let width = $("#plot").width();
+  if(width === 0) {
+    // the plot tab is initially hidden and then width=0
+    width = 400;
+  }
+  let height = $("#plot").height();
+  if(height === 0) {
+    height = 400;
+  }
+  let XYwh = JSON.stringify({ _x: x, _y: y, _width: width, _height: height });
+  let JSONstring = JSON.stringify(XYwh);
+  $.ajax({
+    contentType: "application/json; charset=UTF-8",
+    processData: false,
+    url: "@{GgplotR}",
+    type: "PUT",
+    data: JSONstring,
+    success: function(string) {
+      $("#spinner").hide();
+      let error_base64 = string.split("*::*::*::*::*");
+      let error = error_base64[0];
+      if(error === "") {
+        let base64 = error_base64[1];
+        $("#plot").attr("src", base64);
+      } else {
+        titleEl.textContent = "An error has occured";
+        messageEl.textContent = error;
+        myModal.show();
+      }
+    },
+    dataType: "text"
+  });
+}
+```
