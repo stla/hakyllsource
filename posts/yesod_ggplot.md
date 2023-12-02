@@ -14,80 +14,80 @@ output:
 highlighter: pandoc-solarized
 ---
 
-Yesod is a web framework for Haskell. In this post I show how to do a Yesod 
-application allowing to upload some data from a CSV or a XLSX file and to 
-display a R graphic representing two selected columns of the data.
+Yesod is a web framework for Haskell. In this post I show how to do a
+Yesod application allowing to upload some data from a CSV or a XLSX file
+and to display a R graphic representing two selected columns of the
+data.
 
 ![](./figures/yesod-ggplot.gif)
 
-Below is the directory content of the application, available in 
-[this Github repository](https://github.com/stla/yesod_ggplot).
+Below is the directory content of the application, available in [this
+Github repository](https://github.com/stla/yesod_ggplot).
 
-```
-|   .dir-locals.el
-|   client_session_key.aes
-|   package.yaml
-|   README.md
-|   routes.yesodroutes
-|   stack.yaml
-|   
-+---app
-|       Main.hs
-|       
-+---src
-|       Application.hs
-|       Foundation.hs
-|       GGplot.hs
-|       Home.hs
-|       
-\---static
-    +---bootstrap-5.3.2
-    |   +---css
-    |   |       bootstrap.min.css
-    |   |       bootstrap.min.css.map
-    |   |       
-    |   \---js
-    |           bootstrap.bundle.min.js
-    |           bootstrap.bundle.min.js.map
-    |           
-    +---DataTables-1.13.8
-    |   |   datatables.min.css
-    |   |   datatables.min.js
-    |   |   
-    |   \---images
-    |           sort_asc.png
-    |           sort_asc_disabled.png
-    |           sort_both.png
-    |           sort_desc.png
-    |           sort_desc_disabled.png
-    |           
-    +---images
-    |       haskell.png
+    |   .dir-locals.el
+    |   client_session_key.aes
+    |   package.yaml
+    |   README.md
+    |   routes.yesodroutes
+    |   stack.yaml
+    |   
+    +---app
+    |       Main.hs
     |       
-    +---jQuery
-    |       jquery-3.7.1.min.js
+    +---src
+    |       Application.hs
+    |       Foundation.hs
+    |       GGplot.hs
+    |       Home.hs
     |       
-    +---PapaParse
-    |       papaparse.min.js
-    |       
-    +---R
-    |       ggplotXY.R
-    |       
-    \---SheetJS
-            xlsx.core.min.js
-            xlsx.core.min.map
-```
+    \---static
+        +---bootstrap-5.3.2
+        |   +---css
+        |   |       bootstrap.min.css
+        |   |       bootstrap.min.css.map
+        |   |       
+        |   \---js
+        |           bootstrap.bundle.min.js
+        |           bootstrap.bundle.min.js.map
+        |           
+        +---DataTables-1.13.8
+        |   |   datatables.min.css
+        |   |   datatables.min.js
+        |   |   
+        |   \---images
+        |           sort_asc.png
+        |           sort_asc_disabled.png
+        |           sort_both.png
+        |           sort_desc.png
+        |           sort_desc_disabled.png
+        |           
+        +---images
+        |       haskell.png
+        |       
+        +---jQuery
+        |       jquery-3.7.1.min.js
+        |       
+        +---PapaParse
+        |       papaparse.min.js
+        |       
+        +---R
+        |       ggplotXY.R
+        |       
+        \---SheetJS
+                xlsx.core.min.js
+                xlsx.core.min.map
 
-I'm using **bootstrap** for the style, **DataTables** to display a nice table 
-of the data, **PapaParse** to parse the uploaded CSV file to a JSON object, and
-**SheetJS** to convert the uploaded XLSX file to CSV data, which can then be 
-parsed to a JSON object with **PapaParse**.
+I'm using **bootstrap** for the style, **DataTables** to display a nice
+table of the data, **PapaParse** to parse the uploaded CSV file to a
+JSON object, and **SheetJS** to convert the uploaded XLSX file to CSV
+data, which can then be parsed to a JSON object with **PapaParse**.
 
-[Hamlet](https://www.yesodweb.com/book/shakespearean-templates) is a HTML 
-templating language developed for Yesod applications. Below is the Hamlet code 
-of the application. I use a Bootstrap modal to display errors if there are.
+[Hamlet](https://www.yesodweb.com/book/shakespearean-templates) is a
+HTML templating language developed for Yesod applications. Below is the
+Hamlet code of the application. I use a Bootstrap modal to display
+errors if there are.
 
-```html
+``` html
 <body>
   $# BOOTSTRAP MODAL -----------------------------------------------------------
   <div #myModal .modal .fade aria-hidden aria-labelledby=myModalLabel tabindex=-1>
@@ -152,15 +152,16 @@ of the application. I use a Bootstrap modal to display errors if there are.
             <img #plot width=100% height=400px>
 ```
 
-The interface has two tabs: one to upload and display the data, and the other 
-one to select two columns and display the graphic.
+The interface has two tabs: one to upload and display the data, and the
+other one to select two columns and display the graphic.
 
-The JavaScript function below will be called when the user uploads a file. 
-The file can be either a CSV file or a XLSX file. If this is a XLSX file, 
-then its content will be converted to CSV data before calling this function.
-This function firstly converts the CSV data to a JSON object, then it fills the 
-table with the data and the `x` and `y` dropdown lists with the column names, 
-and then it defines the behavior of the application.
+The JavaScript function below will be called when the user uploads a
+file. The file can be either a CSV file or a XLSX file. If this is a
+XLSX file, then its content will be converted to CSV data before calling
+this function. This function firstly converts the CSV data to a JSON
+object, then it fills the table with the data and the `x` and `y`
+dropdown lists with the column names, and then it defines the behavior
+of the application.
 
 ``` {.js .numberLines}
 function papaParse(csv) {
@@ -281,17 +282,18 @@ $(function() {
 });
 ```
 
-Below is the `plot` function. It firstly collects the data of the two selected 
-columns and the dimensions of the plot container, and then with an Ajax PUT
-request, it sends all these data to Haskell. The Haskell function 
-`putGgplotR` will receive these data, it will send them to R and it will get 
-the result from R. This result is either a base64 string coding the graphic 
-or an error message. We use a separator `"*::*::*::*::*"` to put the error 
-message at the left of it and the base64 string at the right of it. If there's 
-no error then the left part is the empty string. The Ajax request receives 
-this result. If there is an error message then it includes it in the Bootstrap 
-modal and displays this modal. If there is no error message then it sends the 
-base64 string to the `img` element of the interface.
+Below is the `plot` function. It firstly collects the data of the two
+selected columns and the dimensions of the plot container, and then with
+an Ajax PUT request, it sends all these data to Haskell. The Haskell
+function `putGgplotR` will receive these data, it will send them to R
+and it will get the result from R. This result is either a base64 string
+coding the graphic or an error message. We use a separator
+`"*::*::*::*::*"` to put the error message at the left of it and the
+base64 string at the right of it. If there's no error then the left part
+is the empty string. The Ajax request receives this result. If there is
+an error message then it includes it in the Bootstrap modal and displays
+this modal. If there is no error message then it sends the base64 string
+to the `img` element of the interface.
 
 ``` {.js .numberLines}
 function plot($selX, $selY, dfx, dfy, colNames, titleEl, messageEl, myModal) {
@@ -335,11 +337,11 @@ function plot($selX, $selY, dfx, dfy, colNames, titleEl, messageEl, myModal) {
 }
 ```
 
-The Haskell function `putGgplotR` that we just mentioned will send the data to 
-R with a JSON file written in the temporary folder. Here is the function used 
-to write a temporary file:
+The Haskell function `putGgplotR` that we just mentioned will send the
+data to R with a JSON file written in the temporary folder. Here is the
+function used to write a temporary file:
 
-```haskell
+``` haskell
 writeTempFile :: String -> FilePath -> IO FilePath
 writeTempFile contents fileName = do
     tmpDir <- getCanonicalTemporaryDirectory
@@ -354,7 +356,7 @@ writeTempFile contents fileName = do
 
 And here is the function `putGgplotR`:
 
-```haskell
+``` haskell
 putGgplotR :: Handler String
 putGgplotR = do
     jsonData <- requireCheckJsonBody :: Handler String
