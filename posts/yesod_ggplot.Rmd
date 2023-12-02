@@ -241,6 +241,43 @@ function papaParse(csv) {
 }
 ```
 
+Here is the JavaScript code handling the file upload:
+
+``` {.js .numberLines}
+$(function() {
+  $("#file").on("change", function(e) {
+    let file = e.target.files[0];
+    let extension = file.name.split(".").pop().toLowerCase();
+    // --------------------------------------------------------------------
+    if(extension === "xlsx") {
+      let reader = new FileReader();
+      reader.onload = function (e) {
+        let workbook;
+        try {
+          workbook = XLSX.read(e.target.result, {
+            type: "binary"
+          });
+        } catch(err) {
+          alert("Something is wrong with this XLSX file.");
+          throw new Error(err);
+        }
+        let sheetNames = workbook.SheetNames;
+        let sheet1 = sheetNames[0];
+        let XLSXasCSV = XLSX.utils.sheet_to_csv(workbook.Sheets[sheet1]);
+        papaParse(XLSXasCSV);
+      };
+      reader.onerror = function(err) {
+        alert("I can't read this XLSX file!");
+        throw new Error(err);
+      };
+      reader.readAsArrayBuffer(file);
+    } else if(extension === "csv" || extension === "tsv") {
+      papaParse(file);
+    }
+  });
+});
+```
+
 Below is the `plot` function. It firstly collects the data of the two selected 
 columns and the dimensions of the plot container, and then with an Ajax PUT
 request, it sends all these data to Haskell. The Haskell function 
@@ -293,4 +330,87 @@ function plot($selX, $selY, dfx, dfy, colNames, titleEl, messageEl, myModal) {
     dataType: "text"
   });
 }
+```
+
+The Haskell function `putGgplotR` that we just mentioned will send the data to 
+R with a JSON file written in the temporary folder. Here is the function used 
+to write a temporary file:
+
+```haskell
+writeTempFile :: String -> FilePath -> IO FilePath
+writeTempFile contents fileName = do
+    tmpDir <- getCanonicalTemporaryDirectory
+    dir <- createTempDirectory tmpDir "yesod"
+    let filePath = dir ++ "/" ++ fileName
+    writeFile filePath contents
+    return $ replaceBackslahes filePath
+    where
+        replaceBackslahes :: String -> String
+        replaceBackslahes string = subRegex (mkRegex "\\\\") string "/"
+```
+
+And here is the function `putGgplotR`:
+
+```haskell
+putGgplotR :: Handler String
+putGgplotR = do
+    jsonData <- requireCheckJsonBody :: Handler String
+    jsonFile <- liftIO $ writeTempFile jsonData "data.json"
+    (exitcode, stdout, stderr) <- liftIO $ 
+        readProcessWithExitCode "Rscript" ["-e", rCommand jsonFile] ""
+    let base64 = stdout
+    let err = if exitcode == ExitSuccess then "" else stderr
+    -- return the error message and the base64 string with a separator
+    return $ err ++ "*::*::*::*::*" ++ base64
+    where
+        rCommand :: FilePath -> String
+        rCommand file = 
+            "jsonFile<-" ++ quote file ++ 
+                ";source(" ++ quote "static/R/ggplotXY.R" ++ ")"
+            where
+                quote :: String -> String
+                quote x = "\"" ++ x ++ "\""        
+```
+
+Finally, here is the R file ***ggplotXY.R*** which is sourced:
+
+``` {.r .numberLines}
+library(ggplot2)
+library(jsonlite)
+library(base64enc)
+
+# extract data from the JSON file
+jsonData <- fromJSON(jsonFile)
+x <- jsonData[["_x"]]
+y <- jsonData[["_y"]]
+w <- jsonData[["_width"]]
+h <- jsonData[["_height"]]
+
+# if `y` is not numeric, we throw an error
+if(!is.numeric(y)) {
+  stop("The `y` column is not numeric.")
+}
+
+# function to convert x to numeric if possible
+maybeNumeric <- function(x) {
+  xx <- as.numeric(x)
+  if(anyNA(xx)) x else xx
+}
+
+# data
+dat <- data.frame(x = maybeNumeric(x), y = y)
+
+# plot
+gg <- ggplot(dat, aes(x = x, y = y)) + 
+  geom_point()
+
+# save plot as PNG
+png <- tempfile(fileext = ".png")
+ggsave(png, gg, width = w, height = h, units = "px", dpi = "print")
+
+# convert the PNG file to a base64 string
+base64 <- dataURI(file = png, mime = "image/png")
+
+# print the base64 string
+cat(base64)
 ```
