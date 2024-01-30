@@ -1,0 +1,104 @@
+---
+title: "Using the 'RowReorder' extension in a Shiny app"
+author: "Stéphane Laurent"
+date: '2024-01-30'
+tags: R, shiny, datatables
+rbloggers: yes
+output:
+  md_document:
+    variant: markdown
+    preserve_yaml: true
+  html_document:
+    highlight: kate
+    keep_md: no
+highlighter: pandoc-solarized
+---
+
+The 'RowReorder' extension of **datatables** is available in the **DT** package. 
+This extension allows to reorder the rows of a **DT** table by dragging and 
+dropping. However, if you enable this extension in a Shiny app for a table 
+using the server-side processing (option `server=TRUE` in `renderDT`), that 
+won't work: each time the rows are reordered, they will jump back to their 
+original locations.
+
+So, if you want to use the server-side processing, you have to get the new order 
+of the rows whenever they are reordered and then you have to replace the 
+data by applying this new order to it. It is possible to get the new order in 
+JavaScript by listening to the **datatables** event `row-reorder`. Then it 
+suffices to send this new order to the Shiny server with the help of 
+`Shiny.setInputValue`. Here is the JavaScript code which does this job, 
+where `n` is the number of rows of the data:
+
+```r
+js <- c(
+  "table.on('row-reorder', function(e, details, edit) {",
+  sprintf("  var order = [%s];", toString(0:(n-1))),
+  "  for(entry of details) {",
+  "    order[entry.newPosition] = entry.oldPosition;",
+  "  }",
+  "  Shiny.setInputValue('newOrder', order);",
+  "});"
+)
+```
+
+With this code, whenever the rows are reordered, the Shiny server receives 
+the new order in `input$newOrder`. So one can use a Shiny observer of this 
+value, in which we can replace the data with the help of the **DT** function 
+`replaceData`. One has to keep track of the transformed data for the subsequent
+reorderings, and we can use a reactive dataframe to do so. Here is the full code
+of the implementation of this method in a Shiny app:
+
+```r
+library(shiny)
+library(DT)
+
+dat <- data.frame(
+  Type  = c("A", "B", "C", "D"),
+  Value = c(100, 90, 80, 70)
+)
+
+js <- c(
+  "table.on('row-reorder', function(e, details, edit) {",
+  sprintf("  var order = [%s];", toString(0:(nrow(dat)-1))),
+  "  for(entry of details) {",
+  "    order[entry.newPosition] = entry.oldPosition;",
+  "  }",
+  "  Shiny.setInputValue('newOrder', order);",
+  "});"
+)
+
+showRowNames <- TRUE
+
+ui <- fluidPage(
+  br(),
+  DTOutput("table")
+)
+
+server <- function(input, output, session){
+  
+  output$table <- renderDT({
+    datatable(
+      dat,
+      rownames = showRowNames,
+      extensions = "RowReorder",
+      callback = JS(js),
+      options = list(rowReorder = TRUE)
+    )
+  }, server = TRUE)
+  
+  proxy <- dataTableProxy("table")
+  
+  Dat <- reactiveVal(dat)
+  
+  observeEvent(input$newOrder, {
+    dat0 <- Dat()
+    dat1 <- dat0[input$newOrder + 1, ]
+    replaceData(proxy, dat1, resetPaging = FALSE, rownames = showRowNames)
+    Dat(dat1)
+  })
+  
+}
+
+shinyApp(ui, server)
+```
+
